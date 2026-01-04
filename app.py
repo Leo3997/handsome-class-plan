@@ -1,0 +1,396 @@
+from flask import Flask, jsonify, request, render_template, send_file
+from flask_cors import CORS
+import logging
+import normal
+import substitution
+from storage import ScheduleStorage
+from export_excel import ExcelExporter
+from error_handler import analyze_failure
+
+# 配置日志系统
+logging.basicConfig(
+    filename='schedule_system.log',
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    encoding='utf-8'
+)
+logger = logging.getLogger(__name__)
+
+app = Flask(__name__)
+CORS(app)
+
+# 初始化存储模块
+storage = ScheduleStorage()
+# 初始化Excel导出模块
+exporter = ExcelExporter()
+
+global_result = None
+global_system = None
+
+def serialize_schedule(system):
+    formatted_data = {}
+    for c_id in system.classes:
+        formatted_data[c_id] = {}
+        for p in range(system.periods):
+            formatted_data[c_id][p] = {}
+            for d in range(system.days):
+                info = system.final_schedule.get((c_id, d, p))
+                if info:
+                    cell_data = {
+                        "subject": info['subject'],
+                        "teacher_name": info['teacher_name'],
+                        "is_sub": info['is_sub']
+                    }
+                else:
+                    cell_data = None
+                formatted_data[c_id][p][d] = cell_data
+    return formatted_data
+
+def serialize_teacher_schedule(system, teacher_name):
+    """按老师视角序列化课表"""
+    # 构建老师课表矩阵：periods x days
+    teacher_data = {}
+    for p in range(system.periods):
+        teacher_data[p] = {}
+        for d in range(system.days):
+            teacher_data[p][d] = None
+    
+    # 遍历所有班级的所有时段
+    for c_id in system.classes:
+        for p in range(system.periods):
+            for d in range(system.days):
+                info = system.final_schedule.get((c_id, d, p))
+                if info and info['teacher_name'] == teacher_name:
+                    teacher_data[p][d] = {
+                        "class_id": str(c_id),
+                        "subject": info['subject'],
+                        "is_sub": info['is_sub']
+                    }
+    
+    return teacher_data
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/api/init', methods=['POST'])
+def init_schedule():
+    global global_result, global_system
+    
+    # 接收完整配置
+    # 格式: { "num_classes": 10, "courses": {...}, "teacher_names": {"语文": ["张三"], ...} }
+    config = request.json if request.json else {}
+    
+    logger.info(f"接收到排课请求 - 班级数: {config.get('num_classes')}, 科目数: {len(config.get('courses', {}))}")
+    logger.info(f"自定义老师科目: {list(config.get('teacher_names', {}).keys())}")
+
+    try:
+        result = normal.run_scheduler(config)
+        
+        if result['status'] != 'success':
+            # 分析失败原因
+            error_analysis = analyze_failure(config)
+            
+            logger.warning(f"排课失败 - {error_analysis['error_type']}: {error_analysis['message']}")
+            
+            return jsonify({
+                "status": "error",
+                "error_type": error_analysis['error_type'],
+                "message": error_analysis['message'],
+                "suggestions": error_analysis['suggestions']
+            }), 400
+            
+        global_result = result
+        global_system = substitution.SubstitutionSystem(result)
+        
+        teacher_list = sorted([{"id": t['id'], "name": t['name']} for t in result['teachers_db']], key=lambda x: x['name'])
+        
+        logger.info(f"排课成功 - 生成 {len(global_system.classes)} 个班级的课表，共 {len(teacher_list)} 位老师")
+        
+        return jsonify({
+            "status": "success", 
+            "teachers": teacher_list,
+            "schedule": serialize_schedule(global_system),
+            "stats": result.get('stats', {})
+        })
+    except Exception as e:
+        logger.error(f"排课异常: {str(e)}", exc_info=True)
+        
+        # 尝试分析错误
+        error_analysis = analyze_failure(config)
+        
+        return jsonify({
+            "status": "error",
+            "error_type": "system_error",
+            "message": f"系统错误: {str(e)}",
+            "suggestions": error_analysis['suggestions']
+        }), 500
+
+@app.route('/api/substitute', methods=['POST'])
+def apply_substitute():
+    global global_result, global_system
+    if not global_result:
+        return jsonify({"status": "error", "message": "请先生成课表"}), 400
+    
+    data = request.json
+    leave_requests_raw = data.get('leaves', [])
+    
+    day_map = {"周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4}
+    processed_requests = []
+    for req in leave_requests_raw:
+        processed_requests.append({
+            "name": req['name'],
+            "days": [day_map[d] for d in req['days']]
+        })
+        
+    try:
+        global_system = substitution.SubstitutionSystem(global_result)
+        
+        # 捕获process_leaves的返回值（统计信息）
+        stats = global_system.process_leaves(processed_requests)
+        
+        # 构建日志信息
+        logs = []
+        
+        # 遍历课表，找出所有代课和调整的课程
+        for (c, d, p), info in sorted(global_system.final_schedule.items()):
+            if info.get('is_sub'):
+                day_name = ["周一", "周二", "周三", "周四", "周五"][d]
+                if info['teacher_name'] == "【自习】":
+                    logs.append({
+                        "type": "self_study",
+                        "message": f"✗ {c}班 {day_name}第{p+1}节 标记为自习"
+                    })
+                else:
+                    logs.append({
+                        "type": "substitute",
+                        "message": f"✓ {c}班 {day_name}第{p+1}节 {info['teacher_name']}代课"
+                    })
+        
+        logger.info(f"代课处理完成 - 直接代课:{stats['direct']}次, 互换:{stats['swap']}次, 自习:{stats['self_study']}次")
+        
+        return jsonify({
+            "status": "success",
+            "schedule": serialize_schedule(global_system),
+            "stats": stats,
+            "logs": logs
+        })
+    except Exception as e:
+        logger.error(f"代课处理异常: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/schedule/move', methods=['POST'])
+def move_course():
+    """手动移动/交换课程"""
+    global global_result, global_system
+    if not global_result:
+        return jsonify({"status": "error", "message": "请先生成课表"}), 400
+        
+    try:
+        # 如果还没初始化system对象，先初始化
+        if global_system is None:
+            global_system = substitution.SubstitutionSystem(global_result)
+            
+        data = request.json
+        class_id = str(data.get('class_id'))
+        from_slot = tuple(data.get('from_slot'))
+        to_slot = tuple(data.get('to_slot'))
+        
+        result = global_system.move_course(class_id, from_slot, to_slot)
+        
+        if result['success']:
+            return jsonify({
+                "status": "success",
+                "message": result['message'],
+                "schedule": serialize_schedule(global_system)
+            })
+        else:
+            return jsonify({
+                "status": "error",
+                "message": result['message']
+            }), 400
+            
+    except Exception as e:
+        logger.error(f"调课异常: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# ============ 数据持久化接口 ============
+
+@app.route('/api/save', methods=['POST'])
+def save_schedule():
+    """保存当前课表方案"""
+    global global_result, global_system
+    
+    if not global_result or not global_system:
+        return jsonify({"status": "error", "message": "没有可保存的课表"}), 400
+    
+    data = request.json
+    name = data.get('name', '').strip()
+    
+    if not name:
+        return jsonify({"status": "error", "message": "请提供方案名称"}), 400
+    
+    # 准备保存数据
+    schedule_data = {
+        "schedule": serialize_schedule(global_system),
+        "teachers": sorted([{"id": t['id'], "name": t['name']} for t in global_result['teachers_db']], 
+                          key=lambda x: x['name'])
+    }
+    
+    config = data.get('config', {})
+    
+    result = storage.save_schedule(name, schedule_data, config)
+    
+    if result["status"] == "success":
+        return jsonify(result)
+    else:
+        return jsonify(result), 500
+
+@app.route('/api/list', methods=['GET'])
+def list_schedules():
+    """列出所有已保存的课表方案"""
+    result = storage.list_schedules()
+    return jsonify(result)
+
+@app.route('/api/load', methods=['POST'])
+def load_schedule():
+    """加载指定的课表方案"""
+    global global_result, global_system
+    
+    data = request.json
+    name = data.get('name', '').strip()
+    
+    if not name:
+        return jsonify({"status": "error", "message": "请提供方案名称"}), 400
+    
+    result = storage.load_schedule(name)
+    
+    if result["status"] == "error":
+        return jsonify(result), 404
+    
+    loaded_data = result["data"]
+    
+    # 注意：加载的数据只包含序列化后的课表，不包含求解器对象
+    # 因此 global_result 和 global_system 需要特殊处理
+    # 这里我们只返回课表数据，不更新全局状态（无法重新生成 global_system）
+    
+    return jsonify({
+        "status": "success",
+        "schedule": loaded_data.get("schedule", {}),
+        "teachers": loaded_data.get("teachers", []),
+        "config": loaded_data.get("config", {}),
+        "created_at": loaded_data.get("created_at", "")
+    })
+
+@app.route('/api/delete', methods=['POST'])
+def delete_schedule():
+    """删除指定的课表方案"""
+    data = request.json
+    name = data.get('name', '').strip()
+    
+    if not name:
+        return jsonify({"status": "error", "message": "请提供方案名称"}), 400
+    
+    result = storage.delete_schedule(name)
+    
+    if result["status"] == "success":
+        return jsonify(result)
+    else:
+        return jsonify(result), 404
+
+# ============ Excel导出接口 ============
+
+@app.route('/api/export/class/<class_id>', methods=['GET'])
+def export_class(class_id):
+    """导出指定班级的课表为Excel"""
+    global global_system
+    
+    if not global_system:
+        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    
+    try:
+        schedule_data = serialize_schedule(global_system)
+        excel_file = exporter.export_class_schedule(schedule_data, class_id)
+        
+        return send_file(
+            excel_file,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=f'{class_id}班课表.xlsx'
+        )
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/export/all_classes', methods=['GET'])
+def export_all_classes():
+    """导出所有班级的课表为Excel（多sheet）"""
+    global global_system
+    
+    if not global_system:
+        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    
+    try:
+        schedule_data = serialize_schedule(global_system)
+        excel_file = exporter.export_all_classes(schedule_data)
+        
+        return send_file(
+            excel_file,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name='全部班级课表.xlsx'
+        )
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/export/teacher/<teacher_name>', methods=['GET'])
+def export_teacher(teacher_name):
+    """导出指定老师的课表为Excel"""
+    global global_system, global_result
+    
+    if not global_system or not global_result:
+        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    
+    try:
+        schedule_data = serialize_schedule(global_system)
+        teachers_db = global_result['teachers_db']
+        excel_file = exporter.export_teacher_schedule(schedule_data, teachers_db, teacher_name)
+        
+        return send_file(
+            excel_file,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=f'{teacher_name}的课表.xlsx'
+        )
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+# ============ 老师视图接口 ============
+
+@app.route('/api/teacher_view', methods=['POST'])
+def get_teacher_view():
+    """获取指定老师的课表视图"""
+    global global_system
+    
+    if not global_system:
+        return jsonify({"status": "error", "message": "没有可用的课表"}), 400
+    
+    data = request.json
+    teacher_name = data.get('teacher_name', '').strip()
+    
+    if not teacher_name:
+        return jsonify({"status": "error", "message": "请提供老师姓名"}), 400
+    
+    try:
+        teacher_schedule = serialize_teacher_schedule(global_system, teacher_name)
+        
+        return jsonify({
+            "status": "success",
+            "teacher_name": teacher_name,
+            "schedule": teacher_schedule
+        })
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
+    
