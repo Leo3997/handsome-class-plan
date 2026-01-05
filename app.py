@@ -3,7 +3,7 @@ from flask_cors import CORS
 import logging
 import normal
 import substitution
-from storage import ScheduleStorage
+from database import ScheduleDatabase
 from export_excel import ExcelExporter
 from error_handler import analyze_failure
 
@@ -19,8 +19,8 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)
 
-# 初始化存储模块
-storage = ScheduleStorage()
+# 初始化存储模块 (SQLite)
+storage = ScheduleDatabase()
 # 初始化Excel导出模块
 exporter = ExcelExporter()
 
