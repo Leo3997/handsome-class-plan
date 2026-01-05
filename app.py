@@ -39,6 +39,7 @@ def serialize_schedule(system):
                     cell_data = {
                         "subject": info['subject'],
                         "teacher_name": info['teacher_name'],
+                        "teacher_id": info.get('teacher_id'),
                         "is_sub": info['is_sub'],
                         "course_type": info.get('course_type', 'minor')
                     }
@@ -200,7 +201,17 @@ def move_course():
             global_system = substitution.SubstitutionSystem(global_result)
             
         data = request.json
-        class_id = str(data.get('class_id'))
+        
+        # =========== 🔴 核心修复开始 ===========
+        raw_class_id = data.get('class_id')
+        try:
+            # 尝试将 ID 转为整数 (因为 normal.py 生成的是 int: 1, 2, 3...)
+            class_id = int(raw_class_id)
+        except (ValueError, TypeError):
+            # 如果转换失败（比如本来就是"HighSchool-1"这种字符串），则保持原样
+            class_id = str(raw_class_id)
+        # =========== 🔴 核心修复结束 ===========
+
         from_slot = tuple(data.get('from_slot'))
         to_slot = tuple(data.get('to_slot'))
         
@@ -220,6 +231,59 @@ def move_course():
             
     except Exception as e:
         logger.error(f"调课异常: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/restore', methods=['POST'])
+def restore_schedule():
+    """恢复课表状态 (用于前端 Undo/Redo)"""
+    global global_system
+    
+    if not global_system:
+        return jsonify({"status": "error", "message": "系统未初始化"}), 400
+        
+    try:
+        data = request.json
+        schedule_data = data.get('schedule')
+        
+        if not schedule_data:
+            return jsonify({"status": "error", "message": "无效的课表数据"}), 400
+            
+        # 重建 final_schedule
+        # 前端格式: class_id -> p -> d -> info
+        new_final = {}
+        # =========== 🔴 核心修复：遍历 JSON 键时转为 int ===========
+        for c_id_raw, periods in schedule_data.items():
+            # JSON 的键永远是字符串，这里必须尝试转回 int
+            # 因为 normal.py 里的 classes 是 int (1, 2, 3...)
+            try:
+                c_id = int(c_id_raw)
+            except (ValueError, TypeError):
+                c_id = c_id_raw # 如果原本就是字符串（如"高一1班"），保持原样
+
+            for p_str, days in periods.items():
+                p = int(p_str)
+                for d_str, info in days.items():
+                    d = int(d_str)
+                    if info:
+                        # 确保 info 里面也有 teacher_id (依赖 serialize_schedule 的正确性)
+                        new_final[(c_id, d, p)] = info
+        # ========================================================
+        
+        global_system.final_schedule = new_final
+        
+        # === 重建 teacher_busy 索引 ===
+        global_system.teacher_busy = set()
+        for (key, info) in new_final.items():
+            # key 是 (class_id, day, period)
+            c, d, p = key
+            tid = info.get('teacher_id')
+            if tid:
+                global_system.teacher_busy.add((tid, d, p))
+        
+        return jsonify({"status": "success", "message": "状态已恢复"})
+        
+    except Exception as e:
+        logger.error(f"恢复状态异常: {str(e)}", exc_info=True)
         return jsonify({"status": "error", "message": str(e)}), 500
 
 # ============ 数据持久化接口 ============
@@ -410,6 +474,80 @@ def get_teacher_view():
             "schedule": teacher_schedule
         })
     except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/import_config', methods=['POST'])
+def import_config():
+    """导入Excel配置"""
+    if 'file' not in request.files:
+        return jsonify({"status": "error", "message": "未上传文件"}), 400
+    
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({"status": "error", "message": "文件名为空"}), 400
+        
+    try:
+        import pandas as pd
+        df = pd.read_excel(file)
+        
+        # 预期列名: 科目, 每周节数, 课程类型, 老师名单, 教室限制
+        courses = {}
+        resources = []
+        
+        # 归一化列名 (去除空格)
+        df.columns = [str(c).strip() for c in df.columns]
+        
+        for _, row in df.iterrows():
+            subject = str(row.get('科目', '')).strip()
+            # 跳过空行或 'nan'
+            if not subject or subject.lower() == 'nan': continue
+            
+            try:
+                # 支持 float 类型的 "2.0"
+                count = int(float(row.get('每周节数', 0)))
+            except:
+                count = 0
+                
+            c_type_raw = str(row.get('课程类型', 'main')).strip().lower()
+            c_type = 'minor' if c_type_raw in ['副科', 'minor'] else 'main'
+            
+            teachers_str = str(row.get('老师名单', '')).strip()
+            if teachers_str.lower() == 'nan': teachers_str = ''
+            teachers = [t.strip() for t in teachers_str.replace('，', ',').split(',') if t.strip()]
+            
+            room = str(row.get('教室限制', '')).strip()
+            if room.lower() == 'nan': room = ''
+            
+            courses[subject] = {
+                "count": count,
+                "type": c_type,
+                "teachers": teachers
+            }
+            
+            if room:
+                exists = False
+                for r in resources:
+                    if r['name'] == room:
+                        if subject not in r['subjects']:
+                            r['subjects'].append(subject)
+                        exists = True
+                        break
+                if not exists:
+                    resources.append({
+                        "name": room,
+                        "capacity": 1,
+                        "subjects": [subject]
+                    })
+                    
+        return jsonify({
+            "status": "success", 
+            "message": f"成功导入 {len(courses)} 个科目配置",
+            "courses": courses,
+            "resources": resources
+        })
+        
+    except Exception as e:
+        logger.error(f"导入配置异常: {str(e)}", exc_info=True)
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':

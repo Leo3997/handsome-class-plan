@@ -352,3 +352,26 @@ h5 {
 .fade-in {
     animation: fadeIn 0.3s ease-out;
 }
+
+/* Real-time Feedback Styles */
+.conflict-cell {
+    background-color: #fee2e2 !important;
+    /* Red 100 */
+    border: 2px dashed #ef4444 !important;
+    /* Red 500 */
+    cursor: not-allowed !important;
+}
+
+.conflict-tooltip {
+    position: fixed;
+    background: #ef4444;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: none;
+}

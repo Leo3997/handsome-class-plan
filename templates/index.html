@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全自定义智能排课系统</title>
+    <title>得鹿山智能排课系统</title>
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/bootstrap-icons.min.css" rel="stylesheet">
     <link href="/static/css/style.css" rel="stylesheet">
@@ -19,7 +19,7 @@
             <!-- Sidebar -->
             <div class="col-md-3 sidebar">
                 <h4 class="mb-4 text-primary fw-bold">
-                    <i class="bi bi-calendar-check-fill me-2"></i>智能排课系统
+                    <i class="bi bi-calendar-check-fill me-2"></i>得鹿山智能排课系统
                 </h4>
 
                 <div class="d-flex gap-2 mb-4">
@@ -34,6 +34,16 @@
                     <button class="btn btn-light border shadow-sm" data-bs-toggle="modal"
                         data-bs-target="#settingsModal" title="基本参数设置" style="width: 42px;">
                         <i class="bi bi-file-earmark-text"></i>
+                    </button>
+                </div>
+                <div class="d-flex gap-2 mb-3">
+                    <button id="btn-undo" class="btn btn-outline-secondary w-50 shadow-sm" onclick="performUndo()"
+                        disabled>
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>撤销
+                    </button>
+                    <button id="btn-redo" class="btn btn-outline-secondary w-50 shadow-sm" onclick="performRedo()"
+                        disabled>
+                        <i class="bi bi-arrow-clockwise me-1"></i>重做
                     </button>
                 </div>
                 <button id="btn-stats" class="btn btn-outline-primary w-100 mb-3 shadow-sm" onclick="openStatistics()"
@@ -188,6 +198,16 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="mb-3 d-flex justify-content-end align-items-center bg-light p-2 rounded">
+                        <input type="file" id="config-file-input" accept=".xlsx, .xls" style="display: none;"
+                            onchange="handleConfigUpload(this)">
+                        <small class="text-muted me-auto"><i class="bi bi-info-circle me-1"></i>支持导入排课参数 Excel</small>
+                        <button class="btn btn-outline-success btn-sm"
+                            onclick="document.getElementById('config-file-input').click()">
+                            <i class="bi bi-file-earmark-spreadsheet me-1"></i>从 Excel 导入配置
+                        </button>
+                    </div>
+
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">班级总数</label>
                         <div class="col-sm-4">
@@ -383,11 +403,21 @@
         </div>
     </div>
 
+    <!-- Conflict Tooltip -->
+    <div id="conflict-tooltip" class="conflict-tooltip"></div>
+
     <script>
         let globalSchedule = {};
         let deleteModalVar = null;
         let targetDeleteName = '';
         let globalTeachers = [];
+        let teacherScheduleMap = {}; // Global Map for conflict checking
+
+        // Undo/Redo Globals
+        let historyStack = [];
+        let redoStack = [];
+        const MAX_HISTORY = 20;
+
         let currentView = 'class';
         let leaveRequests = [];
         const DAYS = ["周一", "周二", "周三", "周四", "周五"];
@@ -738,6 +768,11 @@
                 const data = await response.json();
 
                 if (data.status === 'success') {
+                    // Clear history on new init
+                    historyStack = [];
+                    redoStack = [];
+                    updateUndoButtons();
+
                     updateUI(data);
                     status.innerHTML = '<i class="bi bi-check-circle-fill"></i> 排课成功';
                     status.className = "text-center text-success fw-bold mb-3";
@@ -767,6 +802,30 @@
                 document.getElementById('btn-stats').disabled = false;
             }
             globalTeachers = data.teachers || [];
+            globalSchedule = data.schedule; // Update global variable
+
+            // === Build Teacher Schedule Map for Conflict Detection ===
+            teacherScheduleMap = {};
+            if (globalSchedule) {
+                Object.entries(globalSchedule).forEach(([classId, periods]) => {
+                    Object.entries(periods).forEach(([pIndex, days]) => {
+                        Object.entries(days).forEach(([dIndex, info]) => {
+                            if (info && info.teacher_name) {
+                                // Split teachers if multiple (e.g. "Zhang, Li") - though system usually assigns one main
+                                // Assuming simple case or primary teacher
+                                const tName = info.teacher_name;
+                                if (!teacherScheduleMap[tName]) teacherScheduleMap[tName] = {};
+                                teacherScheduleMap[tName][`${dIndex}_${pIndex}`] = {
+                                    classId: classId,
+                                    subject: info.subject,
+                                    room: info.room
+                                };
+                            }
+                        });
+                    });
+                });
+            }
+            // =========================================================
 
             const teacherSelect = document.getElementById('teacher-select');
             teacherSelect.innerHTML = '';
@@ -795,7 +854,7 @@
                 classSelect.appendChild(opt);
             });
 
-            globalSchedule = data.schedule;
+            // globalSchedule = data.schedule; // Already updated above
             renderCurrentClass();
 
             teacherSelect.disabled = false;
@@ -823,12 +882,18 @@
                 for (let d = 0; d < 5; d++) {
                     const td = document.createElement('td');
                     td.className = "draggable-cell";
+                    // Add data attributes for conflict detection
+                    td.dataset.day = d;
+                    td.dataset.period = p;
+
                     td.setAttribute('draggable', 'true');
                     td.setAttribute('ondragstart', `handleDragStart(event, ${p}, ${d})`);
                     td.setAttribute('ondragover', 'handleDragOver(event)');
                     td.setAttribute('ondrop', `handleDrop(event, ${p}, ${d})`);
                     td.setAttribute('ondragleave', 'handleDragLeave(event)');
                     td.setAttribute('ondragend', 'handleDragEnd(event)');
+                    // Add click handler for Smart Suggestions
+                    td.setAttribute('onclick', `handleCellClick(event, ${p}, ${d})`);
 
                     const info = classData[p][d];
                     if (info) {
@@ -856,27 +921,74 @@
         }
 
         let draggedSource = null;
+        const tooltipEl = document.getElementById('conflict-tooltip');
+
         function handleDragStart(e, period, day) {
-            draggedSource = { period, day };
+            clearSuggestions(); // Clear any existing highlights
+            const classId = document.getElementById('class-select').value;
+            // Get teacher name from globalSchedule
+            const info = globalSchedule[classId] ? globalSchedule[classId][period][day] : null;
+            const teacher = info ? info.teacher_name : null;
+
+            draggedSource = { period, day, teacher };
             e.target.classList.add('drag-source');
             e.dataTransfer.setData('text/plain', JSON.stringify({ period, day }));
             e.dataTransfer.effectAllowed = 'move';
         }
+
         function handleDragOver(e) {
             e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
             const td = e.target.closest('td');
-            if (td && !td.classList.contains('drag-source')) {
-                td.classList.add('drag-over');
+            // Basic checks
+            if (!td || td.classList.contains('drag-source')) return;
+
+            const targetDay = td.dataset.day;
+            const targetPeriod = td.dataset.period;
+
+            // Conflict Detection Logic
+            if (draggedSource && draggedSource.teacher && targetDay !== undefined) {
+                const map = teacherScheduleMap[draggedSource.teacher];
+                const key = `${targetDay}_${targetPeriod}`;
+                const conflict = map ? map[key] : null;
+                const currentClassId = document.getElementById('class-select').value;
+
+                // Check if teacher busy elsewhere (same teacher, same slot, DIFFERENT class)
+                if (conflict && conflict.classId != currentClassId) {
+                    td.classList.add('conflict-cell');
+                    // Show Tooltip
+                    tooltipEl.style.display = 'block';
+                    tooltipEl.style.left = (e.pageX + 15) + 'px';
+                    tooltipEl.style.top = (e.pageY + 15) + 'px';
+                    tooltipEl.innerText = `⚠️ 冲突: ${draggedSource.teacher} 在 ${conflict.classId}班 有课 (${conflict.subject})`;
+
+                    e.dataTransfer.dropEffect = 'none'; // Forbidden
+                    return;
+                }
             }
+
+            td.classList.add('drag-over');
+            e.dataTransfer.dropEffect = 'move';
+            hideTooltip();
         }
+
         function handleDragLeave(e) {
             const td = e.target.closest('td');
-            if (td) td.classList.remove('drag-over');
+            if (td) {
+                td.classList.remove('drag-over');
+                td.classList.remove('conflict-cell');
+            }
+            hideTooltip();
         }
+
         function handleDragEnd(e) {
             e.target.classList.remove('drag-source');
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+            document.querySelectorAll('.conflict-cell').forEach(el => el.classList.remove('conflict-cell'));
+            hideTooltip();
+        }
+
+        function hideTooltip() {
+            tooltipEl.style.display = 'none';
         }
         async function handleDrop(e, targetPeriod, targetDay) {
             e.preventDefault();
@@ -888,6 +1000,9 @@
             const classId = document.getElementById('class-select').value;
 
             try {
+                // Save state before move
+                pushHistory();
+
                 const response = await fetch('/api/schedule/move', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -946,6 +1061,9 @@
             const btn = document.getElementById('btn-apply');
             btn.disabled = true; btn.innerText = "计算中...";
             try {
+                // Save state before substitution
+                pushHistory();
+
                 const resp = await fetch('/api/substitute', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1050,6 +1168,11 @@
                 const data = await resp.json();
 
                 if (data.status === 'success') {
+                    // Clear history on load
+                    historyStack = [];
+                    redoStack = [];
+                    updateUndoButtons();
+
                     // 1. Update Global Schedule
                     globalSchedule = data.schedule;
 
@@ -1329,6 +1452,208 @@
                     alert(`系统错误: ${e.message}`);
                 }
             });
+        });
+
+        // ================= Undo/Redo Logic =================
+        function pushHistory() {
+            if (!globalSchedule || Object.keys(globalSchedule).length === 0) return;
+            // Deep copy
+            const snapshot = JSON.parse(JSON.stringify(globalSchedule));
+            historyStack.push(snapshot);
+            if (historyStack.length > MAX_HISTORY) historyStack.shift();
+            redoStack = []; // Clear redo on new action
+            updateUndoButtons();
+        }
+
+        async function performUndo() {
+            if (historyStack.length === 0) return;
+            // Save current state to redo stack
+            const currentState = JSON.parse(JSON.stringify(globalSchedule));
+            redoStack.push(currentState);
+
+            const prevState = historyStack.pop();
+            await applyRestoredState(prevState);
+            updateUndoButtons();
+        }
+
+        async function performRedo() {
+            if (redoStack.length === 0) return;
+            // Save current state to history
+            const currentState = JSON.parse(JSON.stringify(globalSchedule));
+            historyStack.push(currentState);
+
+            const nextState = redoStack.pop();
+            await applyRestoredState(nextState);
+            updateUndoButtons();
+        }
+
+        async function applyRestoredState(scheduleData) {
+            try {
+                const resp = await fetch('/api/restore', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ schedule: scheduleData })
+                });
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    // Update global variable
+                    globalSchedule = scheduleData;
+
+                    // Re-calculate derived data (teacher map)
+                    updateUI({ schedule: globalSchedule, teachers: globalTeachers, stats: data.stats });
+
+                    // Re-render current view
+                    if (currentView === 'class') renderCurrentClass();
+                    else if (currentView === 'teacher') renderCurrentTeacher();
+
+                } else {
+                    alert('恢复状态失败: ' + data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert('系统错误: ' + e.message);
+            }
+        }
+
+        function updateUndoButtons() {
+            const btnUndo = document.getElementById('btn-undo');
+            const btnRedo = document.getElementById('btn-redo');
+            if (btnUndo) btnUndo.disabled = historyStack.length === 0;
+            if (btnRedo) btnRedo.disabled = redoStack.length === 0;
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function (e) {
+            // Check if input/textarea is focused to avoid conflict? (optional)
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+                e.preventDefault();
+                performUndo();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+                e.preventDefault();
+                performRedo();
+            }
+        });
+
+        async function handleConfigUpload(input) {
+            if (!input.files || input.files.length === 0) return;
+
+            const file = input.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                // Show loading state?
+                const btn = input.nextElementSibling; // The button is actually next next.. getting via ID is safer but button triggered click.
+                // Doesn't matter, just fetch.
+
+                const resp = await fetch('/api/import_config', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!resp.ok) {
+                    const text = await resp.text();
+                    throw new Error(`Import failed: ${text}`);
+                }
+
+                const data = await resp.json();
+                if (data.status === 'success') {
+                    // Convert courses dict to array
+                    const newCourses = [];
+                    for (const [subj, info] of Object.entries(data.courses)) {
+                        newCourses.push({
+                            name: subj,
+                            count: info.count,
+                            type: info.type,
+                            teachers: info.teachers.join(', ')
+                        });
+                    }
+                    config.courses = newCourses;
+
+                    // Resources
+                    const newResources = data.resources.map(r => ({
+                        name: r.name,
+                        capacity: r.capacity,
+                        subjects: r.subjects.join(', ')
+                    }));
+                    config.resources = newResources;
+
+                    renderSettings();
+                    alert(`✅ ${data.message}`);
+                } else {
+                    alert(`❌ 导入失败: ${data.message}`);
+                }
+            } catch (e) {
+                console.error(e);
+                alert(`系统错误: ${e.message}`);
+            } finally {
+                input.value = ''; // Reset input
+            }
+        }
+
+
+        // ================= Smart Suggestions =================
+        function handleCellClick(e, srcPeriod, srcDay) {
+            // If dragging, ignore click
+            if (e.target.closest('.drag-source')) return;
+
+            // Clear previous suggestions
+            clearSuggestions();
+
+            const classId = document.getElementById('class-select').value;
+            const info = globalSchedule[classId] ? globalSchedule[classId][srcPeriod][srcDay] : null;
+
+            if (!info || !info.teacher_name) return; // Clicked empty cell
+
+            const teacher = info.teacher_name;
+
+            // [~] Implement smart suggestions (highlight feasible slots for a selected class) <!-- id: 7 -->
+            // Highlight feasible slots
+            // Feasible = Empty slot AND Teacher is free
+            const tbody = document.getElementById('schedule-body');
+            const rows = tbody.querySelectorAll('tr');
+
+            for (let p = 0; p < 9; p++) {
+                for (let d = 0; d < 5; d++) {
+                    // Skip self
+                    if (p === srcPeriod && d === srcDay) continue;
+
+                    // Check if slot is empty in current class
+                    const targetInfo = globalSchedule[classId][p][d];
+                    if (!targetInfo) {
+                        // Slot is empty from class perspective.
+                        // Check teacher availability
+                        // Teacher is busy if teacherScheduleMap[teacher] has entry at (d,p)
+                        // AND that entry is NOT the current class (moving within same class is fine, but we are checking empty slots so no entry should be there for current class)
+
+                        // Wait, if teacher teaches Class 2 at (d,p), they are busy. 
+                        const map = teacherScheduleMap[teacher];
+                        const key = `${d}_${p}`;
+                        const conflict = map ? map[key] : null;
+
+                        if (!conflict) {
+                            // Feasible!
+                            // Find the TD
+                            const targetTd = rows[p].children[d + 1]; // +1 because of TH
+                            if (targetTd) targetTd.classList.add('feasible-cell');
+                        }
+                    }
+                }
+            }
+        }
+
+        function clearSuggestions() {
+            document.querySelectorAll('.feasible-cell').forEach(el => el.classList.remove('feasible-cell'));
+        }
+
+        // Hide suggestions when clicking outside table
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.schedule-table')) {
+                clearSuggestions();
+            }
         });
     </script>
 </body>

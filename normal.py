@@ -380,6 +380,7 @@ def run_scheduler(config=None):
     solver = cp_model.CpSolver()
     # 增加一点求解时间以应对更复杂的优化目标
     solver.parameters.max_time_in_seconds = 20 
+    solver.parameters.num_search_workers = 8 # 启用多线程求解 
     status = solver.Solve(model)
     logger.info(f"Solver status: {solver.StatusName(status)}")
 
