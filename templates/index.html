@@ -16,7 +16,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
             z-index: 9999;
@@ -132,7 +132,8 @@
     <!-- 开屏动画 -->
     <div id="splash-screen">
         <div class="splash-content">
-            <i class="bi bi-calendar-check-fill splash-icon"></i>
+            <img src="/static/splash_logo.png" alt="Logo" class="splash-icon"
+                style="height: 266px; width: auto; animation: bounce 2.5s infinite;">
             <div class="splash-title">得鹿山智能排课系统</div>
             <div class="splash-subtitle">Smart Scheduling System</div>
             <div class="loader"></div>
@@ -143,9 +144,12 @@
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-3 sidebar">
-                <h4 class="mb-4 text-primary fw-bold">
-                    <i class="bi bi-calendar-check-fill me-2"></i>得鹿山智能排课系统
-                </h4>
+                <div class="d-flex flex-column align-items-center mb-4 text-center">
+                    <img src="/static/logo.png" alt="Logo" style="height: 100px; margin-bottom: 12px;">
+                    <h4 class="text-primary fw-bold mb-0">
+                        得鹿山智能排课系统
+                    </h4>
+                </div>
 
                 <div class="d-flex gap-2 mb-4">
                     <button id="btn-init" class="btn btn-primary flex-grow-1 py-2 shadow-sm" onclick="initSystem()">

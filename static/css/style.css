@@ -1,8 +1,8 @@
 :root {
-    --primary-color: #4f46e5;
-    /* Indigo 600 */
-    --primary-hover: #4338ca;
-    /* Indigo 700 */
+    --primary-color: #2563eb;
+    /* Blue 600 */
+    --primary-hover: #1d4ed8;
+    /* Blue 700 */
     --secondary-color: #64748b;
     /* Slate 500 */
     --success-color: #10b981;
