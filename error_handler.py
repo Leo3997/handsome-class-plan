@@ -41,7 +41,7 @@ def analyze_failure(config):
     courses = config.get('courses', {})
     
     total_hours = sum(courses.values())
-    max_capacity = 30  # 一周5天x6节课
+    max_capacity = 45  # 一周5天x9节课 (修正：原为30)
     
     suggestions = []
     error_type = "unknown"
@@ -79,10 +79,11 @@ def analyze_failure(config):
             
         required_teachers = (num_classes + max_classes_per_teacher - 1) // max_classes_per_teacher
         
-        if provided_teachers > 0 and provided_teachers < required_teachers:
-            error_type = "insufficient_teachers"
-            message = f"{subject}老师不足"
-            suggestions.append(f"「{subject}」需要至少 {required_teachers} 位老师，当前只提供了 {provided_teachers} 位")
+        # if provided_teachers > 0 and provided_teachers < required_teachers:
+        #     error_type = "insufficient_teachers"
+        #     message = f"{subject}老师不足"
+        #     suggestions.append(f"「{subject}」需要至少 {required_teachers} 位老师，当前只提供了 {provided_teachers} 位")
+        pass
     
     # 检查3：每日课程均衡性
     for subject, count in courses.items():

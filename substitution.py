@@ -1,4 +1,7 @@
 import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class SwapCandidate:
@@ -32,6 +35,7 @@ class SubstitutionSystem:
         self.days = solver_result['days'] # 5
         self.periods = solver_result['periods'] # 6
         self.courses = solver_result['courses']
+        self.resources = solver_result.get('resources', [])
         
         self.final_schedule = {} 
         self.teacher_busy = set()
@@ -42,6 +46,15 @@ class SubstitutionSystem:
         self.subject_teachers = {}
         for t in self.teachers_db:
             self.subject_teachers.setdefault(t['subject'], []).append(t['id'])
+            
+        # 构建 subject -> resource_name room map
+        self.subj_room_map = {}
+        for res in self.resources:
+            targets = res.get('subjects', [])
+            if isinstance(targets, str):
+                targets = [s.strip() for s in targets.replace('，', ',').split(',') if s.strip()]
+            for s in targets:
+                self.subj_room_map[s] = res.get('name', '')
 
         self._parse_original_schedule()
 
@@ -54,12 +67,26 @@ class SubstitutionSystem:
                             tid = self.class_teacher_map.get((c, subj))
                             tname = self.id_to_name.get(tid, "Unknown")
                             
-                            self.final_schedule[(c, d, p)] = {
+                            # 获取课程类型
+                            course_config = self.courses.get(subj, {})
+                            if isinstance(course_config, dict):
+                                course_type = course_config.get("type", "minor")
+                            else:
+                                # 旧格式兼容
+                                course_type = "main" if course_config >= 5 else "minor"
+                            
+                            entry = {
                                 "subject": subj,
                                 "teacher_id": tid,
                                 "teacher_name": tname,
-                                "is_sub": False
+                                "is_sub": False,
+                                "course_type": course_type
                             }
+                            # Add room info if valid
+                            if subj in self.subj_room_map:
+                                entry['room'] = self.subj_room_map[subj]
+                                
+                            self.final_schedule[(c, d, p)] = entry
                             self.teacher_busy.add((tid, d, p))
                             break
 
@@ -117,7 +144,7 @@ class SubstitutionSystem:
                     best_swap = self._select_best_swap(swap_candidates)
                     self._execute_swap(best_swap, d, p, c, original_tid, all_leave_tids)
                     stats['swap'] += 1
-                    print(f"✓ 课程互换: {self.id_to_name[best_swap.substitute_tid]} "
+                    logger.info(f"✓ 课程互换: {self.id_to_name[best_swap.substitute_tid]} "
                           f"周{d+1}第{p+1}节去{c}班代课, "
                           f"原课调至周{best_swap.swap_day+1}第{best_swap.swap_period+1}节")
                     continue  # 成功，处理下一个
@@ -126,14 +153,11 @@ class SubstitutionSystem:
                 self.final_schedule[(c, d, p)]['teacher_name'] = "【自习】"
                 self.final_schedule[(c, d, p)]['is_sub'] = True
                 stats['self_study'] += 1
-                print(f"✗ 无法安排代课: {c}班 周{d+1}第{p+1}节 标记为自习")
+                logger.info(f"✗ 无法安排代课: {c}班 周{d+1}第{p+1}节 标记为自习")
         
         # 输出统计信息
-        print(f"\n📊 代课统计:")
-        print(f"  - 直接代课: {stats['direct']}次")
-        print(f"  - 课程互换: {stats['swap']}次")
-        print(f"  - 标记自习: {stats['self_study']}次")
-        print(f"  - 总扰动度: {stats['direct'] * 0 + stats['swap'] * 1 + stats['self_study'] * 999}分")
+        logger.info(f"代课统计: 直接代课: {stats['direct']}次, 课程互换: {stats['swap']}次, 标记自习: {stats['self_study']}次")
+        logger.info(f"总扰动度: {stats['direct'] * 0 + stats['swap'] * 1 + stats['self_study'] * 999}分")
         
         return stats
 
@@ -293,12 +317,25 @@ class SubstitutionSystem:
         
         # 步骤2: 代课老师原课程移到新时段
         # 创建新的课程记录
-        self.final_schedule[(swap.substitute_class, swap.swap_day, swap.swap_period)] = {
+        new_entry = {
             "subject": swap.subject,
             "teacher_id": swap.substitute_tid,
             "teacher_name": self.id_to_name[swap.substitute_tid],
             "is_sub": True  # 标记为调整过的课程
         }
+        
+        # 添加课程类型
+        course_config = self.courses.get(swap.subject, {})
+        if isinstance(course_config, dict):
+            new_entry["course_type"] = course_config.get("type", "minor")
+        else:
+            new_entry["course_type"] = "main" if course_config >= 5 else "minor"
+        
+        # 添加教室信息
+        if swap.subject in self.subj_room_map:
+            new_entry['room'] = self.subj_room_map[swap.subject]
+            
+        self.final_schedule[(swap.substitute_class, swap.swap_day, swap.swap_period)] = new_entry
         self.teacher_busy.add((swap.substitute_tid, swap.swap_day, swap.swap_period))
         
         # 步骤3: 从原时段移除代课老师的课程

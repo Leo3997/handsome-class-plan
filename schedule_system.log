@@ -469,3 +469,1283 @@ TypeError: object of type 'int' has no len()
 2026-01-05 09:41:20,281 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
 2026-01-05 09:41:20,285 - INFO - 127.0.0.1 - - [05/Jan/2026 09:41:20] "POST /api/init HTTP/1.1" 200 -
 2026-01-05 09:41:24,339 - INFO - 127.0.0.1 - - [05/Jan/2026 09:41:24] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 10:04:44,951 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 10:04:45,091 - INFO -  * Restarting with stat
+2026-01-05 10:04:46,611 - WARNING -  * Debugger is active!
+2026-01-05 10:04:46,621 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:06:34,369 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:06:34,369 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:06:34,372 - INFO -  * Restarting with stat
+2026-01-05 10:06:35,853 - WARNING -  * Debugger is active!
+2026-01-05 10:06:35,863 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 10:07:45,692 - INFO - 接收到排课请求 - 班级数: 4, 科目数: 0
+2026-01-05 10:07:45,692 - INFO - 自定义老师科目: []
+2026-01-05 10:07:46,140 - INFO - 排课成功 - 生成 4 个班级的课表，共 12 位老师
+2026-01-05 10:07:46,144 - INFO - 127.0.0.1 - - [05/Jan/2026 10:07:46] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:08:28,659 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET / HTTP/1.1" 200 -
+2026-01-05 10:08:28,678 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 10:08:28,918 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 10:08:28,997 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 10:08:28,998 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 10:08:28,999 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:28] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 10:08:29,339 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:29] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 10:08:30,561 - INFO - 127.0.0.1 - - [05/Jan/2026 10:08:30] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:12:26,395 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 10:12:26,519 - INFO -  * Restarting with stat
+2026-01-05 10:12:28,400 - WARNING -  * Debugger is active!
+2026-01-05 10:12:28,414 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 10:14:25,221 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:14:25,221 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:14:25,224 - INFO -  * Restarting with stat
+2026-01-05 10:14:26,821 - WARNING -  * Debugger is active!
+2026-01-05 10:14:26,836 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 10:14:27,088 - INFO - 接收到排课请求 - 班级数: 4, 科目数: 2
+2026-01-05 10:14:27,088 - INFO - 自定义老师科目: []
+2026-01-05 10:14:27,188 - INFO - 排课成功 - 生成 4 个班级的课表，共 3 位老师
+2026-01-05 10:14:27,190 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:27] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:14:56,096 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "GET / HTTP/1.1" 200 -
+2026-01-05 10:14:56,116 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:14:56,331 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:14:56,420 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:14:56,422 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:14:56,422 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:14:56,765 - INFO - 127.0.0.1 - - [05/Jan/2026 10:14:56] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:15:59,575 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:15:59,575 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:16:00,113 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:16:00,117 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:00] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:16:35,201 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:16:35,201 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:16:35,203 - INFO -  * Restarting with stat
+2026-01-05 10:16:36,631 - WARNING -  * Debugger is active!
+2026-01-05 10:16:36,643 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:16:44,151 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:16:44,151 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:16:44,153 - INFO -  * Restarting with stat
+2026-01-05 10:16:45,647 - WARNING -  * Debugger is active!
+2026-01-05 10:16:45,660 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:16:46,593 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "GET / HTTP/1.1" 200 -
+2026-01-05 10:16:46,903 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:16:46,921 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:16:46,922 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:16:46,922 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:16:46,923 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:46] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:16:47,259 - INFO - 127.0.0.1 - - [05/Jan/2026 10:16:47] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:19:05,732 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:05] "GET / HTTP/1.1" 200 -
+2026-01-05 10:19:05,753 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:05] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:19:05,984 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:05] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:19:06,063 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:06] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:19:06,064 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:06] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:19:06,064 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:06] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:19:06,410 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:06] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:19:07,619 - INFO - 127.0.0.1 - - [05/Jan/2026 10:19:07] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:20:35,301 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:20:35,301 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:20:35,864 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:20:35,868 - INFO - 127.0.0.1 - - [05/Jan/2026 10:20:35] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:25:48,099 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:25:48,099 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:25:48,101 - INFO -  * Restarting with stat
+2026-01-05 10:25:49,552 - WARNING -  * Debugger is active!
+2026-01-05 10:25:49,561 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:25:49,769 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:49] "GET / HTTP/1.1" 200 -
+2026-01-05 10:25:49,788 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:49] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 10:25:49,789 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:49] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 10:25:50,100 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:50] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 10:25:50,114 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:50] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 10:25:50,115 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:50] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 10:25:50,488 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:50] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 10:25:51,717 - INFO - 127.0.0.1 - - [05/Jan/2026 10:25:51] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:26:08,874 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:26:08,874 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:26:09,519 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:26:09,522 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:09] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:26:16,122 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:16] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 10:26:50,567 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:50] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 10:26:54,031 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:54] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 10:26:59,190 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "GET / HTTP/1.1" 200 -
+2026-01-05 10:26:59,211 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:26:59,440 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:26:59,519 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:26:59,521 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:26:59,521 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:26:59,844 - INFO - 127.0.0.1 - - [05/Jan/2026 10:26:59] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:27:00,110 - INFO - 127.0.0.1 - - [05/Jan/2026 10:27:00] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:28:23,569 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 10:28:23,663 - INFO -  * Restarting with stat
+2026-01-05 10:28:25,093 - WARNING -  * Debugger is active!
+2026-01-05 10:28:25,105 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:28:32,553 - INFO -  * Detected change in 'f:\\schedule_system\\substitution.py', reloading
+2026-01-05 10:28:32,662 - INFO -  * Restarting with stat
+2026-01-05 10:28:34,100 - WARNING -  * Debugger is active!
+2026-01-05 10:28:34,110 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:29:01,371 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:29:01,371 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:29:01,374 - INFO -  * Restarting with stat
+2026-01-05 10:29:02,800 - WARNING -  * Debugger is active!
+2026-01-05 10:29:02,815 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:29:04,499 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "GET / HTTP/1.1" 200 -
+2026-01-05 10:29:04,516 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:29:04,750 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:29:04,829 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:29:04,831 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:29:04,833 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:04] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:29:05,156 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:05] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:29:05,421 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:05] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:29:06,381 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:29:06,382 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:29:06,966 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:29:06,971 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:06] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:29:13,643 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:13] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 10:29:20,988 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:20] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 10:29:59,102 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:29:59,102 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:29:59,746 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:29:59,750 - INFO - 127.0.0.1 - - [05/Jan/2026 10:29:59] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:31:26,318 - INFO -  * Detected change in 'f:\\schedule_system\\app.py', reloading
+2026-01-05 10:31:26,419 - INFO -  * Restarting with stat
+2026-01-05 10:31:27,937 - WARNING -  * Debugger is active!
+2026-01-05 10:31:27,949 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:33:33,869 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 10:33:33,869 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 10:33:33,873 - INFO -  * Restarting with stat
+2026-01-05 10:33:35,413 - WARNING -  * Debugger is active!
+2026-01-05 10:33:35,424 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 10:33:37,106 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "GET / HTTP/1.1" 200 -
+2026-01-05 10:33:37,126 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:33:37,360 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 10:33:37,438 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 10:33:37,439 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 10:33:37,440 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 10:33:37,811 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:37] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 10:33:39,052 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:39] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 10:33:41,819 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 10:33:41,819 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 10:33:42,403 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 10:33:42,410 - INFO - 127.0.0.1 - - [05/Jan/2026 10:33:42] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 10:36:23,485 - INFO - 127.0.0.1 - - [05/Jan/2026 10:36:23] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 10:46:10,793 - INFO - 接收到排课请求 - 班级数: 10, 科目数: 14
+2026-01-05 10:46:10,793 - INFO - 自定义老师科目: []
+2026-01-05 10:46:16,405 - INFO - 排课成功 - 生成 10 个班级的课表，共 39 位老师
+2026-01-05 10:46:16,416 - INFO - 127.0.0.1 - - [05/Jan/2026 10:46:16] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:04:04,986 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 11:04:04,987 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 11:04:04,988 - INFO -  * Restarting with stat
+2026-01-05 11:04:06,440 - WARNING -  * Debugger is active!
+2026-01-05 11:04:06,451 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 11:05:55,454 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET / HTTP/1.1" 200 -
+2026-01-05 11:05:55,474 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 11:05:55,482 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 11:05:55,482 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 11:05:55,482 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 11:05:55,482 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 11:05:55,577 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:55] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 11:05:57,278 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:57] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:05:57,290 - INFO - 127.0.0.1 - - [05/Jan/2026 11:05:57] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 11:06:48,697 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 11:06:48,697 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:06:49,561 - INFO - 排课成功 - 生成 6 个班级的课表,共 14 位老师
+2026-01-05 11:06:49,566 - INFO - 127.0.0.1 - - [05/Jan/2026 11:06:49] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:15:14,417 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "GET / HTTP/1.1" 200 -
+2026-01-05 11:15:14,431 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:15:14,437 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:15:14,438 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:15:14,442 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:15:14,445 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:15:14,489 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:14] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:15:15,816 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:15] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:15:17,038 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 11:15:17,038 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:15:17,710 - WARNING - 排课失败 - insufficient_teachers: 数学老师不足
+2026-01-05 11:15:17,710 - INFO - 127.0.0.1 - - [05/Jan/2026 11:15:17] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:18:22,601 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:18:22,601 - INFO - 自定义老师科目: []
+2026-01-05 11:18:23,994 - ERROR - 排课异常: unsupported operand type(s) for +: 'int' and 'dict'
+Traceback (most recent call last):
+  File "F:\schedule_system\app.py", line 95, in init_schedule
+    error_analysis = analyze_failure(config)
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\schedule_system\error_handler.py", line 43, in analyze_failure
+    total_hours = sum(courses.values())
+                  ^^^^^^^^^^^^^^^^^^^^^
+TypeError: unsupported operand type(s) for +: 'int' and 'dict'
+2026-01-05 11:18:24,038 - INFO - 127.0.0.1 - - [05/Jan/2026 11:18:24] "[35m[1mPOST /api/init HTTP/1.1[0m" 500 -
+2026-01-05 11:18:27,649 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:18:27,650 - INFO - 自定义老师科目: []
+2026-01-05 11:18:29,038 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 11:18:29,039 - INFO - 127.0.0.1 - - [05/Jan/2026 11:18:29] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:18:40,036 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:18:40,036 - INFO - 自定义老师科目: []
+2026-01-05 11:18:41,380 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 11:18:41,381 - INFO - 127.0.0.1 - - [05/Jan/2026 11:18:41] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:21:36,503 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:21:36,503 - INFO - 自定义老师科目: []
+2026-01-05 11:21:37,868 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 11:21:37,868 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:37] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:21:39,303 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:21:39,303 - INFO - 自定义老师科目: []
+2026-01-05 11:21:40,719 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 11:21:40,719 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:40] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:21:43,193 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:21:43,193 - INFO - 自定义老师科目: []
+2026-01-05 11:21:44,605 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 11:21:44,605 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:44] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:21:47,050 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "GET / HTTP/1.1" 200 -
+2026-01-05 11:21:47,078 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:21:47,085 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:21:47,088 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:21:47,088 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:21:47,091 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:21:47,128 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:47] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:21:48,491 - INFO - 127.0.0.1 - - [05/Jan/2026 11:21:48] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:24:11,126 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:24:11,127 - INFO - 自定义老师科目: []
+2026-01-05 11:24:12,815 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:24:12,820 - INFO - 127.0.0.1 - - [05/Jan/2026 11:24:12] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:30:09,790 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "GET / HTTP/1.1" 200 -
+2026-01-05 11:30:09,812 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:30:09,814 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:30:09,815 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:30:09,822 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:30:09,824 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:30:09,874 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:09] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:30:10,988 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:10] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:30:11,866 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:30:11,867 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:30:13,255 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 11:30:13,255 - INFO - 127.0.0.1 - - [05/Jan/2026 11:30:13] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:31:09,527 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:31:09,527 - INFO - 自定义老师科目: []
+2026-01-05 11:31:11,583 - INFO - 排课成功 - 生成 6 个班级的课表,共 31 位老师
+2026-01-05 11:31:11,591 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:11] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:31:15,069 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:15] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 11:31:17,243 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:17] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 11:31:18,149 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:18] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 11:31:18,874 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:18] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 11:31:22,761 - INFO - 127.0.0.1 - - [05/Jan/2026 11:31:22] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 11:32:05,724 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:05] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 11:32:06,978 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:06] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 11:32:40,585 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 11:32:40,585 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 11:32:40,588 - INFO -  * Restarting with stat
+2026-01-05 11:32:42,097 - WARNING -  * Debugger is active!
+2026-01-05 11:32:42,113 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 11:32:44,282 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "GET / HTTP/1.1" 200 -
+2026-01-05 11:32:44,302 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:32:44,309 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:32:44,309 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:32:44,311 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:32:44,315 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:32:44,343 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:44] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:32:45,442 - INFO - 127.0.0.1 - - [05/Jan/2026 11:32:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:33:11,947 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:33:11,947 - INFO - 自定义老师科目: []
+2026-01-05 11:33:13,834 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:33:13,841 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:13] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:33:43,245 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "GET / HTTP/1.1" 200 -
+2026-01-05 11:33:43,263 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:33:43,268 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:33:43,271 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:33:43,275 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:33:43,276 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:33:43,356 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:43] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:33:45,046 - INFO - 127.0.0.1 - - [05/Jan/2026 11:33:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:34:23,779 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:34:23,780 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:34:25,246 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 11:34:25,247 - INFO - 127.0.0.1 - - [05/Jan/2026 11:34:25] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:36:15,278 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:36:15,278 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:36:17,032 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:36:17,040 - INFO - 127.0.0.1 - - [05/Jan/2026 11:36:17] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:38:52,703 - INFO - 接收到排课请求 - 班级数: None, 科目数: 4
+2026-01-05 11:38:52,703 - INFO - 自定义老师科目: []
+2026-01-05 11:38:52,703 - ERROR - 排课异常: 'list' object has no attribute 'items'
+Traceback (most recent call last):
+  File "F:\schedule_system\app.py", line 91, in init_schedule
+    result = normal.run_scheduler(config)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "F:\schedule_system\normal.py", line 112, in run_scheduler
+    for subj, course_config in COURSE_REQUIREMENTS.items():
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'items'
+2026-01-05 11:38:52,736 - INFO - 127.0.0.1 - - [05/Jan/2026 11:38:52] "[35m[1mPOST /api/init HTTP/1.1[0m" 500 -
+2026-01-05 11:41:13,533 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:41:13,534 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:41:15,164 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:41:15,174 - INFO - 127.0.0.1 - - [05/Jan/2026 11:41:15] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:41:52,965 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:41:52,965 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 11:41:54,436 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 11:41:54,437 - INFO - 127.0.0.1 - - [05/Jan/2026 11:41:54] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 11:43:02,510 - INFO -  * Detected change in 'F:\\schedule_system\\substitution.py', reloading
+2026-01-05 11:43:02,573 - INFO -  * Detected change in 'f:\\schedule_system\\substitution.py', reloading
+2026-01-05 11:43:02,644 - INFO -  * Restarting with stat
+2026-01-05 11:43:02,697 - INFO -  * Restarting with stat
+2026-01-05 11:43:04,405 - WARNING -  * Debugger is active!
+2026-01-05 11:43:04,416 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 11:43:04,442 - WARNING -  * Debugger is active!
+2026-01-05 11:43:04,452 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 11:45:42,952 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 11:45:42,952 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 11:45:42,955 - INFO -  * Restarting with stat
+2026-01-05 11:45:44,386 - WARNING -  * Debugger is active!
+2026-01-05 11:45:44,397 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 11:45:45,829 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET / HTTP/1.1" 200 -
+2026-01-05 11:45:45,849 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 11:45:45,854 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 11:45:45,863 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 11:45:45,873 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 11:45:45,874 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 11:45:45,956 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:45] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 11:45:47,478 - INFO - 127.0.0.1 - - [05/Jan/2026 11:45:47] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:48:03,718 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "GET / HTTP/1.1" 200 -
+2026-01-05 11:48:03,740 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:48:03,751 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 11:48:03,752 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 11:48:03,753 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 11:48:03,755 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 11:48:03,835 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:03] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 11:48:05,265 - INFO - 127.0.0.1 - - [05/Jan/2026 11:48:05] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 11:50:14,878 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:50:14,878 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+2026-01-05 11:50:16,508 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:50:16,516 - INFO - 127.0.0.1 - - [05/Jan/2026 11:50:16] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:52:45,790 - INFO - 127.0.0.1 - - [05/Jan/2026 11:52:45] "[31m[1mGET /api/init HTTP/1.1[0m" 405 -
+2026-01-05 11:56:38,540 - INFO - 127.0.0.1 - - [05/Jan/2026 11:56:38] "GET / HTTP/1.1" 200 -
+2026-01-05 11:57:53,453 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:57:53,453 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+2026-01-05 11:57:55,113 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:57:55,120 - INFO - 127.0.0.1 - - [05/Jan/2026 11:57:55] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 11:58:31,662 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 11:58:31,662 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+2026-01-05 11:58:33,392 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 11:58:33,398 - INFO - 127.0.0.1 - - [05/Jan/2026 11:58:33] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 12:04:02,663 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 12:04:02,663 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治']
+2026-01-05 12:04:04,546 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 12:04:04,553 - INFO - 127.0.0.1 - - [05/Jan/2026 12:04:04] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 12:05:28,975 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:28] "GET / HTTP/1.1" 200 -
+2026-01-05 12:05:28,996 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:28] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 12:05:29,002 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:29] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 12:05:29,002 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 12:05:29,005 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:29] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 12:05:29,009 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:29] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 12:05:29,103 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:29] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 12:05:30,573 - INFO - 127.0.0.1 - - [05/Jan/2026 12:05:30] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 12:09:26,884 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 12:09:26,884 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 12:09:28,860 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 12:09:28,869 - INFO - 127.0.0.1 - - [05/Jan/2026 12:09:28] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 12:26:21,203 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "GET / HTTP/1.1" 200 -
+2026-01-05 12:26:21,226 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 12:26:21,235 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 12:26:21,240 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 12:26:21,241 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 12:26:21,243 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 12:26:21,368 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:21] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 12:26:23,253 - INFO - 127.0.0.1 - - [05/Jan/2026 12:26:23] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 12:27:41,988 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 12:27:41,988 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 12:27:44,114 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 12:27:44,121 - INFO - 127.0.0.1 - - [05/Jan/2026 12:27:44] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:10:52,519 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 13:10:52,519 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 13:10:52,521 - INFO -  * Restarting with stat
+2026-01-05 13:10:54,015 - WARNING -  * Debugger is active!
+2026-01-05 13:10:54,024 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:11:08,747 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "GET / HTTP/1.1" 200 -
+2026-01-05 13:11:08,771 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:11:08,776 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:11:08,780 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:11:08,780 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:11:08,785 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:11:08,881 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:08] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:11:10,685 - INFO - 127.0.0.1 - - [05/Jan/2026 13:11:10] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:12:06,927 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:12:06,928 - INFO - 自定义老师科目: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 13:12:09,133 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:12:09,140 - INFO - 127.0.0.1 - - [05/Jan/2026 13:12:09] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:25:28,498 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:25:28,657 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:25:28,682 - INFO -  * Restarting with stat
+2026-01-05 13:25:28,802 - INFO -  * Restarting with stat
+2026-01-05 13:25:30,530 - WARNING -  * Debugger is active!
+2026-01-05 13:25:30,540 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:25:30,596 - WARNING -  * Debugger is active!
+2026-01-05 13:25:30,607 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:26:32,039 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:26:32,139 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:26:32,157 - INFO -  * Restarting with stat
+2026-01-05 13:26:32,249 - INFO -  * Restarting with stat
+2026-01-05 13:26:33,697 - WARNING -  * Debugger is active!
+2026-01-05 13:26:33,709 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:26:33,769 - WARNING -  * Debugger is active!
+2026-01-05 13:26:33,785 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:27:30,630 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:27:30,669 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:27:30,757 - INFO -  * Restarting with stat
+2026-01-05 13:27:30,811 - INFO -  * Restarting with stat
+2026-01-05 13:27:32,350 - WARNING -  * Debugger is active!
+2026-01-05 13:27:32,362 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:27:32,385 - WARNING -  * Debugger is active!
+2026-01-05 13:27:32,399 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:28:22,344 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:28:22,402 - INFO -  * Detected change in 'f:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:28:22,459 - INFO -  * Restarting with stat
+2026-01-05 13:28:22,520 - INFO -  * Restarting with stat
+2026-01-05 13:28:24,090 - WARNING -  * Debugger is active!
+2026-01-05 13:28:24,102 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:28:24,133 - WARNING -  * Debugger is active!
+2026-01-05 13:28:24,145 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:28:47,286 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:28:47,366 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:28:47,398 - INFO -  * Restarting with stat
+2026-01-05 13:28:47,475 - INFO -  * Restarting with stat
+2026-01-05 13:28:48,954 - WARNING -  * Debugger is active!
+2026-01-05 13:28:48,964 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:28:49,014 - WARNING -  * Debugger is active!
+2026-01-05 13:28:49,035 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:30:00,051 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 13:30:00,051 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 13:30:00,053 - INFO -  * Restarting with stat
+2026-01-05 13:30:01,484 - WARNING -  * Debugger is active!
+2026-01-05 13:30:01,493 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:30:03,096 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET / HTTP/1.1" 200 -
+2026-01-05 13:30:03,118 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 13:30:03,124 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 13:30:03,127 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 13:30:03,127 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 13:30:03,130 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 13:30:03,191 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:03] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 13:30:04,345 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:04] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:30:09,740 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:30:09,740 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:30:11,390 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:30:11,397 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:11] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:30:25,074 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:25] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 13:30:31,312 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:31] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 13:30:33,283 - INFO - 127.0.0.1 - - [05/Jan/2026 13:30:33] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-05 13:37:55,665 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:37:55,769 - INFO -  * Restarting with stat
+2026-01-05 13:37:57,258 - WARNING -  * Debugger is active!
+2026-01-05 13:37:57,271 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:38:42,705 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:38:42,800 - INFO -  * Restarting with stat
+2026-01-05 13:38:44,242 - WARNING -  * Debugger is active!
+2026-01-05 13:38:44,253 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:39:13,036 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:39:13,132 - INFO -  * Restarting with stat
+2026-01-05 13:39:14,578 - WARNING -  * Debugger is active!
+2026-01-05 13:39:14,593 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:40:02,392 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:40:02,487 - INFO -  * Restarting with stat
+2026-01-05 13:40:03,973 - WARNING -  * Debugger is active!
+2026-01-05 13:40:03,985 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:40:46,993 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:40:47,099 - INFO -  * Restarting with stat
+2026-01-05 13:40:48,551 - WARNING -  * Debugger is active!
+2026-01-05 13:40:48,564 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:41:24,549 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:41:24,643 - INFO -  * Restarting with stat
+2026-01-05 13:41:26,093 - WARNING -  * Debugger is active!
+2026-01-05 13:41:26,103 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:41:37,073 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:41:37,173 - INFO -  * Restarting with stat
+2026-01-05 13:41:38,660 - WARNING -  * Debugger is active!
+2026-01-05 13:41:38,671 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:42:03,974 - INFO -  * Detected change in 'F:\\schedule_system\\test_resources.py', reloading
+2026-01-05 13:42:04,074 - INFO -  * Restarting with stat
+2026-01-05 13:42:05,575 - WARNING -  * Debugger is active!
+2026-01-05 13:42:05,590 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:43:07,453 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 13:43:07,453 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 13:43:07,455 - INFO -  * Restarting with stat
+2026-01-05 13:43:09,110 - WARNING -  * Debugger is active!
+2026-01-05 13:43:09,125 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:43:09,714 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "GET / HTTP/1.1" 200 -
+2026-01-05 13:43:09,732 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:43:09,737 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:43:09,738 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:43:09,741 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:43:09,742 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:43:09,776 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:09] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:43:11,105 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:43:11,105 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:43:11,253 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:11] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:43:12,579 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 13:43:12,579 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:12] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:43:17,864 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:43:17,864 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:43:19,744 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:43:19,752 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:19] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:43:53,272 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:43:53,272 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:43:54,987 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:43:54,997 - INFO - 127.0.0.1 - - [05/Jan/2026 13:43:54] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:44:11,383 - INFO - 接收到排课请求 - 班级数: 10, 科目数: 13
+2026-01-05 13:44:11,383 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:44:15,263 - INFO - 排课成功 - 生成 10 个班级的课表,共 44 位老师
+2026-01-05 13:44:15,276 - INFO - 127.0.0.1 - - [05/Jan/2026 13:44:15] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:49:16,232 - INFO -  * Detected change in 'F:\\schedule_system\\storage.py', reloading
+2026-01-05 13:49:16,351 - INFO -  * Restarting with stat
+2026-01-05 13:49:17,154 - INFO -  * Detected change in 'f:\\schedule_system\\storage.py', reloading
+2026-01-05 13:49:17,261 - INFO -  * Restarting with stat
+2026-01-05 13:49:17,860 - WARNING -  * Debugger is active!
+2026-01-05 13:49:17,871 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:49:18,282 - INFO -  * Detected change in 'F:\\schedule_system\\storage.py', reloading
+2026-01-05 13:49:18,400 - INFO -  * Restarting with stat
+2026-01-05 13:49:18,855 - WARNING -  * Debugger is active!
+2026-01-05 13:49:18,867 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:49:19,852 - WARNING -  * Debugger is active!
+2026-01-05 13:49:19,862 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:49:22,608 - INFO -  * Detected change in 'F:\\schedule_system\\substitution.py', reloading
+2026-01-05 13:49:22,703 - INFO -  * Restarting with stat
+2026-01-05 13:49:22,785 - INFO -  * Detected change in 'f:\\schedule_system\\substitution.py', reloading
+2026-01-05 13:49:22,887 - INFO -  * Restarting with stat
+2026-01-05 13:49:24,250 - WARNING -  * Debugger is active!
+2026-01-05 13:49:24,260 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:49:24,426 - WARNING -  * Debugger is active!
+2026-01-05 13:49:24,438 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:50:10,608 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "GET / HTTP/1.1" 200 -
+2026-01-05 13:50:10,622 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:50:10,628 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:50:10,630 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:50:10,630 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:50:10,633 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:50:10,676 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:10] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:50:11,998 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:50:11,998 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:50:12,143 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:12] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:50:13,475 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 13:50:13,475 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:13] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:50:16,426 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:50:16,427 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:50:17,902 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 13:50:17,903 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:17] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:50:20,871 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:50:20,871 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:50:22,299 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 13:50:22,301 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:22] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:50:26,390 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:50:26,390 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:50:28,163 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:50:28,170 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:28] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:50:35,467 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:35] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:50:37,532 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:37] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:50:38,687 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:38] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:50:43,080 - INFO - 代课处理完成 - 直接代课:0次, 互换:0次, 自习:0次
+2026-01-05 13:50:43,087 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:43] "POST /api/substitute HTTP/1.1" 200 -
+2026-01-05 13:50:48,234 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:48] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:50:49,490 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:49] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:50:53,712 - INFO - 127.0.0.1 - - [05/Jan/2026 13:50:53] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 13:53:25,769 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:53:25,890 - INFO -  * Restarting with stat
+2026-01-05 13:53:26,288 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:53:26,390 - INFO -  * Restarting with stat
+2026-01-05 13:53:27,431 - WARNING -  * Debugger is active!
+2026-01-05 13:53:27,447 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:53:27,914 - WARNING -  * Debugger is active!
+2026-01-05 13:53:27,926 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:53:40,524 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 13:53:40,526 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 13:53:40,528 - INFO -  * Restarting with stat
+2026-01-05 13:53:41,980 - WARNING -  * Debugger is active!
+2026-01-05 13:53:41,991 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:54:02,959 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "GET / HTTP/1.1" 200 -
+2026-01-05 13:54:02,974 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:54:02,980 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:54:02,981 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:54:02,982 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:54:02,986 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:02] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:54:03,016 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:03] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:54:03,125 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:03] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:54:03,819 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:54:03,819 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:54:05,272 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 13:54:05,274 - INFO - 127.0.0.1 - - [05/Jan/2026 13:54:05] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:55:17,396 - INFO -  * Detected change in 'f:\\schedule_system\\error_handler.py', reloading
+2026-01-05 13:55:17,526 - INFO -  * Restarting with stat
+2026-01-05 13:55:17,842 - INFO -  * Detected change in 'f:\\schedule_system\\error_handler.py', reloading
+2026-01-05 13:55:17,880 - INFO -  * Detected change in 'F:\\schedule_system\\error_handler.py', reloading
+2026-01-05 13:55:17,974 - INFO -  * Restarting with stat
+2026-01-05 13:55:18,023 - INFO -  * Restarting with stat
+2026-01-05 13:55:19,280 - WARNING -  * Debugger is active!
+2026-01-05 13:55:19,292 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:55:19,759 - WARNING -  * Debugger is active!
+2026-01-05 13:55:19,772 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:55:19,793 - WARNING -  * Debugger is active!
+2026-01-05 13:55:19,804 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:55:43,747 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "GET / HTTP/1.1" 200 -
+2026-01-05 13:55:43,768 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,774 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,776 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,782 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,783 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,810 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:55:43,922 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:43] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:55:44,850 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:55:44,850 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:55:46,305 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 13:55:46,306 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:46] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:55:53,956 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:55:53,957 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:55:55,759 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 13:55:55,766 - INFO - 127.0.0.1 - - [05/Jan/2026 13:55:55] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 13:56:09,838 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:56:09,838 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:56:11,320 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 13:56:11,320 - INFO - 127.0.0.1 - - [05/Jan/2026 13:56:11] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:58:30,748 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:58:30,759 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 13:58:30,914 - INFO -  * Restarting with stat
+2026-01-05 13:58:30,916 - INFO -  * Restarting with stat
+2026-01-05 13:58:31,398 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 13:58:31,528 - INFO -  * Restarting with stat
+2026-01-05 13:58:32,677 - WARNING -  * Debugger is active!
+2026-01-05 13:58:32,680 - WARNING -  * Debugger is active!
+2026-01-05 13:58:32,692 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:58:32,693 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 13:58:33,221 - WARNING -  * Debugger is active!
+2026-01-05 13:58:33,231 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 13:59:14,347 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:59:14,347 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:59:15,787 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 13:59:15,789 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:15] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:59:17,864 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "GET / HTTP/1.1" 200 -
+2026-01-05 13:59:17,879 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:59:17,885 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 13:59:17,887 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 13:59:17,887 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 13:59:17,891 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 13:59:17,916 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:17] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 13:59:18,030 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:18] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 13:59:18,637 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:59:18,637 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:59:20,132 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 13:59:20,132 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:20] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 13:59:30,759 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 13:59:30,759 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 13:59:32,197 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 13:59:32,197 - INFO - 127.0.0.1 - - [05/Jan/2026 13:59:32] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:00:24,592 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:00:24,592 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:00:26,024 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 14:00:26,026 - INFO - 127.0.0.1 - - [05/Jan/2026 14:00:26] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:01:50,779 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "GET / HTTP/1.1" 200 -
+2026-01-05 14:01:50,795 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,797 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,800 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,803 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,804 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,833 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:01:50,947 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:50] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:01:57,440 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:01:57,440 - INFO - 自定义老师科目: []
+2026-01-05 14:01:58,878 - WARNING - 排课失败 - constraint_too_tight: 约束条件过于严格，求解器无法找到可行方案
+2026-01-05 14:01:58,880 - INFO - 127.0.0.1 - - [05/Jan/2026 14:01:58] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:02:32,342 - INFO -  * Detected change in 'F:\\schedule_system\\error_handler.py', reloading
+2026-01-05 14:02:32,406 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 14:02:32,491 - INFO -  * Restarting with stat
+2026-01-05 14:02:32,552 - INFO -  * Restarting with stat
+2026-01-05 14:02:34,430 - WARNING -  * Debugger is active!
+2026-01-05 14:02:34,448 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:02:34,470 - WARNING -  * Debugger is active!
+2026-01-05 14:02:34,488 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:02:34,761 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "GET / HTTP/1.1" 200 -
+2026-01-05 14:02:34,776 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,782 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,785 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,790 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,793 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,830 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:02:34,979 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:34] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:02:36,833 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:02:36,833 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:02:38,375 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 14:02:38,376 - INFO - 127.0.0.1 - - [05/Jan/2026 14:02:38] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:04:02,095 - INFO -  * Detected change in 'F:\\schedule_system\\tests\\test_normal.py', reloading
+2026-01-05 14:04:02,107 - INFO -  * Detected change in 'f:\\schedule_system\\tests\\test_normal.py', reloading
+2026-01-05 14:04:02,233 - INFO -  * Restarting with stat
+2026-01-05 14:04:02,237 - INFO -  * Restarting with stat
+2026-01-05 14:04:04,018 - WARNING -  * Debugger is active!
+2026-01-05 14:04:04,020 - WARNING -  * Debugger is active!
+2026-01-05 14:04:04,028 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:04:04,032 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:04:16,842 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 14:04:16,859 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 14:04:16,953 - INFO -  * Restarting with stat
+2026-01-05 14:04:16,974 - INFO -  * Restarting with stat
+2026-01-05 14:04:18,580 - WARNING -  * Debugger is active!
+2026-01-05 14:04:18,591 - WARNING -  * Debugger is active!
+2026-01-05 14:04:18,592 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:04:18,602 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:04:33,473 - INFO -  * Detected change in 'f:\\schedule_system\\tests\\test_normal.py', reloading
+2026-01-05 14:04:33,538 - INFO -  * Detected change in 'F:\\schedule_system\\tests\\test_normal.py', reloading
+2026-01-05 14:04:33,601 - INFO -  * Restarting with stat
+2026-01-05 14:04:33,668 - INFO -  * Restarting with stat
+2026-01-05 14:04:35,123 - WARNING -  * Debugger is active!
+2026-01-05 14:04:35,133 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:04:35,174 - WARNING -  * Debugger is active!
+2026-01-05 14:04:35,184 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:05:07,632 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "GET / HTTP/1.1" 200 -
+2026-01-05 14:05:07,650 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,652 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,656 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,660 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,662 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,689 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:05:07,796 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:07] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:05:08,384 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:05:08,384 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:05:09,836 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 14:05:09,836 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:09] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:05:24,701 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 14:05:24,702 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 14:05:24,704 - INFO -  * Restarting with stat
+2026-01-05 14:05:26,320 - WARNING -  * Debugger is active!
+2026-01-05 14:05:26,334 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:05:26,736 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "GET / HTTP/1.1" 200 -
+2026-01-05 14:05:26,755 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,758 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,760 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,761 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,768 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,801 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:05:26,902 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:26] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:05:28,048 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:05:28,048 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:05:29,525 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 14:05:29,526 - INFO - 127.0.0.1 - - [05/Jan/2026 14:05:29] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:08:47,703 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 14:08:47,840 - INFO -  * Restarting with stat
+2026-01-05 14:08:48,771 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 14:08:48,898 - INFO -  * Restarting with stat
+2026-01-05 14:08:49,649 - WARNING -  * Debugger is active!
+2026-01-05 14:08:49,662 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:08:50,581 - WARNING -  * Debugger is active!
+2026-01-05 14:08:50,596 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:09:13,024 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:09:13,024 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:09:13,024 - INFO - Received config courses type: <class 'dict'>
+2026-01-05 14:09:13,024 - INFO - Teacher Names Config: {'语文': ['张伟', '李娜'], '数学': ['王军'], '英语': ['Miss', 'Li']}
+2026-01-05 14:09:13,024 - INFO - Generated 25 teachers.
+2026-01-05 14:09:14,553 - WARNING - 排课失败 - insufficient_teachers: 英语老师不足
+2026-01-05 14:09:14,554 - INFO - 127.0.0.1 - - [05/Jan/2026 14:09:14] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:10:02,685 - INFO -  * Detected change in 'F:\\schedule_system\\error_handler.py', reloading
+2026-01-05 14:10:02,808 - INFO -  * Restarting with stat
+2026-01-05 14:10:02,809 - INFO -  * Detected change in 'f:\\schedule_system\\error_handler.py', reloading
+2026-01-05 14:10:02,969 - INFO -  * Restarting with stat
+2026-01-05 14:10:04,584 - WARNING -  * Debugger is active!
+2026-01-05 14:10:04,594 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:10:04,682 - WARNING -  * Debugger is active!
+2026-01-05 14:10:04,696 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:10:13,382 - INFO -  * Detected change in 'F:\\schedule_system\\normal.py', reloading
+2026-01-05 14:10:13,446 - INFO -  * Detected change in 'f:\\schedule_system\\normal.py', reloading
+2026-01-05 14:10:13,557 - INFO -  * Restarting with stat
+2026-01-05 14:10:13,616 - INFO -  * Restarting with stat
+2026-01-05 14:10:15,097 - WARNING -  * Debugger is active!
+2026-01-05 14:10:15,107 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:10:15,150 - WARNING -  * Debugger is active!
+2026-01-05 14:10:15,161 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:10:23,018 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "GET / HTTP/1.1" 200 -
+2026-01-05 14:10:23,033 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:10:23,040 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:10:23,042 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:10:23,042 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:10:23,042 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:10:23,088 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:23] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:10:24,498 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:10:24,498 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:10:24,498 - INFO - Received config courses type: <class 'dict'>
+2026-01-05 14:10:24,498 - INFO - Teacher Names Config: {'语文': ['张伟', '李娜'], '数学': ['王军'], '英语': ['Miss', 'Li']}
+2026-01-05 14:10:24,498 - INFO - Generated 25 teachers.
+2026-01-05 14:10:24,635 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:24] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:10:26,102 - INFO - Solver status: INFEASIBLE
+2026-01-05 14:10:26,105 - WARNING - 排课失败 - schedule_overload: 总课时(45)超过每周容量(30)
+2026-01-05 14:10:26,105 - INFO - 127.0.0.1 - - [05/Jan/2026 14:10:26] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-05 14:11:08,961 - INFO -  * Detected change in 'f:\\schedule_system\\error_handler.py', reloading
+2026-01-05 14:11:08,966 - INFO -  * Detected change in 'F:\\schedule_system\\error_handler.py', reloading
+2026-01-05 14:11:09,073 - INFO -  * Restarting with stat
+2026-01-05 14:11:09,080 - INFO -  * Restarting with stat
+2026-01-05 14:11:10,987 - WARNING -  * Debugger is active!
+2026-01-05 14:11:10,987 - WARNING -  * Debugger is active!
+2026-01-05 14:11:10,998 - INFO -  * Debugger PIN: 373-090-368
+2026-01-05 14:11:10,998 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:16:47,005 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "GET / HTTP/1.1" 200 -
+2026-01-05 14:16:47,021 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:16:47,024 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:16:47,027 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:16:47,030 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:16:47,032 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:16:47,069 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:47] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:16:48,363 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:16:48,363 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:16:48,364 - INFO - Received config courses type: <class 'list'>
+2026-01-05 14:16:48,364 - INFO - List content (first 1): [{'name': '语文', 'count': 7, 'type': 'main', 'teachers': '张伟, 李娜'}]
+2026-01-05 14:16:48,364 - INFO - Converted courses dict keys: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 14:16:48,364 - INFO - Teacher Names Config: {'语文': ['张伟', '李娜'], '数学': ['王军'], '英语': ['Miss', 'Li']}
+2026-01-05 14:16:48,364 - INFO - Generated 32 teachers.
+2026-01-05 14:16:48,515 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:48] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:16:50,252 - INFO - Solver status: OPTIMAL
+2026-01-05 14:16:50,269 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 14:16:50,278 - INFO - 127.0.0.1 - - [05/Jan/2026 14:16:50] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 14:17:29,373 - INFO - 127.0.0.1 - - [05/Jan/2026 14:17:29] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 14:17:30,201 - INFO - 127.0.0.1 - - [05/Jan/2026 14:17:30] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 14:17:31,928 - INFO - 127.0.0.1 - - [05/Jan/2026 14:17:31] "[31m[1mPOST /api/schedule/move HTTP/1.1[0m" 400 -
+2026-01-05 14:18:01,179 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:01] "POST /api/save HTTP/1.1" 200 -
+2026-01-05 14:18:01,193 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:01] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:18:17,090 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "GET / HTTP/1.1" 200 -
+2026-01-05 14:18:17,105 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,112 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,114 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,115 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,116 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,144 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:18:17,253 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:17] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:18:26,143 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "GET / HTTP/1.1" 200 -
+2026-01-05 14:18:26,157 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,158 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,161 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,165 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,167 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,194 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:18:26,296 - INFO - 127.0.0.1 - - [05/Jan/2026 14:18:26] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:20:26,966 - INFO -  * Detected change in 'f:\\schedule_system\\app.py', reloading
+2026-01-05 14:20:27,061 - INFO -  * Restarting with stat
+2026-01-05 14:20:27,505 - INFO -  * Detected change in 'F:\\schedule_system\\app.py', reloading
+2026-01-05 14:20:27,635 - INFO -  * Restarting with stat
+2026-01-05 14:22:54,463 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 14:22:54,463 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 14:22:54,466 - INFO -  * Restarting with stat
+2026-01-05 14:22:56,010 - WARNING -  * Debugger is active!
+2026-01-05 14:22:56,020 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:23:16,014 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET / HTTP/1.1" 200 -
+2026-01-05 14:23:16,036 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 14:23:16,040 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 14:23:16,040 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 14:23:16,043 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 14:23:16,046 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 14:23:16,124 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:16] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 14:23:17,490 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:17] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:23:24,617 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:23:24,618 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:23:24,618 - INFO - Received config courses type: <class 'list'>
+2026-01-05 14:23:24,618 - INFO - List content (first 1): [{'name': '语文', 'count': 7, 'type': 'main', 'teachers': '张伟, 李娜'}]
+2026-01-05 14:23:24,618 - INFO - Converted courses dict keys: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 14:23:24,618 - INFO - Teacher Names Config: {'语文': ['张伟', '李娜'], '数学': ['王军'], '英语': ['Miss', 'Li']}
+2026-01-05 14:23:24,618 - INFO - Generated 32 teachers.
+2026-01-05 14:23:26,471 - INFO - Solver status: OPTIMAL
+2026-01-05 14:23:26,490 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 14:23:26,499 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:26] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 14:23:43,960 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:43] "POST /api/save HTTP/1.1" 200 -
+2026-01-05 14:23:43,971 - INFO - 127.0.0.1 - - [05/Jan/2026 14:23:43] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:24:10,259 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:24:10,261 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:24:10,264 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:24:10,278 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:24:10,818 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:24:10,820 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:24:10,838 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:10] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:24:23,063 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:23] "POST /api/save HTTP/1.1" 200 -
+2026-01-05 14:24:23,084 - INFO - 127.0.0.1 - - [05/Jan/2026 14:24:23] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:25:54,742 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET / HTTP/1.1" 200 -
+2026-01-05 14:25:54,766 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 14:25:54,767 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 14:25:54,769 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 14:25:54,771 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 14:25:54,772 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 14:25:54,866 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:54] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 14:25:56,214 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:56] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:25:56,219 - INFO - 127.0.0.1 - - [05/Jan/2026 14:25:56] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 14:27:46,252 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "GET / HTTP/1.1" 200 -
+2026-01-05 14:27:46,265 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,268 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,271 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,273 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,274 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,307 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:27:46,417 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:46] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:27:52,549 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:52] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:52,549 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:52] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:52,551 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:52] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:27:52,559 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:52] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:27:53,128 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:53] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:27:53,129 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:53] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:27:53,143 - INFO - 127.0.0.1 - - [05/Jan/2026 14:27:53] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:26,863 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "GET / HTTP/1.1" 200 -
+2026-01-05 14:29:26,879 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,882 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,887 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,889 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,892 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,916 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:29:26,949 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:26,964 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:26,985 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:29:26,988 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:26] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:27,711 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:27] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:29:56,090 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "GET / HTTP/1.1" 200 -
+2026-01-05 14:29:56,109 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:56,113 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:56,118 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:29:56,121 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:29:56,123 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:29:56,132 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:29:56,164 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:56,176 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:56,205 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:29:56,918 - INFO - 127.0.0.1 - - [05/Jan/2026 14:29:56] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:32:31,971 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:31] "GET / HTTP/1.1" 200 -
+2026-01-05 14:32:31,988 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:31] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:31,993 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:31] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:31,998 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:31] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:31,999 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:31] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:32,000 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:32,004 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:32:32,034 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:32:32,052 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:32:32,073 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:32:32,777 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:32] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:32:35,776 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:35] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:32:37,467 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:37] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:32:37,796 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:37] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:32:37,970 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:37] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:32:39,048 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:39] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:32:39,201 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:39] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:32:40,209 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:40] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:32:40,346 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:40] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:32:51,280 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 14:32:51,280 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 14:32:51,283 - INFO -  * Restarting with stat
+2026-01-05 14:32:52,811 - WARNING -  * Debugger is active!
+2026-01-05 14:32:52,827 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 14:32:54,166 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "GET / HTTP/1.1" 200 -
+2026-01-05 14:32:54,186 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:54,190 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:54,196 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:54,197 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:54,201 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:54,839 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:54] "GET / HTTP/1.1" 200 -
+2026-01-05 14:32:55,547 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:55,550 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:55,553 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:32:55,557 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:55,558 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:32:55,706 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:55] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:32:56,375 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:56] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:32:57,041 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:57] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:32:57,223 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:57] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:32:57,678 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:57] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:32:59,203 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:59] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:32:59,398 - INFO - 127.0.0.1 - - [05/Jan/2026 14:32:59] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:00,473 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:00] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:00,637 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:00] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:00,785 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:00] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:01,419 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:01] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:01,819 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:01] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:01,993 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:01] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:02,482 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:02] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:02,902 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:02] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:03,922 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:03] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:04,385 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:04] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:04,785 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:04] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:05,150 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:05] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:05,521 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:05] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:05,854 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:05] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:06,209 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:06] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:06,581 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:06] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:06,760 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:06] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:06,933 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:06] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,089 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,230 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,378 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,541 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,709 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:07,932 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:08,247 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:08] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:08,444 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:08] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:09,509 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:09] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:09,714 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:09] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:33:10,082 - INFO - 127.0.0.1 - - [05/Jan/2026 14:33:10] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:34:34,745 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "GET / HTTP/1.1" 200 -
+2026-01-05 14:34:34,763 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:34:34,767 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:34:34,769 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:34:34,771 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:34:34,774 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:34:34,908 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:34] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:34:36,332 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:36] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:34:37,862 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:37] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:34:38,847 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:38] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:34:39,797 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:39] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:34:40,395 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:40] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:34:40,737 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:40] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:34:41,043 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:41] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:34:43,819 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:43] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:34:44,182 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:44] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:34:46,461 - INFO - 127.0.0.1 - - [05/Jan/2026 14:34:46] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:37:04,440 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "GET / HTTP/1.1" 200 -
+2026-01-05 14:37:04,456 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:04,459 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:04,460 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:04,463 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:37:04,465 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:37:04,508 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:04] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:37:05,835 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:05] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:37:07,288 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:07] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:37:08,155 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:08] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:37:17,969 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:17] "GET / HTTP/1.1" 200 -
+2026-01-05 14:37:17,990 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:17] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:17,997 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:17] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:17,998 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:17] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:37:17,999 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:17] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:37:18,001 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:18] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:37:18,132 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:18] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:37:22,587 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:22] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:37:25,968 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:25] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:37:26,936 - INFO - 127.0.0.1 - - [05/Jan/2026 14:37:26] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:39:57,953 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "GET / HTTP/1.1" 200 -
+2026-01-05 14:39:57,968 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:39:57,972 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:39:57,973 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:39:57,977 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:39:57,979 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:57] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:39:58,115 - INFO - 127.0.0.1 - - [05/Jan/2026 14:39:58] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:40:00,350 - INFO - 127.0.0.1 - - [05/Jan/2026 14:40:00] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 14:40:03,205 - INFO - 127.0.0.1 - - [05/Jan/2026 14:40:03] "GET /api/load/默认 HTTP/1.1" 200 -
+2026-01-05 14:41:21,730 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "GET / HTTP/1.1" 200 -
+2026-01-05 14:41:21,750 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:41:21,752 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:41:21,759 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:41:21,759 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:41:21,759 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:41:21,905 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:21] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:41:45,749 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET / HTTP/1.1" 200 -
+2026-01-05 14:41:45,766 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 14:41:45,768 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 14:41:45,768 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 14:41:45,769 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 14:41:45,771 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 14:41:45,809 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 14:41:45,916 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:41:45,917 - INFO - 127.0.0.1 - - [05/Jan/2026 14:41:45] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 14:43:29,921 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "GET / HTTP/1.1" 200 -
+2026-01-05 14:43:29,933 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:29,935 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:29,938 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:29,940 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:43:29,943 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:43:29,973 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:29] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:43:30,089 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:30] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:43:37,042 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:37,043 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:37,043 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:43:37,056 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:43:37,648 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:43:37,650 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:43:37,665 - INFO - 127.0.0.1 - - [05/Jan/2026 14:43:37] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:45:57,314 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "GET / HTTP/1.1" 200 -
+2026-01-05 14:45:57,333 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:45:57,335 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:45:57,338 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:45:57,341 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:45:57,343 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:45:57,345 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:45:57,378 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:45:57,399 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:45:57,416 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:45:57,423 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:57] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:45:58,118 - INFO - 127.0.0.1 - - [05/Jan/2026 14:45:58] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:46:13,792 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 13
+2026-01-05 14:46:13,792 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 14:46:13,792 - INFO - Received config courses type: <class 'list'>
+2026-01-05 14:46:13,792 - INFO - List content (first 1): [{'name': '语文', 'count': 7, 'type': 'main', 'teachers': '张伟, 李娜'}]
+2026-01-05 14:46:13,792 - INFO - Converted courses dict keys: ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治', '体育', '美术', '音乐', '信息技术']
+2026-01-05 14:46:13,792 - INFO - Teacher Names Config: {'语文': ['张伟', '李娜'], '数学': ['王军'], '英语': ['Miss', 'Li']}
+2026-01-05 14:46:13,792 - INFO - Generated 32 teachers.
+2026-01-05 14:46:15,539 - INFO - Solver status: OPTIMAL
+2026-01-05 14:46:15,558 - INFO - 排课成功 - 生成 6 个班级的课表,共 32 位老师
+2026-01-05 14:46:15,566 - INFO - 127.0.0.1 - - [05/Jan/2026 14:46:15] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 14:48:44,638 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "GET / HTTP/1.1" 200 -
+2026-01-05 14:48:44,657 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:48:44,663 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:48:44,663 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:48:44,667 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:48:44,667 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:48:44,671 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:48:44,698 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:48:44,711 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:48:44,730 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:48:44,737 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:44] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:48:45,429 - INFO - 127.0.0.1 - - [05/Jan/2026 14:48:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:49:07,946 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET / HTTP/1.1" 200 -
+2026-01-05 14:49:07,971 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 14:49:07,975 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 14:49:07,977 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 14:49:07,977 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 14:49:07,979 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:49:07,979 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:07] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 14:49:08,010 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:49:08,026 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 14:49:08,045 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:49:08,049 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:49:08,703 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:49:08,707 - INFO - 127.0.0.1 - - [05/Jan/2026 14:49:08] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 14:50:00,274 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "GET / HTTP/1.1" 200 -
+2026-01-05 14:50:00,293 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,303 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:50:00,305 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,305 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,307 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,308 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,339 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:50:00,359 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:50:00,371 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:50:00,391 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:00] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:50:01,088 - INFO - 127.0.0.1 - - [05/Jan/2026 14:50:01] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:55:00,114 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "GET / HTTP/1.1" 200 -
+2026-01-05 14:55:00,134 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,137 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,140 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,143 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,148 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 14:55:00,149 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,177 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:55:00,190 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 14:55:00,200 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:55:00,218 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 14:55:00,925 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:00] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:55:12,793 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "GET / HTTP/1.1" 200 -
+2026-01-05 14:55:12,815 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:12,819 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:12,820 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 14:55:12,823 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 14:55:12,825 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 14:55:12,876 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:12] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 14:55:14,207 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:14] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 14:55:17,258 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:17] "GET /api/load/看看 HTTP/1.1" 200 -
+2026-01-05 14:55:18,039 - INFO - 127.0.0.1 - - [05/Jan/2026 14:55:18] "GET /api/load/你好 HTTP/1.1" 200 -
+2026-01-05 15:03:53,243 - INFO -  * Detected change in 'f:\\schedule_system\\app.py', reloading
+2026-01-05 15:03:53,264 - INFO -  * Detected change in 'f:\\schedule_system\\app.py', reloading
+2026-01-05 15:03:53,365 - INFO -  * Restarting with stat
+2026-01-05 15:03:53,377 - INFO -  * Restarting with stat
+2026-01-05 15:03:55,227 - WARNING -  * Debugger is active!
+2026-01-05 15:03:55,232 - WARNING -  * Debugger is active!
+2026-01-05 15:03:55,236 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 15:03:55,243 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 15:04:53,966 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "GET / HTTP/1.1" 200 -
+2026-01-05 15:04:53,981 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:04:53,983 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:04:53,986 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:04:53,989 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 15:04:53,990 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:53] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 15:04:54,035 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:54] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 15:04:55,403 - INFO - 127.0.0.1 - - [05/Jan/2026 15:04:55] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:05:07,461 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:07] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:05:07,463 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:07] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:05:07,465 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:07] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:05:07,473 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:07] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:05:08,048 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:08] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:05:08,049 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:08] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:05:08,067 - INFO - 127.0.0.1 - - [05/Jan/2026 15:05:08] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:42,805 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 15:06:42,805 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 15:06:42,807 - INFO -  * Restarting with stat
+2026-01-05 15:06:44,403 - WARNING -  * Debugger is active!
+2026-01-05 15:06:44,415 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 15:06:45,321 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "GET / HTTP/1.1" 200 -
+2026-01-05 15:06:45,342 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,345 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,347 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,351 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,353 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:06:45,354 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,388 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:45,406 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:45,417 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 15:06:45,436 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:45] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:46,151 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:46] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:06:53,557 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:53,557 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:53,558 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:06:53,567 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:06:53,587 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:53,590 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:53,611 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:53] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:58,369 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:58] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:06:58,382 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:58] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:58,391 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:58] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:06:58,393 - INFO - 127.0.0.1 - - [05/Jan/2026 15:06:58] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:29,143 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET / HTTP/1.1" 200 -
+2026-01-05 15:07:29,163 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 15:07:29,167 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 15:07:29,167 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 15:07:29,169 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 15:07:29,171 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 15:07:29,215 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:29] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 15:07:30,530 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:30] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:07:30,533 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 15:07:34,169 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:34,172 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:34,173 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:34,189 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:07:34,757 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:34,759 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:34,783 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:34] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:49,161 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "GET / HTTP/1.1" 200 -
+2026-01-05 15:07:49,179 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,184 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,190 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,192 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:07:49,192 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,193 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,224 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:49,239 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:49,249 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 15:07:49,267 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:07:49,933 - INFO - 127.0.0.1 - - [05/Jan/2026 15:07:49] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:11:45,260 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "GET / HTTP/1.1" 200 -
+2026-01-05 15:11:45,282 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2026-01-05 15:11:45,287 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,293 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,295 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,297 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,298 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,328 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[33mGET /static/js/bootstrap.bundle.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:11:45,342 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[33mGET /static/js/chart.umd.min.js.map HTTP/1.1[0m" 404 -
+2026-01-05 15:11:45,352 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 15:11:45,368 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:45] "[33mGET /static/css/bootstrap.min.css.map HTTP/1.1[0m" 404 -
+2026-01-05 15:11:46,063 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:46] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:11:47,017 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:47] "POST /api/delete HTTP/1.1" 200 -
+2026-01-05 15:11:47,027 - INFO - 127.0.0.1 - - [05/Jan/2026 15:11:47] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:16:06,256 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "GET / HTTP/1.1" 200 -
+2026-01-05 15:16:06,279 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:16:06,282 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-05 15:16:06,285 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/css/style.css HTTP/1.1[0m" 304 -
+2026-01-05 15:16:06,287 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-05 15:16:06,292 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-05 15:16:06,337 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:06] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-05 15:16:07,714 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:07] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:16:11,652 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:11] "POST /api/delete HTTP/1.1" 200 -
+2026-01-05 15:16:11,658 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:11] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 15:16:15,052 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:15] "POST /api/delete HTTP/1.1" 200 -
+2026-01-05 15:16:15,061 - INFO - 127.0.0.1 - - [05/Jan/2026 15:16:15] "GET /api/list HTTP/1.1" 200 -

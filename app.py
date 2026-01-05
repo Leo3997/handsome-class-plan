@@ -39,8 +39,11 @@ def serialize_schedule(system):
                     cell_data = {
                         "subject": info['subject'],
                         "teacher_name": info['teacher_name'],
-                        "is_sub": info['is_sub']
+                        "is_sub": info['is_sub'],
+                        "course_type": info.get('course_type', 'minor')
                     }
+                    if 'room' in info:
+                        cell_data['room'] = info['room']
                 else:
                     cell_data = None
                 formatted_data[c_id][p][d] = cell_data
@@ -103,9 +106,14 @@ def init_schedule():
         global_result = result
         global_system = substitution.SubstitutionSystem(result)
         
-        teacher_list = sorted([{"id": t['id'], "name": t['name']} for t in result['teachers_db']], key=lambda x: x['name'])
+        teacher_list = sorted([{
+            "id": t['id'], 
+            "name": t['name'],
+            "subject": t.get('subject', ''),
+            "type": t.get('type', 'minor')
+        } for t in result['teachers_db']], key=lambda x: x['name'])
         
-        logger.info(f"排课成功 - 生成 {len(global_system.classes)} 个班级的课表，共 {len(teacher_list)} 位老师")
+        logger.info(f"排课成功 - 生成 {len(global_system.classes)} 个班级的课表,共 {len(teacher_list)} 位老师")
         
         return jsonify({
             "status": "success", 
@@ -240,11 +248,36 @@ def save_schedule():
     config = data.get('config', {})
     
     result = storage.save_schedule(name, schedule_data, config)
+    return jsonify(result)
+
+@app.route('/api/load/<name>', methods=['GET'])
+def load_schedule(name):
+    """加载课表方案"""
+    global global_result, global_system
     
-    if result["status"] == "success":
-        return jsonify(result)
+    result = storage.load_schedule(name)
+    
+    if result['status'] == 'success':
+        data = result['data']
+        # 恢复全局状态
+        # 注意: 这里我们需要重建 global_result 和 global_system
+        # 但 storage 保存的是序列化后的数据，不是原始 Solver 变量
+        # 所以我们只能恢复用于显示的数据，无法恢复 Solver 状态继续排课
+        # 如果需要继续排课，用户需要基于加载的配置重新点击"初始化排课"
+        
+        # 临时构建一个模拟的 global_result 用于显示
+        # 真正重要的是返回给前端的 schedule 和 config
+        
+        return jsonify({
+            "status": "success",
+            "message": f"方案 '{name}' 加载成功",
+            "schedule": data.get("schedule", {}),
+            "config": data.get("config", {})
+        })
     else:
-        return jsonify(result), 500
+        return jsonify(result), 400
+    
+
 
 @app.route('/api/list', methods=['GET'])
 def list_schedules():
@@ -252,51 +285,39 @@ def list_schedules():
     result = storage.list_schedules()
     return jsonify(result)
 
-@app.route('/api/load', methods=['POST'])
-def load_schedule():
-    """加载指定的课表方案"""
-    global global_result, global_system
-    
-    data = request.json
-    name = data.get('name', '').strip()
-    
-    if not name:
-        return jsonify({"status": "error", "message": "请提供方案名称"}), 400
-    
-    result = storage.load_schedule(name)
-    
-    if result["status"] == "error":
-        return jsonify(result), 404
-    
-    loaded_data = result["data"]
-    
-    # 注意：加载的数据只包含序列化后的课表，不包含求解器对象
-    # 因此 global_result 和 global_system 需要特殊处理
-    # 这里我们只返回课表数据，不更新全局状态（无法重新生成 global_system）
-    
-    return jsonify({
-        "status": "success",
-        "schedule": loaded_data.get("schedule", {}),
-        "teachers": loaded_data.get("teachers", []),
-        "config": loaded_data.get("config", {}),
-        "created_at": loaded_data.get("created_at", "")
-    })
+
 
 @app.route('/api/delete', methods=['POST'])
 def delete_schedule():
-    """删除指定的课表方案"""
-    data = request.json
-    name = data.get('name', '').strip()
-    
-    if not name:
-        return jsonify({"status": "error", "message": "请提供方案名称"}), 400
-    
-    result = storage.delete_schedule(name)
-    
-    if result["status"] == "success":
-        return jsonify(result)
-    else:
-        return jsonify(result), 404
+    """删除指定的课表方案 - 增强版"""
+    try:
+        # 1. 安全获取 JSON 数据
+        data = request.get_json(force=True, silent=True)
+        if not data:
+            return jsonify({"status": "error", "message": "请求数据格式错误(Expecting JSON)"}), 400
+            
+        name = data.get('name', '').strip()
+        
+        if not name:
+            return jsonify({"status": "error", "message": "请提供方案名称"}), 400
+        
+        # 2. 调用存储模块
+        result = storage.delete_schedule(name)
+        
+        # 3. 根据结果返回状态码
+        if result["status"] == "success":
+            return jsonify(result), 200
+        else:
+            # 如果文件不存在，也可以算作 404，或者 400
+            return jsonify(result), 400
+            
+    except Exception as e:
+        # 4. 捕获所有未预料的错误，防止服务器崩溃返回 HTML
+        logger.error(f"删除方案接口异常: {str(e)}", exc_info=True)
+        return jsonify({
+            "status": "error", 
+            "message": f"服务器内部错误: {str(e)}"
+        }), 500
 
 # ============ Excel导出接口 ============
 

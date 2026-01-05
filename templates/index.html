@@ -188,12 +188,65 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3 row">
+                    <div class="row mb-3">
                         <label class="col-sm-2 col-form-label">班级总数</label>
                         <div class="col-sm-4">
                             <input type="number" id="setting-num-classes" class="form-control" value="6">
                         </div>
                     </div>
+
+                    <div class="card bg-light border-0 mb-3">
+                        <div class="card-body py-2">
+                            <h6 class="mb-2 text-primary"><i class="bi bi-cpu-fill me-2"></i>算法优化偏好</h6>
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="opt-golden-time" checked>
+                                        <label class="form-check-label" for="opt-golden-time">
+                                            优先安排黄金时间
+                                            <small class="d-block text-muted"
+                                                style="font-size: 0.75rem;">语数英尽量不排在下午</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">避免连堂超过</span>
+                                        <select class="form-select" id="opt-max-consecutive">
+                                            <option value="2">2 节</option>
+                                            <option value="3">3 节</option>
+                                            <option value="4">4 节</option>
+                                        </select>
+                                        <span class="input-group-text">节</span>
+                                    </div>
+                                    <small class="text-muted" style="font-size: 0.75rem;">超过限制将增加惩罚权重</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h6 class="mb-3"><i class="bi bi-building me-2"></i>专用教室资源配置</h6>
+                    <div class="alert alert-light border small">
+                        <strong><i class="bi bi-info-circle me-1"></i>说明：</strong> <br>
+                        限制特定科目的<b>同时上课班级数</b>。例如：只有1间音乐室，则“音乐”课的容量设为1。
+                    </div>
+                    <table class="table table-sm align-middle">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%">资源名称</th>
+                                <th style="width: 15%">容量(间)</th>
+                                <th>适用科目 (用逗号分隔)</th>
+                                <th style="width: 10%">操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="resource-settings-body">
+                        </tbody>
+                    </table>
+                    <button class="btn btn-sm btn-outline-primary mb-3" onclick="addResourceRow()">
+                        <i class="bi bi-plus-lg me-1"></i>新增资源
+                    </button>
+
                     <hr>
                     <h6 class="mb-3"><i class="bi bi-people me-2"></i>科目与师资设置</h6>
                     <div class="alert alert-light border small">
@@ -206,7 +259,8 @@
                         <thead>
                             <tr>
                                 <th style="width: 15%">科目名称</th>
-                                <th style="width: 15%">每周节数</th>
+                                <th style="width: 12%">每周节数</th>
+                                <th style="width: 12%">课程类型</th>
                                 <th>指定老师姓名 (可选)</th>
                                 <th style="width: 10%">操作</th>
                             </tr>
@@ -309,8 +363,30 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>确认删除</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>确定要永久删除方案 <strong id="delete-target-name"></strong> 吗？</p>
+                    <p class="text-muted small mb-0">此操作无法撤销。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" id="btn-confirm-delete">确认删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         let globalSchedule = {};
+        let deleteModalVar = null;
+        let targetDeleteName = '';
         let globalTeachers = [];
         let currentView = 'class';
         let leaveRequests = [];
@@ -324,13 +400,32 @@
         let config = {
             num_classes: 6,
             courses: [
-                { name: "语文", count: 6, teachers: "张伟, 李娜" },
-                { name: "数学", count: 5, teachers: "王军" },
-                { name: "英语", count: 4, teachers: "Miss Li" },
-                { name: "体育", count: 3, teachers: "" },
-                { name: "美术", count: 2, teachers: "" },
-                { name: "音乐", count: 2, teachers: "" },
-                { name: "科学", count: 2, teachers: "" }
+                { name: "语文", count: 7, type: "main", teachers: "张伟, 李娜" },
+                { name: "数学", count: 7, type: "main", teachers: "王军" },
+                { name: "英语", count: 6, type: "main", teachers: "Miss Li" },
+                { name: "物理", count: 5, type: "main", teachers: "" },
+                { name: "化学", count: 4, type: "main", teachers: "" },
+                { name: "生物", count: 3, type: "main", teachers: "" },
+                { name: "历史", count: 3, type: "main", teachers: "" },
+                { name: "地理", count: 2, type: "main", teachers: "" },
+                { name: "政治", count: 2, type: "main", teachers: "" },
+                { name: "体育", count: 3, type: "minor", teachers: "" },
+                { name: "美术", count: 1, type: "minor", teachers: "" },
+                { name: "音乐", count: 1, type: "minor", teachers: "" },
+                { name: "信息技术", count: 1, type: "minor", teachers: "" }
+            ],
+            optimization: {
+                golden_time: true,
+                max_consecutive: 2
+            },
+            resources: [
+                { name: "物理实验室", capacity: 2, subjects: "物理" },
+                { name: "化学实验室", capacity: 2, subjects: "化学" },
+                { name: "生物实验室", capacity: 2, subjects: "生物" },
+                { name: "音乐教室", capacity: 1, subjects: "音乐" },
+                { name: "美术教室", capacity: 1, subjects: "美术" },
+                { name: "操场", capacity: 2, subjects: "体育" },
+                { name: "计算机教室", capacity: 2, subjects: "信息技术" }
             ]
         };
 
@@ -470,29 +565,60 @@
 
         function renderSettings() {
             document.getElementById('setting-num-classes').value = config.num_classes;
+
+            // Render optimization settings
+            if (config.optimization) {
+                document.getElementById('opt-golden-time').checked = config.optimization.golden_time;
+                document.getElementById('opt-max-consecutive').value = config.optimization.max_consecutive;
+            }
+
+            if (config.resources) {
+                const rbody = document.getElementById('resource-settings-body');
+                rbody.innerHTML = '';
+                config.resources.forEach(r => addResourceRow(r.name, r.capacity, r.subjects));
+            }
+
             const tbody = document.getElementById('course-settings-body');
             tbody.innerHTML = '';
             config.courses.forEach((c) => {
-                addCourseRow(c.name, c.count, c.teachers);
+                addCourseRow(c.name, c.count, c.type || 'minor', c.teachers);
             });
         }
 
-        function addCourseRow(name = "", count = 2, teachers = "") {
+        function addCourseRow(name = "", count = 2, type = "minor", teachers = "") {
             const tbody = document.getElementById('course-settings-body');
             const tr = document.createElement('tr');
             tr.innerHTML = `
             <td><input type="text" class="form-control form-control-sm course-name" value="${name}" placeholder="科目"></td>
             <td><input type="number" class="form-control form-control-sm course-count" value="${count}" onchange="updateTotalHours()"></td>
+            <td>
+                <select class="form-select form-select-sm course-type">
+                    <option value="main" ${type === 'main' ? 'selected' : ''}>主课</option>
+                    <option value="minor" ${type === 'minor' ? 'selected' : ''}>副课</option>
+                </select>
+            </td>
             <td><input type="text" class="form-control form-control-sm course-teachers" value="${teachers}" placeholder="例如: 张三, 李四"></td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="removeCourseRow(this)"><i class="bi bi-trash"></i></button></td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
         `;
             tbody.appendChild(tr);
             updateTotalHours();
         }
 
-        function removeCourseRow(btn) {
+        function addResourceRow(name = "", capacity = 1, subjects = "") {
+            const tbody = document.getElementById('resource-settings-body');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+            <td><input type="text" class="form-control form-control-sm res-name" value="${name}" placeholder="如：音乐室"></td>
+            <td><input type="number" class="form-control form-control-sm res-capacity" value="${capacity}" min="1"></td>
+            <td><input type="text" class="form-control form-control-sm res-subjects" value="${subjects}" placeholder="如：音乐, 舞蹈"></td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
+        `;
+            tbody.appendChild(tr);
+        }
+
+        function removeRow(btn) {
             btn.closest('tr').remove();
-            updateTotalHours();
+            updateTotalHours(); // Safe to call even if it's a resource row (won't find course inputs)
         }
 
         function updateTotalHours() {
@@ -509,6 +635,13 @@
 
         function saveSettingsAndInit() {
             config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
+
+            // Read optimization settings
+            config.optimization = {
+                golden_time: document.getElementById('opt-golden-time').checked,
+                max_consecutive: parseInt(document.getElementById('opt-max-consecutive').value)
+            };
+
             const rows = document.querySelectorAll('#course-settings-body tr');
             let newCourses = [];
             let coursesDict = {};
@@ -518,11 +651,12 @@
             rows.forEach(row => {
                 const name = row.querySelector('.course-name').value.trim();
                 const count = parseInt(row.querySelector('.course-count').value);
+                const type = row.querySelector('.course-type').value;
                 const teacherStr = row.querySelector('.course-teachers').value.trim();
 
                 if (name && count > 0) {
-                    newCourses.push({ name, count, teachers: teacherStr });
-                    coursesDict[name] = count;
+                    newCourses.push({ name, count, type, teachers: teacherStr });
+                    coursesDict[name] = { count: count, type: type };
                     total += count;
                     if (teacherStr) {
                         const names = teacherStr.split(/[,，\s]+/).filter(n => n.length > 0);
@@ -532,6 +666,19 @@
             });
 
             config.courses = newCourses;
+
+            // 3. Save resources
+            let newResources = [];
+            document.querySelectorAll('#resource-settings-body tr').forEach(row => {
+                const name = row.querySelector('.res-name').value.trim();
+                const capacity = parseInt(row.querySelector('.res-capacity').value) || 1;
+                const subjects = row.querySelector('.res-subjects').value.trim();
+                if (name && subjects) {
+                    newResources.push({ name, capacity, subjects });
+                }
+            });
+            config.resources = newResources;
+
             if (total > 45) {
                 alert(`⚠️ 注意：总课时 (${total}) 超过了每周容量 (45)！\n多出的课程可能无法安排。`);
             }
@@ -539,7 +686,9 @@
             const payload = {
                 num_classes: config.num_classes,
                 courses: coursesDict,
-                teacher_names: teacherNamesDict
+                teacher_names: teacherNamesDict,
+                resources: config.resources,  // 添加教室资源配置
+                optimization: config.optimization
             };
             initSystem(payload);
         }
@@ -556,19 +705,29 @@
 
             let payload = customPayload;
             if (!payload) {
-                let cDict = {};
+                // Extract teacher names for map
                 let tDict = {};
                 config.courses.forEach(c => {
-                    cDict[c.name] = c.count;
                     if (c.teachers) tDict[c.name] = c.teachers.split(/[,，\s]+/).filter(n => n);
                 });
+
+                // Ensure optimization/resources included in default payload
+                if (!config.optimization) config.optimization = { golden_time: true, max_consecutive: 2 };
+                if (!config.resources) config.resources = [];
+
                 payload = {
                     num_classes: config.num_classes,
-                    courses: cDict,
-                    teacher_names: tDict
+                    courses: config.courses, // Send full list directly (backend now supports this)
+                    teacher_names: tDict,
+                    optimization: config.optimization,
+                    resources: config.resources
                 };
             }
             payload.constraints = globalConstraints;
+            // 确保资源配置也被传递 (如果点击保存按钮会走customPayload，上面的分支是点初始化按钮)
+            if (customPayload && !customPayload.resources) {
+                customPayload.resources = config.resources;
+            }
 
             try {
                 const response = await fetch('/api/init', {
@@ -673,10 +832,22 @@
 
                     const info = classData[p][d];
                     if (info) {
+                        // 添加课程类型样式
+                        if (info.course_type === 'main') {
+                            td.classList.add('course-main');
+                        } else {
+                            td.classList.add('course-minor');
+                        }
+
                         if (info.is_sub) {
                             td.classList.add(info.teacher_name === "【自习】" ? "status-empty" : "status-sub");
                         }
-                        td.innerHTML = `<div class="course-cell">${info.subject}</div><span class="teacher-name">${info.teacher_name}</span>`;
+
+                        let html = `<div class="course-cell">${info.subject}</div><span class="teacher-name">${info.teacher_name}</span>`;
+                        if (info.room) {
+                            html += `<div class="mt-1"><span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.7rem;"><i class="bi bi-geo-alt-fill me-1"></i>${info.room}</span></div>`;
+                        }
+                        td.innerHTML = html;
                     }
                     tr.appendChild(td);
                 }
@@ -825,13 +996,40 @@
                     data.schedules.forEach(s => {
                         const item = document.createElement('div');
                         item.className = 'list-group-item d-flex justify-content-between align-items-start p-2';
-                        item.innerHTML = `
-                            <div class="flex-grow-1" style="cursor: pointer;" onclick="loadSchedule('${s.name}')">
-                                <strong>${s.name}</strong>
-                                <div class="text-muted" style="font-size: 0.75rem;">${s.created_at}</div>
-                            </div>
-                            <button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="deleteSchedule('${s.name}', event)" title="删除"><i class="bi bi-x"></i></button>
+
+                        // Create content wrapper for click (Load)
+                        const content = document.createElement('div');
+                        content.className = 'flex-grow-1';
+                        content.style.cursor = 'pointer';
+                        content.onclick = function () {
+                            console.log('Click triggered for:', s.name);
+                            // alert('DEBUG: Clicked ' + s.name); // Uncomment for debugging
+                            loadSchedule(s.name);
+                        };
+                        content.innerHTML = `
+                            <strong>${s.name}</strong>
+                            <div class="text-muted" style="font-size: 0.75rem;">${s.created_at}</div>
                         `;
+
+                        // Create delete button
+                        const delBtn = document.createElement('button');
+                        delBtn.className = 'btn btn-sm btn-outline-danger py-0 px-1';
+                        delBtn.title = '删除';
+                        delBtn.innerHTML = '<i class="bi bi-x" style="pointer-events: none;"></i>';
+                        delBtn.type = 'button'; // Prevent default form submission
+                        delBtn.style.zIndex = '100'; // Force on top
+                        delBtn.style.position = 'relative';
+                        delBtn.onclick = function (e) {
+                            // Ensure event doesn't bubble or do default action
+                            e.stopPropagation();
+                            e.preventDefault();
+
+                            console.log('Delete button clicked for:', s.name);
+                            deleteSchedule(s.name);
+                        };
+
+                        item.appendChild(content);
+                        item.appendChild(delBtn);
                         listEl.appendChild(item);
                     });
                 } else {
@@ -839,6 +1037,118 @@
                 }
             } catch (e) {
                 console.error('加载方案列表失败:', e);
+            }
+        }
+
+        async function loadSchedule(name) {
+            console.log('Executing loadSchedule for:', name);
+            // Temporary removed confirm for debugging
+            // if (!confirm(`确定要加载方案 "${name}" 吗？...`)) return;
+
+            try {
+                const resp = await fetch(`/api/load/${encodeURIComponent(name)}`);
+                const data = await resp.json();
+
+                if (data.status === 'success') {
+                    // 1. Update Global Schedule
+                    globalSchedule = data.schedule;
+
+                    // Update UI Dropdowns
+                    const classSelect = document.getElementById('class-select');
+                    classSelect.innerHTML = '';
+                    Object.keys(globalSchedule).forEach(cid => {
+                        const opt = document.createElement('option');
+                        opt.value = cid;
+                        opt.innerText = cid + " 班";
+                        classSelect.appendChild(opt);
+                    });
+
+                    // Update Teacher Dropdown (for leave requests)
+                    const teacherSelect = document.getElementById('teacher-select');
+                    teacherSelect.innerHTML = '';
+                    if (data.teachers && data.teachers.length > 0) {
+                        data.teachers.forEach(t => {
+                            const opt = document.createElement('option');
+                            opt.value = t.name;
+                            opt.innerText = t.name;
+                            teacherSelect.appendChild(opt);
+                        });
+                    }
+
+                    // Enable buttons
+                    document.getElementById('teacher-select').disabled = false;
+                    document.getElementById('btn-add-leave').disabled = false;
+                    document.getElementById('btn-apply').disabled = false;
+                    document.getElementById('btn-save').disabled = false;
+                    document.getElementById('btn-export-current').disabled = false;
+                    document.getElementById('btn-export-all').disabled = false;
+                    document.getElementById('btn-view-teacher').disabled = false;
+
+                    renderCurrentClass();
+
+                    // 2. Restore Configuration
+                    if (data.config) {
+                        config = data.config;
+
+                        // Restore basic settings
+                        document.getElementById('setting-num-classes').value = config.num_classes || 10;
+                        if (config.optimization) {
+                            document.getElementById('opt-golden-time').checked = config.optimization.golden_time;
+                            document.getElementById('opt-max-consecutive').value = config.optimization.max_consecutive || 2;
+                        }
+
+                        // Restore Course Table
+                        const courseBody = document.getElementById('course-settings-body');
+                        courseBody.innerHTML = '';
+
+                        // Handle both list and dict formats for courses
+                        let coursesList = [];
+                        if (Array.isArray(config.courses)) {
+                            coursesList = config.courses;
+                        } else if (config.courses) {
+                            // Convert old dict format to list
+                            for (const [name, val] of Object.entries(config.courses)) {
+                                if (typeof val === 'object') {
+                                    coursesList.push({ name: name, ...val });
+                                } else {
+                                    coursesList.push({ name: name, count: val, type: val >= 5 ? 'main' : 'minor' });
+                                }
+                            }
+                        }
+
+                        coursesList.forEach(c => {
+                            // Re-construct teacher string from config or teacher_names mapping if available
+                            let teacherStr = c.teachers || "";
+                            if (!teacherStr && config.teacher_names && config.teacher_names[c.name]) {
+                                teacherStr = config.teacher_names[c.name].join(" ");
+                            }
+                            addCourseRow(c.name, c.count, c.type, teacherStr);
+                        });
+
+                        // Restore Resources
+                        const resBody = document.getElementById('resource-settings-body');
+                        resBody.innerHTML = '';
+                        if (config.resources && Array.isArray(config.resources)) {
+                            config.resources.forEach(r => {
+                                addResourceRow(r.name, r.capacity, r.subjects);
+                            });
+                        }
+
+                        updateTotalHours();
+                    }
+
+                    alert(`方案 "${name}" 加载成功！`);
+                    // Update system status
+                    const status = document.getElementById('system-status');
+                    status.innerHTML = `<i class="bi bi-cloud-check-fill"></i> 已加载`;
+                    status.className = "text-center text-info fw-bold mb-3";
+
+                } else {
+                    alert(`加载失败: ${data.message}`);
+                }
+            } catch (e) {
+                console.error("加载异常:", e);
+                alert("系统错误: " + e.message);
             }
         }
 
@@ -863,73 +1173,22 @@
             } catch (e) { alert('保存失败: ' + e.message); }
         }
 
-        async function loadSchedule(name) {
-            if (!confirm(`确定要加载方案"${name}"吗？当前课表将被替换。`)) return;
-            try {
-                const resp = await fetch('/api/load', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name })
-                });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    globalSchedule = data.schedule;
-                    updateUIAfterLoad(data);
-                    alert(`✅ 已加载方案"${name}"`);
-                } else {
-                    alert(`❌ ${data.message}`);
-                }
-            } catch (e) { alert('加载失败: ' + e.message); }
-        }
 
-        function updateUIAfterLoad(data) {
-            const classSelect = document.getElementById('class-select');
-            classSelect.innerHTML = '';
-            Object.keys(data.schedule).forEach(cid => {
-                const opt = document.createElement('option');
-                opt.value = cid;
-                opt.innerText = cid + " 班";
-                classSelect.appendChild(opt);
-            });
-            const teacherSelect = document.getElementById('teacher-select');
-            teacherSelect.innerHTML = '';
-            if (data.teachers && data.teachers.length > 0) {
-                data.teachers.forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t.name;
-                    opt.innerText = t.name;
-                    teacherSelect.appendChild(opt);
-                });
+
+
+        // 第一阶段：点击删除按钮，只负责弹窗
+        function deleteSchedule(name) {
+            targetDeleteName = name; // 记下要删谁
+
+            // 更新弹窗里的文字
+            document.getElementById('delete-target-name').innerText = name;
+
+            // 显示弹窗
+            const modalEl = document.getElementById('deleteConfirmModal');
+            if (!deleteModalVar) {
+                deleteModalVar = new bootstrap.Modal(modalEl);
             }
-            renderCurrentClass();
-            teacherSelect.disabled = false;
-            document.getElementById('btn-add-leave').disabled = false;
-            document.getElementById('btn-apply').disabled = false;
-            document.getElementById('btn-save').disabled = false;
-            document.getElementById('btn-export-current').disabled = false;
-            document.getElementById('btn-export-all').disabled = false;
-            const status = document.getElementById('system-status');
-            status.innerHTML = `<i class="bi bi-cloud-check-fill"></i> 已加载 (${data.created_at || ''})`;
-            status.className = "text-center text-info fw-bold mb-3";
-        }
-
-        async function deleteSchedule(name, event) {
-            event.stopPropagation();
-            if (!confirm(`确定要删除方案"${name}"吗？此操作不可恢复。`)) return;
-            try {
-                const resp = await fetch('/api/delete', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name })
-                });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    alert(`✅ ${data.message}`);
-                    loadSavedList();
-                } else {
-                    alert(`❌ ${data.message}`);
-                }
-            } catch (e) { alert('删除失败: ' + e.message); }
+            deleteModalVar.show();
         }
 
         function exportCurrentClass() {
@@ -1034,6 +1293,43 @@
         function clearErrorAlert() {
             document.getElementById('error-alert-container').innerHTML = '';
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('btn-confirm-delete').addEventListener('click', async function () {
+                // 关闭弹窗
+                if (deleteModalVar) deleteModalVar.hide();
+
+                const name = targetDeleteName;
+                if (!name) return;
+
+                try {
+                    const resp = await fetch('/api/delete', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name })
+                    });
+
+                    if (!resp.ok) {
+                        const text = await resp.text();
+                        throw new Error(`服务器错误 (${resp.status}): ${text.substring(0, 50)}`);
+                    }
+
+                    const data = await resp.json();
+
+                    if (data.status === 'success') {
+                        // 不弹窗干扰用户，直接刷新列表，体验更流畅
+                        loadSavedList();
+                        // 可选：显示一个轻提示（Toast），这里简单用控制台记录
+                        console.log(`方案 ${name} 删除成功`);
+                    } else {
+                        alert(`删除失败: ${data.message}`);
+                    }
+                } catch (e) {
+                    console.error("删除请求出错:", e);
+                    alert(`系统错误: ${e.message}`);
+                }
+            });
+        });
     </script>
 </body>
 

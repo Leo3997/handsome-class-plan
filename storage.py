@@ -6,6 +6,9 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ScheduleStorage:
@@ -129,7 +132,7 @@ class ScheduleStorage:
                     })
                 except Exception as e:
                     # 跳过损坏的文件
-                    print(f"跳过损坏的文件 {file_path}: {e}")
+                    logger.warning(f"跳过损坏的文件 {file_path}: {e}")
                     continue
             
             # 按创建时间倒序排列
