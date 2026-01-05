@@ -449,3 +449,23 @@ TypeError: object of type 'int' has no len()
 2026-01-04 17:42:45,835 - INFO - 自定义老师科目: []
 2026-01-04 17:42:48,972 - INFO - 排课成功 - 生成 10 个班级的课表，共 51 位老师
 2026-01-04 17:42:48,988 - INFO - 127.0.0.1 - - [04/Jan/2026 17:42:48] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 09:40:11,037 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-01-05 09:40:11,037 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-05 09:40:11,038 - INFO -  * Restarting with stat
+2026-01-05 09:40:12,459 - WARNING -  * Debugger is active!
+2026-01-05 09:40:12,471 - INFO -  * Debugger PIN: 570-250-899
+2026-01-05 09:40:34,477 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET / HTTP/1.1" 200 -
+2026-01-05 09:40:34,515 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-05 09:40:34,727 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-05 09:40:34,824 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-05 09:40:34,824 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET /static/css/style.css HTTP/1.1" 200 -
+2026-01-05 09:40:34,826 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:34] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-05 09:40:35,189 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:35] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-05 09:40:36,448 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:36] "GET /api/list HTTP/1.1" 200 -
+2026-01-05 09:40:36,753 - INFO - 127.0.0.1 - - [05/Jan/2026 09:40:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-05 09:41:19,827 - INFO - 接收到排课请求 - 班级数: 6, 科目数: 7
+2026-01-05 09:41:19,827 - INFO - 自定义老师科目: ['语文', '数学', '英语']
+2026-01-05 09:41:20,281 - INFO - 排课成功 - 生成 6 个班级的课表，共 13 位老师
+2026-01-05 09:41:20,285 - INFO - 127.0.0.1 - - [05/Jan/2026 09:41:20] "POST /api/init HTTP/1.1" 200 -
+2026-01-05 09:41:24,339 - INFO - 127.0.0.1 - - [05/Jan/2026 09:41:24] "POST /api/teacher_view HTTP/1.1" 200 -

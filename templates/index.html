@@ -5,370 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>全自定义智能排课系统</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            background: rgba(255, 255, 255, 0.98);
-            height: 100vh;
-            padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            overflow-y: auto;
-        }
-
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 3px;
-        }
-
-        .main-content {
-            padding: 20px;
-            height: 100vh;
-            overflow-y: auto;
-        }
-
-        /* 卡片区块样式 */
-        .section-card {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-
-        .section-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 3px;
-            height: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 2px;
-        }
-
-        /* 主标题优化 */
-        h4.text-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700 !important;
-        }
-
-        /* 按钮样式 */
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-outline-primary {
-            border: 2px solid #667eea;
-            color: #667eea;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .btn-outline-primary:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            border: none;
-            font-weight: 500;
-            box-shadow: 0 2px 8px rgba(17, 153, 142, 0.3);
-        }
-
-        .btn-success:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(17, 153, 142, 0.4);
-        }
-
-        .btn-outline-success {
-            border: 2px solid #11998e;
-            color: #11998e;
-            font-weight: 500;
-        }
-
-        .btn-outline-success:hover {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-        }
-
-        .btn-info {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            border: none;
-        }
-
-        .btn-outline-info {
-            border: 2px solid #4facfe;
-            color: #4facfe;
-        }
-
-        .btn-outline-info:hover,
-        .btn-outline-info.active {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            border-color: #4facfe;
-            color: white;
-        }
-
-        /* 主内容卡片 */
-        .timetable-card {
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 24px;
-        }
-
-        /* 课表样式 */
-        .schedule-table {
-            border-collapse: separate;
-            border-spacing: 0;
-            overflow: hidden;
-            border-radius: 12px;
-        }
-
-        .schedule-table th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            vertical-align: middle;
-            padding: 14px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: none;
-        }
-
-        .schedule-table td {
-            text-align: center;
-            vertical-align: middle;
-            height: 85px;
-            width: 18%;
-            border: 1px solid #e9ecef;
-            background: white;
-            transition: all 0.2s ease;
-        }
-
-        .schedule-table td:hover {
-            background-color: #f8f9fa;
-        }
-
-        .course-cell {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: #2d3748;
-            margin-bottom: 4px;
-        }
-
-        .teacher-name {
-            font-size: 0.8rem;
-            color: #718096;
-            display: block;
-        }
-
-        .status-sub {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%) !important;
-            border-left: 4px solid #ffc107;
-        }
-
-        .status-empty {
-            background: linear-gradient(135deg, #fee 0%, #f8d7da 100%) !important;
-            border-left: 4px solid #dc3545;
-        }
-
-        /* 状态标签 */
-        .text-success {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .text-danger {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .text-info {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* 输入框优化 */
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
-        }
-
-        /* 拖拽相关样式 */
-        .draggable-cell {
-            cursor: grab;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .draggable-cell:active {
-            cursor: grabbing;
-        }
-
-        .drag-source {
-            opacity: 0.5;
-            transform: scale(0.95);
-            background-color: #e9ecef !important;
-            border: 2px dashed #adb5bd !important;
-        }
-
-        .drag-over {
-            background-color: #e3f2fd !important;
-            border: 2px dashed #2196f3 !important;
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-            z-index: 1;
-        }
-
-        /* 网格交互样式 */
-        .constraint-cell {
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .constraint-cell:hover {
-            background-color: #f8f9fa;
-        }
-
-        .constraint-cell.unavailable {
-            background-color: #ff4d4d;
-            color: white;
-            box-shadow: inset 0 0 0 1px #e03e3e;
-        }
-
-        /* 列表项优化 */
-        .list-group-item {
-            border-radius: 8px !important;
-            margin-bottom: 8px;
-            border: 1px solid #e9ecef;
-            transition: all 0.2s ease;
-        }
-
-        .list-group-item:hover {
-            background-color: #f8f9fa;
-            border-color: #667eea;
-            transform: translateX(4px);
-        }
-
-        /* 错误提示 */
-        .alert {
-            border-radius: 12px;
-            border: none;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-        }
-
-        .alert-warning {
-            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
-        }
-
-        .alert-danger {
-            background: linear-gradient(135deg, #fee 0%, #f8d7da 100%);
-        }
-
-        /* 视图切换按钮 */
-        .btn-outline-primary.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        /* 动画 */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.3s ease;
-        }
-    </style>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/chart.js"></script>
 </head>
 
 <body>
 
     <div class="container-fluid">
         <div class="row">
+            <!-- Sidebar -->
             <div class="col-md-3 sidebar">
-                <h4 class="mb-4 text-primary fw-bold">📅 智能排课系统</h4>
+                <h4 class="mb-4 text-primary fw-bold">
+                    <i class="bi bi-calendar-check-fill me-2"></i>智能排课系统
+                </h4>
 
                 <div class="d-flex gap-2 mb-4">
-                    <button id="btn-init" class="btn btn-primary flex-grow-1 py-2 shadow-sm"
-                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;"
-                        onclick="initSystem()">
+                    <button id="btn-init" class="btn btn-primary flex-grow-1 py-2 shadow-sm" onclick="initSystem()">
                         <span id="init-spinner" class="spinner-border spinner-border-sm d-none"></span>
-                        🚀 生成/重置
+                        <i class="bi bi-rocket-takeoff me-1"></i> 生成/重置
                     </button>
-                    <button class="btn btn-light shadow-sm" onclick="openSettings()" title="高级约束设置"
+                    <button class="btn btn-light border shadow-sm" onclick="openSettings()" title="高级约束设置"
                         style="width: 42px;">
-                        ⚙️
+                        <i class="bi bi-gear-fill"></i>
                     </button>
-                    <button class="btn btn-light shadow-sm" data-bs-toggle="modal" data-bs-target="#settingsModal"
-                        title="基本参数设置" style="width: 42px;">
-                        📝
+                    <button class="btn btn-light border shadow-sm" data-bs-toggle="modal"
+                        data-bs-target="#settingsModal" title="基本参数设置" style="width: 42px;">
+                        <i class="bi bi-file-earmark-text"></i>
                     </button>
                 </div>
                 <button id="btn-stats" class="btn btn-outline-primary w-100 mb-3 shadow-sm" onclick="openStatistics()"
                     disabled>
-                    📊 查看统计看板
+                    <i class="bi bi-bar-chart-fill me-1"></i> 查看统计看板
                 </button>
                 <div id="system-status" class="text-center text-muted small mb-3">系统未初始化</div>
 
@@ -376,7 +46,7 @@
                 <div id="error-alert-container"></div>
 
                 <hr>
-                <h5 class="mb-3">💾 课表方案管理</h5>
+                <h5 class="mb-3"><i class="bi bi-floppy me-2"></i>课表方案管理</h5>
                 <div class="mb-3">
                     <div class="input-group input-group-sm mb-2">
                         <input type="text" id="save-name" class="form-control" placeholder="输入方案名称">
@@ -391,13 +61,13 @@
                 </div>
 
                 <hr>
-                <h5 class="mb-3">📝 请假管理</h5>
+                <h5 class="mb-3"><i class="bi bi-person-lines-fill me-2"></i>请假管理</h5>
                 <div class="mb-3">
-                    <label>选择老师</label>
+                    <label class="form-label small text-muted">选择老师</label>
                     <select id="teacher-select" class="form-select" disabled></select>
                 </div>
                 <div class="mb-3">
-                    <label>时间范围</label>
+                    <label class="form-label small text-muted">时间范围</label>
                     <div class="d-flex gap-2">
                         <select id="start-day" class="form-select">
                             <option>周一</option>
@@ -415,81 +85,79 @@
                         </select>
                     </div>
                 </div>
-                <button id="btn-add-leave" class="btn btn-outline-secondary w-100 mb-2" onclick="addLeave()" disabled>+
-                    添加请假条</button>
+                <button id="btn-add-leave" class="btn btn-outline-secondary w-100 mb-2" onclick="addLeave()" disabled>
+                    <i class="bi bi-plus-lg me-1"></i>添加请假条
+                </button>
                 <ul id="leave-list" class="list-group small mb-3"></ul>
-                <button id="btn-apply" class="btn btn-success w-100" onclick="applySubstitutions()" disabled>🔄
-                    执行智能代课</button>
+                <button id="btn-apply" class="btn btn-success w-100" onclick="applySubstitutions()" disabled>
+                    <i class="bi bi-arrow-repeat me-1"></i>执行智能代课
+                </button>
 
-                <!-- 新增：代课日志区域 -->
+                <!-- 代课日志区域 -->
                 <div id="substitution-logs-container" style="display: none;">
                     <hr>
-                    <h5 class="mb-3">📊 代课日志</h5>
+                    <h5 class="mb-3"><i class="bi bi-journal-text me-2"></i>代课日志</h5>
 
-                    <!-- 统计信息 -->
                     <div id="sub-stats" class="mb-3 p-2"
-                        style="background: #f8f9fa; border-radius: 8px; font-size: 0.85rem;">
+                        style="background: #f8f9fa; border-radius: 8px; font-size: 0.85rem; border: 1px solid #e9ecef;">
                         <div><strong>直接代课：</strong><span id="stat-direct">0</span>次</div>
                         <div><strong>课程互换：</strong><span id="stat-swap" class="text-info">0</span>次</div>
                         <div><strong>标记自习：</strong><span id="stat-self">0</span>次</div>
                         <div class="mt-1"><strong>总扰动度：</strong><span id="stat-score">0</span>分</div>
                     </div>
 
-                    <!-- 详细日志 -->
                     <div class="small text-muted mb-1">详细日志：</div>
                     <div id="sub-logs" class="small"
-                        style="max-height: 200px; overflow-y: auto; background: #f8f9fa; border-radius: 8px; padding: 8px;">
+                        style="max-height: 200px; overflow-y: auto; background: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 8px;">
                         <div class="text-muted text-center">暂无日志</div>
                     </div>
                 </div>
             </div>
 
+            <!-- Main Content -->
             <div class="col-md-9 main-content">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div class="d-flex align-items-center gap-2">
-                        <h3 id="class-title" class="mb-0">班级课表</h3>
-                        <!-- 视图切换按钮 -->
-                        <div class="btn-group btn-group-sm">
+                        <h3 id="class-title" class="mb-0 fw-bold">班级课表</h3>
+                        <div class="btn-group btn-group-sm ms-2">
                             <button class="btn btn-outline-primary active" id="btn-view-class"
                                 onclick="switchView('class')">
-                                📚 班级视图
+                                <i class="bi bi-grid-3x3-gap-fill me-1"></i>班级视图
                             </button>
                             <button class="btn btn-outline-info" id="btn-view-teacher" onclick="switchView('teacher')"
                                 disabled>
-                                👨‍🏫 老师视图
+                                <i class="bi bi-person-video3 me-1"></i>老师视图
                             </button>
                         </div>
                     </div>
 
                     <div class="d-flex align-items-center gap-2">
-                        <!-- 班级选择器（默认显示） -->
                         <div id="class-selector-group" class="d-flex align-items-center gap-2">
-                            <label>查看班级：</label>
+                            <label class="text-secondary small">查看班级：</label>
                             <select id="class-select" class="form-select w-auto"
                                 onchange="renderCurrentClass()"></select>
                         </div>
 
-                        <!-- 老师选择器（默认隐藏） -->
                         <div id="teacher-selector-group" class="d-flex align-items-center gap-2" style="display: none;">
-                            <label>查看老师：</label>
+                            <label class="text-secondary small">查看老师：</label>
                             <select id="teacher-view-select" class="form-select w-auto"
                                 onchange="renderCurrentTeacher()"></select>
                         </div>
 
-                        <div class="btn-group">
+                        <div class="btn-group ms-2">
                             <button class="btn btn-sm btn-outline-success" onclick="exportCurrentClass()"
                                 id="btn-export-current" disabled title="导出当前班级">
-                                📥 导出本班
+                                <i class="bi bi-download me-1"></i>导出本班
                             </button>
                             <button class="btn btn-sm btn-outline-primary" onclick="exportAllClasses()"
                                 id="btn-export-all" disabled title="导出所有班级">
-                                📦 导出全部
+                                <i class="bi bi-box-seam me-1"></i>导出全部
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="timetable-card">
-                    <table class="table table-bordered schedule-table mb-0">
+                    <table class="table schedule-table mb-0">
                         <thead>
                             <tr>
                                 <th style="width:80px">节次</th>
@@ -502,7 +170,7 @@
                         </thead>
                         <tbody id="schedule-body">
                             <tr>
-                                <td colspan="6" class="text-center py-5">请先生成课表</td>
+                                <td colspan="6" class="text-center py-5 text-muted">请先生成课表</td>
                             </tr>
                         </tbody>
                     </table>
@@ -511,11 +179,12 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">⚙️ 全局排课参数设置</h5>
+                    <h5 class="modal-title"><i class="bi bi-sliders me-2"></i>全局排课参数设置</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -526,9 +195,9 @@
                         </div>
                     </div>
                     <hr>
-                    <h6>📚 科目与师资设置</h6>
+                    <h6 class="mb-3"><i class="bi bi-people me-2"></i>科目与师资设置</h6>
                     <div class="alert alert-light border small">
-                        <strong>说明：</strong> <br>
+                        <strong><i class="bi bi-info-circle me-1"></i>说明：</strong> <br>
                         1. 在“指定老师姓名”中输入名字，用<b>空格</b>或<b>逗号</b>分隔。<br>
                         2. 如果指定的名字少于需要的老师数量，系统会自动补全（如 "语文老师3"）。<br>
                         3. 示例：输入 "张伟, 李娜"，系统会优先安排这两位，不够再自动生成。
@@ -545,7 +214,9 @@
                         <tbody id="course-settings-body">
                         </tbody>
                     </table>
-                    <button class="btn btn-sm btn-outline-primary" onclick="addCourseRow()">+ 新增科目</button>
+                    <button class="btn btn-sm btn-outline-primary" onclick="addCourseRow()">
+                        <i class="bi bi-plus-lg me-1"></i>新增科目
+                    </button>
                     <div class="mt-3 text-end">
                         当前总课时: <span id="total-hours" class="fw-bold text-primary">0</span> / 45
                     </div>
@@ -553,18 +224,20 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                        onclick="saveSettingsAndInit()">💾 保存并生成课表</button>
+                        onclick="saveSettingsAndInit()">
+                        <i class="bi bi-check-lg me-1"></i>保存并生成课表
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 高级设置模态框 -->
+    <!-- Advanced Constraints Modal -->
     <div class="modal fade" id="constraintModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">⚙️ 高级排课设置</h5>
+                    <h5 class="modal-title"><i class="bi bi-gear-wide-connected me-2"></i>高级排课设置</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -577,7 +250,7 @@
                     <div class="mb-3">
                         <label class="form-label d-flex justify-content-between">
                             <span>禁排时间设置</span>
-                            <small class="text-muted"><span style="color: #ff4d4d">■</span> 点击红色格子表示禁排</small>
+                            <small class="text-muted"><span class="text-danger">■</span> 点击红色格子表示禁排</small>
                         </label>
                         <div class="table-responsive">
                             <table class="table table-bordered text-center table-sm small" id="constraint-grid">
@@ -606,12 +279,12 @@
         </div>
     </div>
 
-    <!-- 统计看板模态框 -->
+    <!-- Statistics Modal -->
     <div class="modal fade" id="statisticsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">📊 课表统计分析</h5>
+                    <h5 class="modal-title"><i class="bi bi-bar-chart-fill me-2"></i>课表统计分析</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -638,23 +311,40 @@
 
     <script>
         let globalSchedule = {};
-        let globalTeachers = []; // 存储老师列表
-        let currentView = 'class'; // 当前视图模式: 'class' 或 'teacher'
+        let globalTeachers = [];
+        let currentView = 'class';
         let leaveRequests = [];
         const DAYS = ["周一", "周二", "周三", "周四", "周五"];
-        let globalConstraints = { teacher_unavailable: {} }; // 存储高级设置
-        // 统计模块变量
+        let globalConstraints = { teacher_unavailable: {} };
         let currentStats = null;
         let statsModalVar = null;
         let workloadChart = null;
+        let constraintModalVar = null;
 
-        // ============ 统计看板逻辑 ============
+        let config = {
+            num_classes: 6,
+            courses: [
+                { name: "语文", count: 6, teachers: "张伟, 李娜" },
+                { name: "数学", count: 5, teachers: "王军" },
+                { name: "英语", count: 4, teachers: "Miss Li" },
+                { name: "体育", count: 3, teachers: "" },
+                { name: "美术", count: 2, teachers: "" },
+                { name: "音乐", count: 2, teachers: "" },
+                { name: "科学", count: 2, teachers: "" }
+            ]
+        };
+
+        window.onload = function () {
+            renderSettings();
+            updateTotalHours();
+            loadSavedList();
+        };
+
         function openStatistics() {
             if (!statsModalVar) {
                 statsModalVar = new bootstrap.Modal(document.getElementById('statisticsModal'));
             }
             statsModalVar.show();
-            // 延迟渲染
             setTimeout(renderCharts, 300);
         }
 
@@ -666,6 +356,10 @@
             const labels = Object.keys(currentStats).sort();
             const data = labels.map(n => currentStats[n].total);
 
+            // Use primary color for chart
+            const rootStyle = getComputedStyle(document.body);
+            const primaryColor = rootStyle.getPropertyValue('--primary-color') || '#4f46e5';
+
             workloadChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -673,34 +367,31 @@
                     datasets: [{
                         label: '周课时总数',
                         data: data,
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        backgroundColor: primaryColor,
+                        borderRadius: 4,
+                        maxBarThickness: 40
                     }]
                 },
                 options: {
                     scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    }
                 }
             });
         }
-
-        // ============ 高级设置逻辑 ============
-        let constraintModalVar = null;
 
         function openSettings() {
             if (!constraintModalVar) {
                 constraintModalVar = new bootstrap.Modal(document.getElementById('constraintModal'));
             }
 
-            // 填充老师下拉框
             const select = document.getElementById('constraint-teacher-select');
-            // 保持第一个选项
             select.innerHTML = '<option value="">请选择...</option>';
 
             if (globalTeachers && globalTeachers.length > 0) {
-                // 使用已生成的老师数据
                 globalTeachers.forEach(t => {
                     const opt = document.createElement('option');
                     opt.value = t.name;
@@ -708,7 +399,6 @@
                     select.appendChild(opt);
                 });
             } else {
-                // 如果还没生成过老师，尝试从配置中解析（兼容性处理）
                 if (config.courses) {
                     let names = new Set();
                     config.courses.forEach(c => {
@@ -726,10 +416,7 @@
                     });
                 }
             }
-
-            // 清空网格
             document.getElementById('constraint-tbody').innerHTML = '';
-
             constraintModalVar.show();
         }
 
@@ -739,11 +426,7 @@
             tbody.innerHTML = '';
 
             if (!teacherName) return;
-
-            // 获取该老师现有的禁排设置
             const unavailable = globalConstraints.teacher_unavailable[teacherName] || [];
-
-            // 辅助函数：检查是否被禁用
             const isUnavailable = (d, p) => unavailable.some(u => u[0] === d && u[1] === p);
 
             for (let p = 0; p < 9; p++) {
@@ -769,16 +452,13 @@
             if (!globalConstraints.teacher_unavailable[teacherName]) {
                 globalConstraints.teacher_unavailable[teacherName] = [];
             }
-
             const list = globalConstraints.teacher_unavailable[teacherName];
             const index = list.findIndex(u => u[0] === day && u[1] === period);
 
             if (index >= 0) {
-                // 移除
                 list.splice(index, 1);
                 td.classList.remove('unavailable');
             } else {
-                // 添加
                 list.push([day, period]);
                 td.classList.add('unavailable');
             }
@@ -788,30 +468,10 @@
             constraintModalVar.hide();
         }
 
-        // 默认配置
-        let config = {
-            num_classes: 4,
-            courses: [
-                { name: "语文", count: 6, teachers: "张伟, 李娜" },
-                { name: "数学", count: 5, teachers: "王军" },
-                { name: "英语", count: 4, teachers: "Miss Li" },
-                { name: "体育", count: 3, teachers: "" },
-                { name: "美术", count: 2, teachers: "" },
-                { name: "音乐", count: 2, teachers: "" },
-                { name: "科学", count: 2, teachers: "" }
-            ]
-        };
-
-        window.onload = function () {
-            renderSettings();
-            updateTotalHours();
-        };
-
         function renderSettings() {
             document.getElementById('setting-num-classes').value = config.num_classes;
             const tbody = document.getElementById('course-settings-body');
             tbody.innerHTML = '';
-
             config.courses.forEach((c) => {
                 addCourseRow(c.name, c.count, c.teachers);
             });
@@ -824,7 +484,7 @@
             <td><input type="text" class="form-control form-control-sm course-name" value="${name}" placeholder="科目"></td>
             <td><input type="number" class="form-control form-control-sm course-count" value="${count}" onchange="updateTotalHours()"></td>
             <td><input type="text" class="form-control form-control-sm course-teachers" value="${teachers}" placeholder="例如: 张三, 李四"></td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="removeCourseRow(this)">删除</button></td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="removeCourseRow(this)"><i class="bi bi-trash"></i></button></td>
         `;
             tbody.appendChild(tr);
             updateTotalHours();
@@ -848,10 +508,8 @@
         }
 
         function saveSettingsAndInit() {
-            // 1. 读取设置
             config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
             const rows = document.querySelectorAll('#course-settings-body tr');
-
             let newCourses = [];
             let coursesDict = {};
             let teacherNamesDict = {};
@@ -863,36 +521,26 @@
                 const teacherStr = row.querySelector('.course-teachers').value.trim();
 
                 if (name && count > 0) {
-                    // 保存到本地 config 用于回显
                     newCourses.push({ name, count, teachers: teacherStr });
-
-                    // 准备发给后端的格式
                     coursesDict[name] = count;
                     total += count;
-
                     if (teacherStr) {
-                        // 兼容中文逗号和空格
                         const names = teacherStr.split(/[,，\s]+/).filter(n => n.length > 0);
-                        if (names.length > 0) {
-                            teacherNamesDict[name] = names;
-                        }
+                        if (names.length > 0) teacherNamesDict[name] = names;
                     }
                 }
             });
 
             config.courses = newCourses;
-
             if (total > 45) {
                 alert(`⚠️ 注意：总课时 (${total}) 超过了每周容量 (45)！\n多出的课程可能无法安排。`);
             }
 
-            // 2. 发起请求
             const payload = {
                 num_classes: config.num_classes,
                 courses: coursesDict,
                 teacher_names: teacherNamesDict
             };
-
             initSystem(payload);
         }
 
@@ -903,11 +551,11 @@
 
             btn.disabled = true;
             spinner.classList.remove('d-none');
-            status.innerText = "计算中...";
+            // Use HTML for Icon
+            status.innerHTML = '<span class="text-primary"><i class="bi bi-hourglass-split"></i> 计算中...</span>';
 
             let payload = customPayload;
             if (!payload) {
-                // 如果点击的是初始化按钮而不是保存按钮，使用当前默认配置构造 payload
                 let cDict = {};
                 let tDict = {};
                 config.courses.forEach(c => {
@@ -920,8 +568,6 @@
                     teacher_names: tDict
                 };
             }
-
-            // 添加高级约束
             payload.constraints = globalConstraints;
 
             try {
@@ -934,13 +580,12 @@
 
                 if (data.status === 'success') {
                     updateUI(data);
-                    status.innerText = "✅ 排课成功";
+                    status.innerHTML = '<i class="bi bi-check-circle-fill"></i> 排课成功';
                     status.className = "text-center text-success fw-bold mb-3";
-                    clearErrorAlert(); // 清除之前的错误提示
+                    clearErrorAlert();
                 } else {
-                    // 显示友好的错误提示
                     showErrorAlert(data);
-                    status.innerText = "❌ 失败";
+                    status.innerHTML = '<i class="bi bi-x-circle-fill"></i> 失败';
                     status.className = "text-center text-danger fw-bold mb-3";
                 }
             } catch (e) {
@@ -950,7 +595,7 @@
                     message: "网络请求失败",
                     suggestions: ["请检查网络连接", "刷新页面重试"]
                 });
-                status.innerText = "❌ 网络错误";
+                status.innerText = "网络错误";
             } finally {
                 btn.disabled = false;
                 spinner.classList.add('d-none');
@@ -958,16 +603,12 @@
         }
 
         function updateUI(data) {
-            // 保存统计数据并启用看板按钮
             if (data.stats) {
                 currentStats = data.stats;
                 document.getElementById('btn-stats').disabled = false;
             }
-
-            // 保存老师列表到全局变量
             globalTeachers = data.teachers || [];
 
-            // 更新老师下拉框（请假管理用）
             const teacherSelect = document.getElementById('teacher-select');
             teacherSelect.innerHTML = '';
             globalTeachers.forEach(t => {
@@ -977,7 +618,6 @@
                 teacherSelect.appendChild(opt);
             });
 
-            // 更新老师视图下拉框
             const teacherViewSelect = document.getElementById('teacher-view-select');
             teacherViewSelect.innerHTML = '';
             globalTeachers.forEach(t => {
@@ -987,7 +627,6 @@
                 teacherViewSelect.appendChild(opt);
             });
 
-            // 更新班级下拉框
             const classSelect = document.getElementById('class-select');
             classSelect.innerHTML = '';
             Object.keys(data.schedule).forEach(cid => {
@@ -1000,17 +639,15 @@
             globalSchedule = data.schedule;
             renderCurrentClass();
 
-            // 启用所有按钮
             teacherSelect.disabled = false;
             document.getElementById('btn-add-leave').disabled = false;
             document.getElementById('btn-apply').disabled = false;
             document.getElementById('btn-save').disabled = false;
             document.getElementById('btn-export-current').disabled = false;
             document.getElementById('btn-export-all').disabled = false;
-            document.getElementById('btn-view-teacher').disabled = false; // 启用老师视图按钮
+            document.getElementById('btn-view-teacher').disabled = false;
         }
 
-        // --- 渲染与请假逻辑 ---
         function renderCurrentClass() {
             const classId = document.getElementById('class-select').value;
             const tbody = document.getElementById('schedule-body');
@@ -1026,9 +663,7 @@
                 const th = document.createElement('th'); th.innerText = `第 ${p + 1} 节`; tr.appendChild(th);
                 for (let d = 0; d < 5; d++) {
                     const td = document.createElement('td');
-                    td.className = "draggable-cell"; // 添加基础类
-
-                    // 添加拖拽事件
+                    td.className = "draggable-cell";
                     td.setAttribute('draggable', 'true');
                     td.setAttribute('ondragstart', `handleDragStart(event, ${p}, ${d})`);
                     td.setAttribute('ondragover', 'handleDragOver(event)');
@@ -1049,80 +684,52 @@
             }
         }
 
-        // ============ 拖拽调课逻辑 ============
         let draggedSource = null;
-
         function handleDragStart(e, period, day) {
             draggedSource = { period, day };
             e.target.classList.add('drag-source');
-            // 设置数据（虽然我们用全局变量，但为了兼容性还是设置一下）
             e.dataTransfer.setData('text/plain', JSON.stringify({ period, day }));
             e.dataTransfer.effectAllowed = 'move';
         }
-
         function handleDragOver(e) {
-            e.preventDefault(); // 允许放置
+            e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
-
-            // 找到最近的 td 祖先
             const td = e.target.closest('td');
             if (td && !td.classList.contains('drag-source')) {
                 td.classList.add('drag-over');
             }
         }
-
         function handleDragLeave(e) {
             const td = e.target.closest('td');
-            if (td) {
-                td.classList.remove('drag-over');
-            }
+            if (td) td.classList.remove('drag-over');
         }
-
         function handleDragEnd(e) {
             e.target.classList.remove('drag-source');
-            // 清理所有高亮
             document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
         }
-
         async function handleDrop(e, targetPeriod, targetDay) {
             e.preventDefault();
-            handleDragEnd(e); // 清理样式
-
+            handleDragEnd(e);
             if (!draggedSource) return;
-
             const sourcePeriod = draggedSource.period;
             const sourceDay = draggedSource.day;
-
-            // 如果位置没变，直接返回
             if (sourcePeriod === targetPeriod && sourceDay === targetDay) return;
-
             const classId = document.getElementById('class-select').value;
 
-            // 调用后端API
             try {
                 const response = await fetch('/api/schedule/move', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         class_id: classId,
-                        from_slot: [sourceDay, sourcePeriod], // 后端格式 (day, period)
+                        from_slot: [sourceDay, sourcePeriod],
                         to_slot: [targetDay, targetPeriod]
                     })
                 });
-
                 const data = await response.json();
-
                 if (data.status === 'success') {
-                    // 更新全局课表
                     globalSchedule = data.schedule;
                     renderCurrentClass();
-
-                    // 显示简单的成功提示
-                    // 可以考虑用 toast，这里简单用 console
-                    console.log(`调课成功: ${data.message}`);
-
-                    // 如果有代课日志功能，也可以显示一条日志
-                    // showGenericLog("调课", data.message); 
                 } else {
                     alert(`调课失败: ${data.message}`);
                 }
@@ -1130,7 +737,6 @@
                 console.error(err);
                 alert('系统错误: ' + err.message);
             }
-
             draggedSource = null;
         }
 
@@ -1139,24 +745,30 @@
             const start = document.getElementById('start-day').value;
             const end = document.getElementById('end-day').value;
             const map = { "周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4 };
-
             if (map[start] > map[end]) { alert("日期顺序错误"); return; }
-
             const days = [];
             for (let i = map[start]; i <= map[end]; i++) days.push(DAYS[i]);
             leaveRequests.push({ name, days });
-            renderLeaveList();
+            updateLeaveList();
         }
 
-        function renderLeaveList() {
+        function updateLeaveList() {
             const list = document.getElementById('leave-list');
-            list.innerHTML = '';
-            leaveRequests.forEach((req, idx) => {
-                list.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>${req.name} <small class="text-muted">(${req.days.join(',')})</small></span>
-                <button class="btn btn-sm btn-outline-danger" onclick="leaveRequests.splice(${idx},1);renderLeaveList()">×</button>
-            </li>`;
-            });
+            if (leaveRequests.length === 0) { list.innerHTML = ''; return; }
+            list.innerHTML = leaveRequests.map((req, index) => `
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>${req.name}</strong>
+                        <br>
+                        <small class="text-muted">${req.days.join(', ')}</small>
+                    </span>
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeLeave(${index})"><i class="bi bi-x"></i></button>
+                </li>
+            `).join('');
+        }
+        function removeLeave(index) {
+            leaveRequests.splice(index, 1);
+            updateLeaveList();
         }
 
         async function applySubstitutions() {
@@ -1172,29 +784,42 @@
                 if (data.status === 'success') {
                     globalSchedule = data.schedule;
                     renderCurrentClass();
+                    if (data.logs) showSubstitutionLogs(data.stats, data.logs);
                     alert("代课安排完成！");
                 } else {
                     alert("错误: " + data.message);
                 }
             } finally {
-                btn.disabled = false; btn.innerText = "🔄 执行智能代课";
+                btn.disabled = false; btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i>执行智能代课';
             }
         }
 
-        // ============ 课表方案管理功能 ============
+        function showSubstitutionLogs(stats, logs) {
+            const container = document.getElementById('substitution-logs-container');
+            container.style.display = 'block';
+            document.getElementById('stat-direct').textContent = stats.direct || 0;
+            document.getElementById('stat-swap').textContent = stats.swap || 0;
+            document.getElementById('stat-self').textContent = stats.self_study || 0;
+            const totalScore = (stats.direct || 0) * 0 + (stats.swap || 0) * 1 + (stats.self_study || 0) * 999;
+            document.getElementById('stat-score').textContent = totalScore;
 
-        // 页面加载时获取已保存方案列表
-        window.addEventListener('DOMContentLoaded', function () {
-            loadSavedList();
-        });
+            const logsContainer = document.getElementById('sub-logs');
+            if (logs && logs.length > 0) {
+                logsContainer.innerHTML = logs.map(log => {
+                    const colorClass = log.type === 'self_study' ? 'text-danger' : 'text-success';
+                    return `<div class="${colorClass}" style="margin-bottom: 4px;">${log.message}</div>`;
+                }).join('');
+            } else {
+                logsContainer.innerHTML = '<div class="text-muted text-center">暂无日志</div>';
+            }
+            setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+        }
 
         async function loadSavedList() {
             try {
                 const resp = await fetch('/api/list');
                 const data = await resp.json();
-
                 const listEl = document.getElementById('saved-list');
-
                 if (data.status === 'success' && data.schedules && data.schedules.length > 0) {
                     listEl.innerHTML = '';
                     data.schedules.forEach(s => {
@@ -1205,7 +830,7 @@
                                 <strong>${s.name}</strong>
                                 <div class="text-muted" style="font-size: 0.75rem;">${s.created_at}</div>
                             </div>
-                            <button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="deleteSchedule('${s.name}', event)" title="删除">×</button>
+                            <button class="btn btn-sm btn-outline-danger py-0 px-1" onclick="deleteSchedule('${s.name}', event)" title="删除"><i class="bi bi-x"></i></button>
                         `;
                         listEl.appendChild(item);
                     });
@@ -1219,73 +844,45 @@
 
         async function saveCurrentSchedule() {
             const name = document.getElementById('save-name').value.trim();
-
-            if (!name) {
-                alert('请输入方案名称');
-                return;
-            }
-
-            if (!globalSchedule || Object.keys(globalSchedule).length === 0) {
-                alert('没有可保存的课表');
-                return;
-            }
-
+            if (!name) { alert('请输入方案名称'); return; }
+            if (!globalSchedule || Object.keys(globalSchedule).length === 0) { alert('没有可保存的课表'); return; }
             try {
                 const resp = await fetch('/api/save', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: name,
-                        config: config
-                    })
+                    body: JSON.stringify({ name: name, config: config })
                 });
-
                 const data = await resp.json();
-
                 if (data.status === 'success') {
                     alert(`✅ ${data.message}`);
                     document.getElementById('save-name').value = '';
-                    loadSavedList(); // 刷新列表
+                    loadSavedList();
                 } else {
                     alert(`❌ ${data.message}`);
                 }
-            } catch (e) {
-                alert('保存失败: ' + e.message);
-            }
+            } catch (e) { alert('保存失败: ' + e.message); }
         }
 
         async function loadSchedule(name) {
-            if (!confirm(`确定要加载方案"${name}"吗？当前课表将被替换。`)) {
-                return;
-            }
-
+            if (!confirm(`确定要加载方案"${name}"吗？当前课表将被替换。`)) return;
             try {
                 const resp = await fetch('/api/load', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
-
                 const data = await resp.json();
-
                 if (data.status === 'success') {
-                    // 更新全局数据
                     globalSchedule = data.schedule;
-
-                    // 更新UI
                     updateUIAfterLoad(data);
-
                     alert(`✅ 已加载方案"${name}"`);
                 } else {
                     alert(`❌ ${data.message}`);
                 }
-            } catch (e) {
-                alert('加载失败: ' + e.message);
-            }
+            } catch (e) { alert('加载失败: ' + e.message); }
         }
 
         function updateUIAfterLoad(data) {
-            // 更新班级下拉框
             const classSelect = document.getElementById('class-select');
             classSelect.innerHTML = '';
             Object.keys(data.schedule).forEach(cid => {
@@ -1294,8 +891,6 @@
                 opt.innerText = cid + " 班";
                 classSelect.appendChild(opt);
             });
-
-            // 更新老师下拉框
             const teacherSelect = document.getElementById('teacher-select');
             teacherSelect.innerHTML = '';
             if (data.teachers && data.teachers.length > 0) {
@@ -1306,78 +901,50 @@
                     teacherSelect.appendChild(opt);
                 });
             }
-
-            // 渲染课表
             renderCurrentClass();
-
-            // 启用功能按钮
             teacherSelect.disabled = false;
             document.getElementById('btn-add-leave').disabled = false;
             document.getElementById('btn-apply').disabled = false;
             document.getElementById('btn-save').disabled = false;
             document.getElementById('btn-export-current').disabled = false;
             document.getElementById('btn-export-all').disabled = false;
-
-            // 更新状态
             const status = document.getElementById('system-status');
-            status.innerText = `✅ 已加载 (${data.created_at || ''})`;
+            status.innerHTML = `<i class="bi bi-cloud-check-fill"></i> 已加载 (${data.created_at || ''})`;
             status.className = "text-center text-info fw-bold mb-3";
         }
 
         async function deleteSchedule(name, event) {
-            event.stopPropagation(); // 防止触发加载事件
-
-            if (!confirm(`确定要删除方案"${name}"吗？此操作不可恢复。`)) {
-                return;
-            }
-
+            event.stopPropagation();
+            if (!confirm(`确定要删除方案"${name}"吗？此操作不可恢复。`)) return;
             try {
                 const resp = await fetch('/api/delete', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name })
                 });
-
                 const data = await resp.json();
-
                 if (data.status === 'success') {
                     alert(`✅ ${data.message}`);
-                    loadSavedList(); // 刷新列表
+                    loadSavedList();
                 } else {
                     alert(`❌ ${data.message}`);
                 }
-            } catch (e) {
-                alert('删除失败: ' + e.message);
-            }
+            } catch (e) { alert('删除失败: ' + e.message); }
         }
-
-        // ============ Excel导出功能 ============
 
         function exportCurrentClass() {
             const classId = document.getElementById('class-select').value;
-
-            if (!classId) {
-                alert('请先选择要导出的班级');
-                return;
-            }
-
-            // 直接打开下载链接
+            if (!classId) { alert('请先选择要导出的班级'); return; }
             window.location.href = `/api/export/class/${classId}`;
         }
 
         function exportAllClasses() {
-            if (!confirm('确定要导出所有班级的课表吗？')) {
-                return;
-            }
-            // 直接打开下载链接
+            if (!confirm('确定要导出所有班级的课表吗？')) return;
             window.location.href = '/api/export/all_classes';
         }
 
-        // ============ 老师视图功能 ============
-
         function switchView(mode) {
             currentView = mode;
-
             const classBtn = document.getElementById('btn-view-class');
             const teacherBtn = document.getElementById('btn-view-teacher');
             const classSelector = document.getElementById('class-selector-group');
@@ -1385,7 +952,6 @@
             const title = document.getElementById('class-title');
 
             if (mode === 'class') {
-                // 切换到班级视图
                 classBtn.classList.add('active');
                 teacherBtn.classList.remove('active');
                 classSelector.style.display = 'flex';
@@ -1393,7 +959,6 @@
                 title.innerText = '班级课表';
                 renderCurrentClass();
             } else if (mode === 'teacher') {
-                // 切换到老师视图
                 classBtn.classList.remove('active');
                 teacherBtn.classList.add('active');
                 classSelector.style.display = 'none';
@@ -1405,89 +970,61 @@
 
         async function renderCurrentTeacher() {
             const teacherName = document.getElementById('teacher-view-select').value;
-
-            if (!teacherName) {
-                return;
-            }
-
+            if (!teacherName) return;
             try {
                 const resp = await fetch('/api/teacher_view', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ teacher_name: teacherName })
                 });
-
                 const data = await resp.json();
-
                 if (data.status === 'success') {
                     renderTeacherSchedule(data.schedule);
                 } else {
                     alert(`错误: ${data.message}`);
                 }
-            } catch (e) {
-                alert('获取老师课表失败: ' + e.message);
-            }
+            } catch (e) { alert('获取老师课表失败: ' + e.message); }
         }
 
         function renderTeacherSchedule(schedule) {
             const tbody = document.getElementById('schedule-body');
             tbody.innerHTML = '';
-
             for (let p = 0; p < 9; p++) {
                 const tr = document.createElement('tr');
-                const th = document.createElement('th');
-                th.innerText = `第 ${p + 1} 节`;
-                tr.appendChild(th);
-
+                const th = document.createElement('th'); th.innerText = `第 ${p + 1} 节`; tr.appendChild(th);
                 for (let d = 0; d < 5; d++) {
                     const td = document.createElement('td');
                     const periodData = schedule[p];
                     const info = periodData ? periodData[d] : null;
-
                     if (info) {
-                        // 显示班级和科目
                         td.className = info.is_sub ? 'status-sub' : '';
                         td.innerHTML = `<div class="course-cell">${info.class_id}班</div><span class="teacher-name">${info.subject}</span>`;
                     }
-
                     tr.appendChild(td);
                 }
-
                 tbody.appendChild(tr);
             }
         }
 
-        // ============ 错误提示功能 ============
-
         function showErrorAlert(errorData) {
             const container = document.getElementById('error-alert-container');
-
-            // 确定错误类型对应的样式
             let alertClass = 'alert-warning';
-            let icon = '⚠️';
-
+            let icon = '<i class="bi bi-exclamation-triangle-fill"></i>';
             if (errorData.error_type === 'system_error' || errorData.error_type === 'network_error') {
                 alertClass = 'alert-danger';
-                icon = '❌';
-            } else if (errorData.error_type === 'schedule_overload') {
-                alertClass = 'alert-warning';
-                icon = '⚠️';
+                icon = '<i class="bi bi-x-circle-fill"></i>';
             }
-
-            // 构建建议列表HTML
             let suggestionsHTML = '';
             if (errorData.suggestions && errorData.suggestions.length > 0) {
-                suggestionsHTML = '<div class="mt-2"><strong>💡 建议：</strong><ul class="mb-0 mt-1">';
+                suggestionsHTML = '<div class="mt-2"><strong><i class="bi bi-lightbulb"></i> 建议：</strong><ul class="mb-0 mt-1">';
                 errorData.suggestions.forEach(suggestion => {
                     suggestionsHTML += `<li>${suggestion}</li>`;
                 });
                 suggestionsHTML += '</ul></div>';
             }
-
-            // 创建错误提示框
             container.innerHTML = `
                 <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                    <h6 class="alert-heading">${icon} ${errorData.message || '排课失败'}</h6>
+                    <h6 class="alert-heading alert-title">${icon} ${errorData.message || '排课失败'}</h6>
                     ${suggestionsHTML}
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
@@ -1495,162 +1032,8 @@
         }
 
         function clearErrorAlert() {
-            const container = document.getElementById('error-alert-container');
-            container.innerHTML = '';
+            document.getElementById('error-alert-container').innerHTML = '';
         }
-
-        // ============ 代课日志显示功能 ============
-
-        function showSubstitutionLogs(stats, logs) {
-            // 显示日志容器
-            const container = document.getElementById('substitution-logs-container');
-            container.style.display = 'block';
-
-            // 更新统计信息
-            document.getElementById('stat-direct').textContent = stats.direct || 0;
-            document.getElementById('stat-swap').textContent = stats.swap || 0;
-            document.getElementById('stat-self').textContent = stats.self_study || 0;
-
-            // 计算总扰动度
-            const totalScore = (stats.direct || 0) * 0 + (stats.swap || 0) * 1 + (stats.self_study || 0) * 999;
-            document.getElementById('stat-score').textContent = totalScore;
-
-            // 显示详细日志
-            const logsContainer = document.getElementById('sub-logs');
-            if (logs && logs.length > 0) {
-                logsContainer.innerHTML = logs.map(log => {
-                    const colorClass = log.type === 'self_study' ? 'text-danger' : 'text-success';
-                    return `<div class="${colorClass}" style="margin-bottom: 4px;">${log.message}</div>`;
-                }).join('');
-            } else {
-                logsContainer.innerHTML = '<div class="text-muted text-center">暂无日志</div>';
-            }
-
-            // 滚动到容器
-            setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
-        }
-
-        window.showSubstitutionLogs = showSubstitutionLogs;
-
-        // ============ 请假管理功能 ============
-
-        function addLeave() {
-            const teacherSelect = document.getElementById('teacher-select');
-            const startDaySelect = document.getElementById('start-day');
-            const endDaySelect = document.getElementById('end-day');
-
-            const teacherName = teacherSelect.value;
-            const startDay = startDaySelect.value;
-            const endDay = endDaySelect.value;
-
-            if (!teacherName) {
-                alert('请选择老师');
-                return;
-            }
-
-            if (!startDay || !endDay) {
-                alert('请选择请假时间范围');
-                return;
-            }
-
-            // 构建日期范围数组
-            const dayOrder = ["周一", "周二", "周三", "周四", "周五"];
-            const startIndex = dayOrder.indexOf(startDay);
-            const endIndex = dayOrder.indexOf(endDay);
-
-            if (startIndex > endIndex) {
-                alert('起始日期不能晚于结束日期');
-                return;
-            }
-
-            const selectedDays = dayOrder.slice(startIndex, endIndex + 1);
-
-            // 添加请假记录
-            leaveRequests.push({
-                name: teacherName,
-                days: selectedDays
-            });
-
-            // 更新显示
-            updateLeaveList();
-        }
-
-        function updateLeaveList() {
-            const list = document.getElementById('leave-list');
-
-            if (leaveRequests.length === 0) {
-                list.innerHTML = '';
-                return;
-            }
-
-            list.innerHTML = leaveRequests.map((req, index) => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>
-                        <strong>${req.name}</strong>
-                        <br>
-                        <small class="text-muted">${req.days.join(', ')}</small>
-                    </span>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeLeave(${index})">×</button>
-                </li>
-            `).join('');
-        }
-
-        function removeLeave(index) {
-            leaveRequests.splice(index, 1);
-            updateLeaveList();
-        }
-
-        async function applySubstitutions() {
-            if (leaveRequests.length === 0) {
-                alert('请先添加请假条');
-                return;
-            }
-
-            if (!globalSchedule || Object.keys(globalSchedule).length === 0) {
-                alert('请先生成课表');
-                return;
-            }
-
-            const btn = document.getElementById('btn-apply');
-            btn.disabled = true;
-            btn.innerHTML = '⏳ 处理中...';
-
-            try {
-                const response = await fetch('/api/substitute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ leaves: leaveRequests })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    // 更新课表
-                    globalSchedule = data.schedule;
-                    renderCurrentClass();
-
-                    // 显示日志 ⭐ 关键集成点
-                    if (data.stats && data.logs) {
-                        showSubstitutionLogs(data.stats, data.logs);
-                    }
-
-                    alert('✅ 代课处理完成！');
-
-                    // 清空请假列表
-                    leaveRequests = [];
-                    updateLeaveList();
-                } else {
-                    alert(`❌ 代课失败: ${data.message}`);
-                }
-            } catch (e) {
-                console.error(e);
-                alert('处理失败: ' + e.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '🔄 执行智能代课';
-            }
-        }
-
     </script>
 </body>
 
