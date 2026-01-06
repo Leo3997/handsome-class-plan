@@ -1,0 +1,19 @@
+{
+  "name": "schedule_system",
+  "version": "1.0.0",
+  "description": "一个基于 Python (Flask) 和 Google OR-Tools 开发的智能排课系统，专为中小学设计。支持自动化排课、可视化手动微调、高级约束配置及排课数据统计。",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

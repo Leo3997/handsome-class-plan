@@ -5,1799 +5,1378 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>得鹿山智能排课系统</title>
+    <!-- Tailwind CSS -->
+    <link href="/static/css/output.css" rel="stylesheet">
+    <!-- Google Fonts for Campus Vibe -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap CSS (Keep for Modals compatibility) -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/css/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="/static/css/style.css" rel="stylesheet">
+
     <style>
-        /* 开屏动画样式 */
-        #splash-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0f172a, #1e3a8a, #3b82f6);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            z-index: 9999;
+        body {
+            background-color: #eef2f6;
+            background-image: radial-gradient(#cbd5e0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .clay-card {
+            background: #eef2f6;
+            border-radius: 20px;
+            box-shadow: 8px 8px 16px #dce1e8, -8px -8px 16px #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .clay-btn {
+            background: #eef2f6;
+            border-radius: 12px;
+            box-shadow: 5px 5px 10px #dce1e8, -5px -5px 10px #ffffff;
+            color: #4a5568;
+            transition: all 0.2s ease;
+            font-weight: 700;
+        }
+
+        .clay-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            color: #3182ce;
+        }
+
+        .clay-btn:active:not(:disabled) {
+            box-shadow: inset 5px 5px 10px #dce1e8, inset -5px -5px 10px #ffffff;
+            transform: translateY(0);
+        }
+
+        .clay-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .clay-btn-primary {
+            background: #ebf8ff;
+            color: #2b6cb0;
+        }
+
+        .clay-btn-primary:hover:not(:disabled) {
+            color: #2c5282;
+        }
+
+        .clay-input {
+            background: #eef2f6;
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            box-shadow: inset 5px 5px 10px #dce1e8, inset -5px -5px 10px #ffffff;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .clay-input:focus {
+            box-shadow: inset 8px 8px 16px #dce1e8, inset -8px -8px 16px #ffffff;
+        }
+
+        /* Schedule Table */
+        .schedule-cell {
+            background: #eef2f6;
+            border-radius: 12px;
+            box-shadow: 3px 3px 6px #dce1e8, -3px -3px 6px #ffffff;
+            transition: transform 0.2s;
+            cursor: move;
+            min-height: 80px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
+            padding: 4px;
         }
 
-        @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        .schedule-cell:hover {
+            transform: scale(1.02);
+            z-index: 10;
         }
 
-        .splash-content {
-            text-align: center;
-            animation: fadeInUp 1s ease-out;
+        .schedule-cell.empty {
+            box-shadow: inset 3px 3px 6px #dce1e8, inset -3px -3px 6px #ffffff;
+            opacity: 0.6;
         }
 
-        .splash-icon {
-            font-size: 5rem;
-            margin-bottom: 20px;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            animation: bounce 2s infinite;
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
 
-        .splash-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
         }
 
-        .splash-subtitle {
-            font-size: 1.2rem;
-            opacity: 0.8;
-            letter-spacing: 2px;
-        }
-
-        .loader {
-            margin: 30px auto 0;
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid #fff;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes bounce {
-
-            0%,
-            20%,
-            50%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-20px);
-            }
-
-            60% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        #splash-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
     </style>
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/chart.js"></script>
 </head>
 
-<body>
-    <!-- 开屏动画 -->
-    <div id="splash-screen">
-        <div class="splash-content">
-            <img src="/static/splash_logo.png" alt="Logo" class="splash-icon"
-                style="height: 266px; width: auto; animation: bounce 2.5s infinite;">
-            <div class="splash-title">得鹿山智能排课系统</div>
-            <div class="splash-subtitle">Smart Scheduling System</div>
-            <div class="loader"></div>
+<body class="h-screen flex overflow-hidden text-slate-600 font-sans p-4 gap-4">
+
+    <!-- Splash -->
+    <div id="splash-screen"
+        class="fixed inset-0 bg-[#eef2f6] z-[9999] flex flex-col items-center justify-center transition-opacity duration-700">
+        <div class="clay-card p-8 flex flex-col items-center animate-bounce">
+            <img src="/static/logo.png" class="w-16 h-16 mb-4 object-contain">
+            <h2 class="text-2xl font-black text-slate-700 tracking-wider">得鹿山</h2>
+            <p class="text-slate-400 font-bold mt-2">校园排课系统加载中...</p>
         </div>
     </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 sidebar">
-                <div class="d-flex flex-column align-items-center mb-4 text-center">
-                    <img src="/static/logo.png" alt="Logo" style="height: 100px; margin-bottom: 12px;">
-                    <h4 class="text-primary fw-bold mb-0">
-                        得鹿山智能排课系统
-                    </h4>
-                </div>
+    <!-- Sidebar (Left Panel) -->
+    <aside id="main-sidebar"
+        class="w-72 bg-white/80 backdrop-blur-xl border-r border-white/50 flex flex-col fixed md:relative z-50 h-full transition-transform transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
+        <!-- Header -->
+        <div class="p-6 pb-2 text-center relative">
+            <button class="md:hidden absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+                onclick="toggleSidebar()">
+                <i class="bi bi-x-lg text-xl"></i>
+            </button>
+            <div class="w-20 h-20 mx-auto clay-card flex items-center justify-center mb-4 rounded-full">
+                <img src="/static/logo.png" class="w-12 h-12 object-contain" alt="Logo">
+            </div>
+            <h1 class="text-2xl font-black text-slate-700 font-display">得鹿山智能排课</h1>
+            <div
+                class="inline-block px-3 py-1 mt-2 bg-yellow-100 text-yellow-600 rounded-full text-xs font-bold shadow-sm">
+                校园版
+            </div>
+        </div>
 
-                <div class="d-flex gap-2 mb-4">
-                    <button id="btn-init" class="btn btn-primary flex-grow-1 py-2 shadow-sm" onclick="initSystem()">
-                        <span id="init-spinner" class="spinner-border spinner-border-sm d-none"></span>
-                        <i class="bi bi-rocket-takeoff me-1"></i> 生成/重置
-                    </button>
-                    <button class="btn btn-light border shadow-sm" onclick="openSettings()" title="高级约束设置"
-                        style="width: 42px;">
-                        <i class="bi bi-gear-fill"></i>
-                    </button>
-                    <button class="btn btn-light border shadow-sm" data-bs-toggle="modal"
-                        data-bs-target="#settingsModal" title="基本参数设置" style="width: 42px;">
-                        <i class="bi bi-file-earmark-text"></i>
-                    </button>
-                </div>
-                <div class="d-flex gap-2 mb-3">
-                    <button id="btn-undo" class="btn btn-outline-secondary w-50 shadow-sm" onclick="performUndo()"
-                        disabled>
-                        <i class="bi bi-arrow-counterclockwise me-1"></i>撤销
-                    </button>
-                    <button id="btn-redo" class="btn btn-outline-secondary w-50 shadow-sm" onclick="performRedo()"
-                        disabled>
-                        <i class="bi bi-arrow-clockwise me-1"></i>重做
-                    </button>
-                </div>
-                <button id="btn-stats" class="btn btn-outline-primary w-100 mb-3 shadow-sm" onclick="openStatistics()"
-                    disabled>
-                    <i class="bi bi-bar-chart-fill me-1"></i> 查看统计看板
+        <!-- Navigation -->
+        <div class="flex-1 overflow-y-auto px-6 py-4 space-y-6 custom-scrollbar">
+
+            <!-- Main Actions -->
+            <button id="btn-init" onclick="initSystem()"
+                class="w-full clay-btn clay-btn-primary py-4 text-lg flex items-center justify-center group relative overflow-hidden">
+                <span id="init-spinner" class="spinner-border spinner-border-sm mr-2 d-none"></span>
+                <i class="bi bi-stars mr-2 text-yellow-500 text-xl group-hover:scale-110 transition-transform"></i>
+                一键生成
+            </button>
+
+
+
+            <!-- Buttons Grid -->
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="openSettings()"
+                    class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-blue-500">
+                    <i class="bi bi-sliders text-xl text-blue-400"></i> 高级
                 </button>
-                <div id="system-status" class="text-center text-muted small mb-3">系统未初始化</div>
-
-                <!-- 错误提示容器 -->
-                <div id="error-alert-container"></div>
-
-                <hr>
-                <h5 class="mb-3"><i class="bi bi-floppy me-2"></i>课表方案管理</h5>
-                <div class="mb-3">
-                    <div class="input-group input-group-sm mb-2">
-                        <input type="text" id="save-name" class="form-control" placeholder="输入方案名称">
-                        <button class="btn btn-outline-success" onclick="saveCurrentSchedule()" id="btn-save"
-                            disabled>保存</button>
-                    </div>
-                    <div class="small text-muted mb-2">已保存的方案：</div>
-                    <div id="saved-list" class="list-group list-group-flush small"
-                        style="max-height: 150px; overflow-y: auto;">
-                        <div class="text-center text-muted py-2">暂无保存方案</div>
-                    </div>
-                </div>
-
-                <hr>
-                <h5 class="mb-3"><i class="bi bi-person-lines-fill me-2"></i>请假管理</h5>
-                <div class="mb-3">
-                    <label class="form-label small text-muted">选择老师</label>
-                    <select id="teacher-select" class="form-select" disabled></select>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label small text-muted">时间范围</label>
-                    <div class="d-flex gap-2">
-                        <select id="start-day" class="form-select">
-                            <option>周一</option>
-                            <option>周二</option>
-                            <option>周三</option>
-                            <option>周四</option>
-                            <option>周五</option>
-                        </select>
-                        <select id="end-day" class="form-select">
-                            <option>周一</option>
-                            <option>周二</option>
-                            <option>周三</option>
-                            <option>周四</option>
-                            <option>周五</option>
-                        </select>
-                    </div>
-                </div>
-                <button id="btn-add-leave" class="btn btn-outline-secondary w-100 mb-2" onclick="addLeave()" disabled>
-                    <i class="bi bi-plus-lg me-1"></i>添加请假条
+                <button data-bs-toggle="modal" data-bs-target="#settingsModal"
+                    class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-indigo-500">
+                    <i class="bi bi-gear-fill text-xl text-indigo-400"></i> 参数
                 </button>
-                <ul id="leave-list" class="list-group small mb-3"></ul>
-                <button id="btn-apply" class="btn btn-success w-100" onclick="applySubstitutions()" disabled>
-                    <i class="bi bi-arrow-repeat me-1"></i>执行智能代课
-                </button>
-
-                <!-- 代课日志区域 -->
-                <div id="substitution-logs-container" style="display: none;">
-                    <hr>
-                    <h5 class="mb-3"><i class="bi bi-journal-text me-2"></i>代课日志</h5>
-
-                    <div id="sub-stats" class="mb-3 p-2"
-                        style="background: #f8f9fa; border-radius: 8px; font-size: 0.85rem; border: 1px solid #e9ecef;">
-                        <div><strong>直接代课：</strong><span id="stat-direct">0</span>次</div>
-                        <div><strong>课程互换：</strong><span id="stat-swap" class="text-info">0</span>次</div>
-                        <div><strong>标记自习：</strong><span id="stat-self">0</span>次</div>
-                        <div class="mt-1"><strong>总扰动度：</strong><span id="stat-score">0</span>分</div>
-                    </div>
-
-                    <div class="small text-muted mb-1">详细日志：</div>
-                    <div id="sub-logs" class="small"
-                        style="max-height: 200px; overflow-y: auto; background: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 8px;">
-                        <div class="text-muted text-center">暂无日志</div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 main-content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="d-flex align-items-center gap-2">
-                        <h3 id="class-title" class="mb-0 fw-bold">班级课表</h3>
-                        <div class="btn-group btn-group-sm ms-2">
-                            <button class="btn btn-outline-primary active" id="btn-view-class"
-                                onclick="switchView('class')">
-                                <i class="bi bi-grid-3x3-gap-fill me-1"></i>班级视图
-                            </button>
-                            <button class="btn btn-outline-info" id="btn-view-teacher" onclick="switchView('teacher')"
-                                disabled>
-                                <i class="bi bi-person-video3 me-1"></i>老师视图
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-center gap-2">
-                        <div id="class-selector-group" class="d-flex align-items-center gap-2">
-                            <label class="text-secondary small">查看班级：</label>
-                            <select id="class-select" class="form-select w-auto"
-                                onchange="renderCurrentClass()"></select>
-                        </div>
-
-                        <div id="teacher-selector-group" class="d-flex align-items-center gap-2" style="display: none;">
-                            <label class="text-secondary small">查看老师：</label>
-                            <select id="teacher-view-select" class="form-select w-auto"
-                                onchange="renderCurrentTeacher()"></select>
-                        </div>
-
-                        <div class="btn-group ms-2">
-                            <button class="btn btn-sm btn-outline-success" onclick="exportCurrentClass()"
-                                id="btn-export-current" disabled title="导出当前班级">
-                                <i class="bi bi-download me-1"></i>导出本班
-                            </button>
-                            <button class="btn btn-sm btn-outline-primary" onclick="exportAllClasses()"
-                                id="btn-export-all" disabled title="导出所有班级">
-                                <i class="bi bi-box-seam me-1"></i>导出全部
-                            </button>
-                        </div>
-                    </div>
+            <!-- Management Card -->
+            <div
+                class="clay-card p-4 !shadow-[inset_5px_5px_10px_#dce1e8,inset_-5px_-5px_10px_#ffffff] !bg-transparent rounded-2xl">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 ml-1">方案存档</h3>
+                <div class="flex gap-2 mb-3">
+                    <input id="save-name" class="clay-input w-full text-sm" placeholder="方案名称...">
+                    <button onclick="saveCurrentSchedule()" id="btn-save" disabled
+                        class="clay-btn w-10 flex items-center justify-center text-green-500">
+                        <i class="bi bi-check-lg"></i>
+                    </button>
                 </div>
-                <div class="timetable-card">
-                    <table class="table schedule-table mb-0">
-                        <thead>
-                            <tr>
-                                <th style="width:80px">节次</th>
-                                <th>周一</th>
-                                <th>周二</th>
-                                <th>周三</th>
-                                <th>周四</th>
-                                <th>周五</th>
-                            </tr>
-                        </thead>
-                        <tbody id="schedule-body">
-                            <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">请先生成课表</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div id="saved-list" class="space-y-2 max-h-32 overflow-y-auto pr-1"></div>
+            </div>
+
+            <!-- Leave & Sub -->
+            <div
+                class="clay-card p-4 !shadow-[inset_5px_5px_10px_#dce1e8,inset_-5px_-5px_10px_#ffffff] !bg-transparent rounded-2xl">
+                <div onclick="document.querySelector('#leave-panel').classList.toggle('hidden')"
+                    class="flex justify-between items-center cursor-pointer mb-2">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">请假与代课</h3>
+                    <i class="bi bi-caret-down-fill text-slate-300"></i>
+                </div>
+
+                <div id="leave-panel" class="hidden space-y-2">
+                    <select id="teacher-select" disabled class="clay-input w-full text-sm p-2"></select>
+
+                    <div class="grid grid-cols-2 gap-2 text-[10px] text-slate-400 font-bold px-1">
+                        <span>开始时间</span>
+                        <span>结束时间</span>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="start-day" class="clay-input w-2/3 text-xs p-2">
+                            <option value="0">周一</option>
+                            <option value="1">周二</option>
+                            <option value="2">周三</option>
+                            <option value="3">周四</option>
+                            <option value="4">周五</option>
+                        </select>
+                        <select id="start-period" class="clay-input w-1/3 text-xs p-2">
+                            <option value="0">1</option>
+                            <option value="1">2</option>
+                            <option value="2">3</option>
+                            <option value="3">4</option>
+                            <option value="4">5</option>
+                            <option value="5">6</option>
+                            <option value="6">7</option>
+                            <option value="7">8</option>
+                            <option value="8">9</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2">
+                        <select id="end-day" class="clay-input w-2/3 text-xs p-2">
+                            <option value="0">周一</option>
+                            <option value="1">周二</option>
+                            <option value="2">周三</option>
+                            <option value="3">周四</option>
+                            <option value="4">周五</option>
+                        </select>
+                        <select id="end-period" class="clay-input w-1/3 text-xs p-2">
+                            <option value="0">1</option>
+                            <option value="1">2</option>
+                            <option value="2">3</option>
+                            <option value="3">4</option>
+                            <option value="4">5</option>
+                            <option value="5">6</option>
+                            <option value="6">7</option>
+                            <option value="7">8</option>
+                            <option value="8">9</option>
+                        </select>
+                    </div>
+
+                    <button onclick="addLeave()" id="btn-add-leave" disabled
+                        class="w-full clay-btn py-2 text-xs text-orange-400 hover:text-orange-500">添加请假条</button>
+                    <ul id="leave-list" class="space-y-2"></ul>
+                    <button onclick="applySubstitutions()" id="btn-apply" disabled
+                        class="w-full clay-btn py-2 text-xs text-purple-500 hover:text-purple-600 font-black mt-2">执行智能代课</button>
                 </div>
             </div>
         </div>
-    </div>
 
+        <!-- Footer -->
+        <div class="px-4 pb-4 space-y-2">
+
+            <a href="/logout"
+                class="block w-full text-center clay-btn py-3 text-red-400 hover:text-red-500 text-sm font-bold">
+                <i class="bi bi-power mr-1"></i> 退出登录
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full rounded-[2rem] overflow-hidden relative">
+
+        <!-- Mobile Menu Button -->
+        <button onclick="toggleSidebar()"
+            class="md:hidden absolute top-6 left-4 z-40 text-slate-500 clay-btn p-2 w-10 h-10 flex items-center justify-center">
+            <i class="bi bi-list text-xl"></i>
+        </button>
+
+        <!-- Header -->
+        <header class="h-20 mb-4 flex items-center justify-between px-2 shrink-0 pl-16 md:pl-2">
+            <div class="ml-1">
+                <h2 id="class-title" class="text-3xl font-black text-slate-700 font-display"> 班级课表 </h2>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <!-- View Switcher -->
+                <div class="clay-card p-1.5 flex gap-2">
+                    <button id="btn-view-class" onclick="switchView('class')"
+                        class="clay-btn px-4 py-2 text-sm text-blue-500 bg-white">班级视图</button>
+                    <button id="btn-view-teacher" onclick="switchView('teacher')" disabled
+                        class="clay-btn px-4 py-2 text-sm text-slate-400 hover:text-slate-600">教师视图</button>
+                </div>
+
+                <!-- Selectors -->
+                <div id="class-selector-group">
+                    <select id="class-select" onchange="renderCurrentClass()"
+                        class="clay-input py-2.5 px-4 text-sm font-bold text-slate-600 w-[200px]"></select>
+                </div>
+                <div id="teacher-selector-group" class="hidden">
+                    <select id="teacher-view-select" onchange="renderCurrentTeacher()"
+                        class="clay-input py-2.5 px-4 text-sm font-bold text-slate-600 w-[200px]"></select>
+                </div>
+
+                <div class="flex gap-3 ml-2">
+                    <button onclick="performUndo()" id="btn-undo" disabled
+                        class="clay-btn w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500"><i
+                            class="bi bi-arrow-counterclockwise text-lg"></i></button>
+                    <button onclick="performRedo()" id="btn-redo" disabled
+                        class="clay-btn w-10 h-10 flex items-center justify-center text-slate-400 hover:text-blue-500"><i
+                            class="bi bi-arrow-clockwise text-lg"></i></button>
+                    <button onclick="exportCurrentClass()" id="btn-export-current" disabled
+                        class="clay-btn w-10 h-10 flex items-center justify-center text-green-500 hover:text-green-600"><i
+                            class="bi bi-cloud-download-fill text-lg"></i></button>
+                    <button onclick="openStatistics()" id="btn-stats" disabled
+                        class="clay-btn w-10 h-10 flex items-center justify-center text-indigo-400 hover:text-indigo-500"><i
+                            class="bi bi-bar-chart-line-fill text-lg"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Schedule Grid -->
+        <div class="flex-1 clay-card p-6 overflow-auto custom-scrollbar relative z-10 !rounded-[2.5rem]">
+            <div id="error-alert-container"></div>
+
+            <div id="loading-state"
+                class="hidden absolute inset-0 flex items-center justify-center bg-white/50 z-50 rounded-[2.5rem] backdrop-blur-sm">
+                <div class="spinner-border text-blue-300" style="width: 3rem; height: 3rem;"></div>
+            </div>
+
+            <table class="w-full text-center border-separate border-spacing-x-4 border-spacing-y-4">
+                <thead>
+                    <tr>
+                        <th class="w-16"></th>
+                        <th class="text-slate-400 font-black uppercase text-sm pb-2">周一</th>
+                        <th class="text-slate-400 font-black uppercase text-sm pb-2">周二</th>
+                        <th class="text-slate-400 font-black uppercase text-sm pb-2">周三</th>
+                        <th class="text-slate-400 font-black uppercase text-sm pb-2">周四</th>
+                        <th class="text-slate-400 font-black uppercase text-sm pb-2">周五</th>
+                    </tr>
+                </thead>
+                <tbody id="schedule-body">
+                    <tr>
+                        <td colspan="6" class="py-20 text-slate-300 font-bold text-xl text-center">准备好排课了吗？
+                            <br> 点击 "一键生成" 开始！
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <!-- Modals (Reused Structure, Clay Styled) -->
     <!-- Settings Modal -->
     <div class="modal fade" id="settingsModal" tabindex="-1">
         <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-sliders me-2"></i>全局排课参数设置</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] !shadow-2xl overflow-hidden p-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-black text-slate-700">配置参数</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3 d-flex justify-content-end align-items-center bg-light p-2 rounded">
-                        <input type="file" id="config-file-input" accept=".xlsx, .xls" style="display: none;"
-                            onchange="handleConfigUpload(this)">
-                        <small class="text-muted me-auto"><i class="bi bi-info-circle me-1"></i>支持导入排课参数 Excel</small>
-                        <button class="btn btn-outline-success btn-sm"
-                            onclick="document.getElementById('config-file-input').click()">
-                            <i class="bi bi-file-earmark-spreadsheet me-1"></i>从 Excel 导入配置
-                        </button>
+                    <div class="clay-card p-6 mb-4 !bg-[#fff5f5] flex justify-between items-center">
+                        <div>
+                            <h6 class="text-red-400 font-bold mb-1 uppercase tracking-wide text-xs">快速配置</h6>
+                            <p class="text-xs text-slate-400">上传 Excel 自动填充科目与老师</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <input type="file" id="config-excel-upload" class="hidden" accept=".xlsx, .xls"
+                                onchange="handleConfigUpload(this)">
+                            <label for="config-excel-upload"
+                                class="clay-btn px-4 py-2 text-xs text-red-400 cursor-pointer hover:text-red-500">
+                                <i class="bi bi-file-earmark-excel-fill mr-1"></i> 导入配置
+                            </label>
+                            <a href="/static/template.xlsx" class="clay-btn px-3 py-2 text-xs text-slate-400" download>
+                                <i class="bi bi-download"></i>
+                            </a>
+                        </div>
                     </div>
-
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">班级总数</label>
-                        <div class="col-sm-4">
-                            <input type="number" id="setting-num-classes" class="form-control" value="6">
+                    <div class="clay-card p-6 mb-4 !bg-[#ebf8ff]">
+                        <h6 class="text-blue-500 font-bold mb-3 uppercase tracking-wide text-xs">核心设置</h6>
+                        <div class="row">
+                            <label class="col-sm-2 font-bold text-slate-600">班级数量</label>
+                            <div class="col-sm-4"><input type="number" id="setting-num-classes"
+                                    class="clay-input w-full" value="6"></div>
                         </div>
                     </div>
 
-                    <div class="card bg-light border-0 mb-3">
-                        <div class="card-body py-2">
-                            <h6 class="mb-2 text-primary"><i class="bi bi-cpu-fill me-2"></i>算法优化偏好</h6>
-                            <div class="row align-items-center">
-                                <div class="col-md-6">
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="opt-golden-time" checked>
-                                        <label class="form-check-label" for="opt-golden-time">
-                                            优先安排黄金时间
-                                            <small class="d-block text-muted"
-                                                style="font-size: 0.75rem;">语数英尽量不排在下午</small>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group input-group-sm">
-                                        <span class="input-group-text">避免连堂超过</span>
-                                        <select class="form-select" id="opt-max-consecutive">
-                                            <option value="2">2 节</option>
-                                            <option value="3">3 节</option>
-                                            <option value="4">4 节</option>
-                                        </select>
-                                        <span class="input-group-text">节</span>
-                                    </div>
-                                    <small class="text-muted" style="font-size: 0.75rem;">超过限制将增加惩罚权重</small>
-                                </div>
+                    <div class="flex flex-col gap-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-3 pl-2 pr-2">
+                                <h6 class="font-bold text-slate-600 flex items-center gap-2 m-0">
+                                    <i class="bi bi-book-half text-blue-400"></i> 科目设置
+                                </h6>
+                                <span id="total-hours-display"
+                                    class="text-xs font-bold px-3 py-1 bg-white rounded-lg text-slate-400 border border-slate-100">
+                                    周课时: <span id="current-hours" class="text-blue-500 text-sm">0</span> / 45
+                                </span>
                             </div>
+                            <div class="clay-card p-4 !shadow-clay-inner h-64 overflow-y-auto">
+                                <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                                    <thead>
+                                        <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
+                                            <th class="pl-2 pb-2 w-[25%]">科目名称</th>
+                                            <th class="pb-2 w-[15%]">每周节数</th>
+                                            <th class="pb-2 w-[15%]">类型</th>
+                                            <th class="pb-2 w-[35%]">固定老师 (选填)</th>
+                                            <th class="text-center pb-2 w-[10%]">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="course-settings-body" class="space-y-2"></tbody>
+                                </table>
+                            </div>
+                            <button
+                                class="clay-btn w-full mt-3 py-3 text-xs text-blue-500 font-bold hover:text-blue-600"
+                                onclick="addCourseRow()">
+                                <i class="bi bi-plus-lg mr-1"></i> 添加科目
+                            </button>
                         </div>
-                    </div>
 
-                    <hr>
-                    <h6 class="mb-3"><i class="bi bi-building me-2"></i>专用教室资源配置</h6>
-                    <div class="alert alert-light border small">
-                        <strong><i class="bi bi-info-circle me-1"></i>说明：</strong> <br>
-                        限制特定科目的<b>同时上课班级数</b>。例如：只有1间音乐室，则“音乐”课的容量设为1。
-                    </div>
-                    <table class="table table-sm align-middle">
-                        <thead>
-                            <tr>
-                                <th style="width: 25%">资源名称</th>
-                                <th style="width: 15%">容量(间)</th>
-                                <th>适用科目 (用逗号分隔)</th>
-                                <th style="width: 10%">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="resource-settings-body">
-                        </tbody>
-                    </table>
-                    <button class="btn btn-sm btn-outline-primary mb-3" onclick="addResourceRow()">
-                        <i class="bi bi-plus-lg me-1"></i>新增资源
-                    </button>
-
-                    <hr>
-                    <h6 class="mb-3"><i class="bi bi-people me-2"></i>科目与师资设置</h6>
-                    <div class="alert alert-light border small">
-                        <strong><i class="bi bi-info-circle me-1"></i>说明：</strong> <br>
-                        1. 在“指定老师姓名”中输入名字，用<b>空格</b>或<b>逗号</b>分隔。<br>
-                        2. 如果指定的名字少于需要的老师数量，系统会自动补全（如 "语文老师3"）。<br>
-                        3. 示例：输入 "张伟, 李娜"，系统会优先安排这两位，不够再自动生成。
-                    </div>
-                    <table class="table table-sm align-middle">
-                        <thead>
-                            <tr>
-                                <th style="width: 15%">科目名称</th>
-                                <th style="width: 12%">每周节数</th>
-                                <th style="width: 12%">课程类型</th>
-                                <th>指定老师姓名 (可选)</th>
-                                <th style="width: 10%">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody id="course-settings-body">
-                        </tbody>
-                    </table>
-                    <button class="btn btn-sm btn-outline-primary" onclick="addCourseRow()">
-                        <i class="bi bi-plus-lg me-1"></i>新增科目
-                    </button>
-                    <div class="mt-3 text-end">
-                        当前总课时: <span id="total-hours" class="fw-bold text-primary">0</span> / 45
+                        <div>
+                            <h6 class="font-bold text-slate-600 mb-3 pl-2 flex items-center gap-2">
+                                <i class="bi bi-building-gear text-green-400"></i> 实验室 / 功能室
+                            </h6>
+                            <div class="clay-card p-4 !shadow-clay-inner h-64 overflow-y-auto">
+                                <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                                    <thead>
+                                        <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
+                                            <th class="pl-2 pb-2 w-[30%]">资源名称</th>
+                                            <th class="pb-2 w-[15%]">容量(间)</th>
+                                            <th class="pb-2 w-[45%]">适用科目 (用逗号分隔)</th>
+                                            <th class="text-center pb-2 w-[10%]">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resource-settings-body" class="space-y-2"></tbody>
+                                </table>
+                            </div>
+                            <button
+                                class="clay-btn w-full mt-3 py-3 text-xs text-green-500 font-bold hover:text-green-600"
+                                onclick="addResourceRow()">
+                                <i class="bi bi-plus-lg mr-1"></i> 添加资源
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                        onclick="saveSettingsAndInit()">
-                        <i class="bi bi-check-lg me-1"></i>保存并生成课表
-                    </button>
+                <div class="modal-footer border-0">
+                    <button class="clay-btn px-6 py-2" data-bs-dismiss="modal">关闭</button>
+                    <button class="clay-btn px-6 py-2 !text-white !bg-blue-400 shadow-none hover:bg-blue-500"
+                        data-bs-dismiss="modal" onclick="saveSettingsAndInit()">保存并生成</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Advanced Constraints Modal -->
+    <!-- Constraint Modal -->
     <div class="modal fade" id="constraintModal" tabindex="-1">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-gear-wide-connected me-2"></i>高级排课设置</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-black text-slate-700">高级约束</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label class="form-label">选择老师进行配置</label>
-                        <select id="constraint-teacher-select" class="form-select" onchange="renderConstraintGrid()">
-                            <option value="">请选择...</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label d-flex justify-content-between">
-                            <span>禁排时间设置</span>
-                            <small class="text-muted"><span class="text-danger">■</span> 点击红色格子表示禁排</small>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center table-sm small" id="constraint-grid">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 40px"></th>
-                                        <th>周一</th>
-                                        <th>周二</th>
-                                        <th>周三</th>
-                                        <th>周四</th>
-                                        <th>周五</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="constraint-tbody">
-                                    <!-- JS渲染 -->
-                                </tbody>
-                            </table>
+                    <div <div
+                        class="bg-indigo-50 text-indigo-500 p-3 rounded-xl mb-3 text-xs font-bold flex items-start gap-2">
+                        <i class="bi bi-exclamation-circle-fill mt-0.5"></i>
+                        <div>
+                            <p>点击格子标记为 <span class="text-red-400">红色</span> 表示该时段【不排课】。</p>
+                            <p class="opacity-70 mt-1">注意：设置完成后，必须点击右下角的“保存并重排”才会生效。</p>
                         </div>
                     </div>
+
+                    <div class="clay-card p-3 mb-4 flex items-center justify-between !bg-white">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-black text-slate-700">禁止科目连排</span>
+                            <span class="text-[10px] text-slate-400 font-bold">同一门课尽量不连续上2节 (如：语文不连上)</span>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input cursor-pointer" type="checkbox" id="check-avoid-consecutive"
+                                style="width: 3em; height: 1.5em;">
+                        </div>
+                    </div>
+
+                    <!-- Mode Switcher -->
+                    <div class="flex gap-4 mb-3">
+                        <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
+                            <input type="radio" name="constraint-mode" value="teacher" class="hidden" checked
+                                onchange="switchConstraintMode()">
+                            <i class="bi bi-person-x-fill mr-1"></i> 教师不排课
+                        </label>
+                        <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
+                            <input type="radio" name="constraint-mode" value="fixed" class="hidden"
+                                onchange="switchConstraintMode()">
+                            <i class="bi bi-pin-angle-fill mr-1"></i> 班级预排课
+                        </label>
+                    </div>
+
+                    <select id="constraint-teacher-select" class="clay-input w-full mb-4"
+                        onchange="renderConstraintGrid()"></select>
+
+                    <select id="constraint-class-select" class="clay-input w-full mb-4 hidden"
+                        onchange="renderConstraintGrid()"></select>
+
+                    <div class="clay-card p-4 !shadow-clay-inner flex justify-center">
+                        <table class="table-auto border-separate border-spacing-2" id="constraint-grid">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>一</th>
+                                    <th>二</th>
+                                    <th>三</th>
+                                    <th>四</th>
+                                    <th>五</th>
+                                </tr>
+                            </thead>
+                            <tbody id="constraint-tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="saveSettings()">保存配置</button>
+                <div class="modal-footer border-0 flex justify-between items-center">
+                    <div class="text-xs text-slate-400 font-bold ml-2">
+                        <i class="bi bi-info-circle-fill mr-1"></i> 修改后需重新生成生效
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="clay-btn px-4 py-2" data-bs-dismiss="modal">暂存 (不生成)</button>
+                        <button onclick="saveConstraintsAndRun()"
+                            class="clay-btn px-8 py-3 !text-green-400 !bg-blue-600 hover:!bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all text-base font-black tracking-widest">
+                            <i class="bi bi-lightning-charge-fill mr-1"></i> 保存并重排
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Statistics Modal -->
+    <!-- Stats Modal -->
     <div class="modal fade" id="statisticsModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-bar-chart-fill me-2"></i>课表统计分析</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title font-black text-slate-700">数据看板</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-tabs mb-3" id="statsTabs">
-                        <li class="nav-item">
-                            <button class="nav-link active" data-bs-toggle="tab"
-                                data-bs-target="#tab-workload">工作量对比</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane fade show active" id="tab-workload">
-                            <div style="height: 400px;">
-                                <canvas id="workloadChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <div class="clay-card p-4 h-[400px]"><canvas id="workloadChart"></canvas></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
+    <!-- Delete Modal -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>确认删除</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>确定要永久删除方案 <strong id="delete-target-name"></strong> 吗？</p>
-                    <p class="text-muted small mb-0">此操作无法撤销。</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-danger" id="btn-confirm-delete">确认删除</button>
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-6 text-center">
+                <h5 class="font-black text-slate-700 mb-2">确定删除?</h5>
+                <div class="flex justify-center gap-4 mt-4">
+                    <button class="clay-btn px-4 py-2" data-bs-dismiss="modal">取消</button>
+                    <button class="clay-btn px-4 py-2 !text-red-500" id="btn-confirm-delete">确定</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Conflict Tooltip -->
-    <div id="conflict-tooltip" class="conflict-tooltip"></div>
+    <!-- Failure Suggestion Modal -->
+    <div class="modal fade" id="failureModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-6">
+                <div class="flex items-center gap-3 mb-4 text-red-500">
+                    <i class="bi bi-exclamation-triangle-fill text-2xl"></i>
+                    <h5 class="font-black text-slate-700 m-0">排课遇到困难</h5>
+                </div>
+                <p class="text-sm text-slate-500 font-bold mb-3">AI 建议您尝试调整以下约束：</p>
+                <div class="clay-card p-4 !shadow-clay-inner max-h-60 overflow-y-auto mb-4">
+                    <ul id="failure-suggestions" class="space-y-2 text-xs text-slate-600 font-bold"></ul>
+                </div>
+                <div class="flex justify-end">
+                    <button class="clay-btn px-6 py-2" data-bs-dismiss="modal">我知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Tooltip -->
+    <div id="conflict-tooltip"
+        class="fixed hidden bg-red-400 text-white px-3 py-2 rounded-xl text-xs font-bold shadow-lg z-50 pointer-events-none">
+    </div>
+
+    <!-- Scripts (Same Logic) -->
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/chart.js"></script>
     <script>
-        let globalSchedule = {};
-        let deleteModalVar = null;
-        let targetDeleteName = '';
-        let globalTeachers = [];
-        let teacherScheduleMap = {}; // Global Map for conflict checking
-
-        // Undo/Redo Globals
-        let historyStack = [];
-        let redoStack = [];
-        const MAX_HISTORY = 20;
-
-        let currentView = 'class';
-        let leaveRequests = [];
-        const DAYS = ["周一", "周二", "周三", "周四", "周五"];
-        let globalConstraints = { teacher_unavailable: {} };
-        let currentStats = null;
-        let statsModalVar = null;
-        let workloadChart = null;
-        let constraintModalVar = null;
-
+        // ... Logic Reuse ...
+        let globalSchedule = {}, deleteModalVar = null, targetDeleteName = '', globalTeachers = [], teacherScheduleMap = {}, historyStack = [], redoStack = [], MAX_HISTORY = 20, currentView = 'class', leaveRequests = [], DAYS = ["周一", "周二", "周三", "周四", "周五"], globalConstraints = { teacher_unavailable: {}, fixed_courses: {} }, currentStats = null, workloadChart = null;
+        let currentScheduleId = null;
         let config = {
             num_classes: 6,
             courses: [
                 { name: "语文", count: 7, type: "main", teachers: "张伟, 李娜" },
                 { name: "数学", count: 7, type: "main", teachers: "王军" },
                 { name: "英语", count: 6, type: "main", teachers: "Miss Li" },
-                { name: "物理", count: 5, type: "main", teachers: "" },
-                { name: "化学", count: 4, type: "main", teachers: "" },
-                { name: "生物", count: 3, type: "main", teachers: "" },
-                { name: "历史", count: 3, type: "main", teachers: "" },
-                { name: "地理", count: 2, type: "main", teachers: "" },
-                { name: "政治", count: 2, type: "main", teachers: "" },
-                { name: "体育", count: 3, type: "minor", teachers: "" },
-                { name: "美术", count: 1, type: "minor", teachers: "" },
-                { name: "音乐", count: 1, type: "minor", teachers: "" },
-                { name: "信息技术", count: 1, type: "minor", teachers: "" }
+                { name: "物理", count: 5, type: "main" },
+                { name: "化学", count: 4, type: "main" },
+                { name: "生物", count: 3, type: "main" },
+                { name: "历史", count: 3, type: "main" },
+                { name: "地理", count: 2, type: "main" },
+                { name: "政治", count: 2, type: "main" },
+                { name: "体育", count: 3, type: "minor" },
+                { name: "美术", count: 1, type: "minor" },
+                { name: "音乐", count: 1, type: "minor" },
+                { name: "信息技术", count: 1, type: "minor" }
             ],
             optimization: {
                 golden_time: true,
-                max_consecutive: 2
+                avoid_consecutive_subjects: false
             },
             resources: [
-                { name: "物理实验室", capacity: 2, subjects: "物理" },
-                { name: "化学实验室", capacity: 2, subjects: "化学" },
-                { name: "生物实验室", capacity: 2, subjects: "生物" },
+                { name: "物理实验室", capacity: 1, subjects: "物理" },
+                { name: "化学实验室", capacity: 1, subjects: "化学" },
+                { name: "生物实验室", capacity: 1, subjects: "生物" },
                 { name: "音乐教室", capacity: 1, subjects: "音乐" },
                 { name: "美术教室", capacity: 1, subjects: "美术" },
-                { name: "操场", capacity: 2, subjects: "体育" },
-                { name: "计算机教室", capacity: 2, subjects: "信息技术" }
+                { name: "计算机房", capacity: 2, subjects: "信息技术" },
+                { name: "大操场", capacity: 4, subjects: "体育" }
             ]
         };
 
-        window.onload = function () {
-            renderSettings();
-            updateTotalHours();
-            loadSavedList();
+        window.onload = () => {
+            setTimeout(() => document.getElementById('splash-screen').style.opacity = 0, 800);
+            setTimeout(() => document.getElementById('splash-screen').remove(), 1400);
+            checkSession();
+            renderSettings(); updateTotalHours(); loadSavedList();
         };
 
-        function openStatistics() {
-            if (!statsModalVar) {
-                statsModalVar = new bootstrap.Modal(document.getElementById('statisticsModal'));
-            }
-            statsModalVar.show();
-            setTimeout(renderCharts, 300);
+        async function checkSession() {
+            try {
+                const res = await fetch('/api/list');
+                if (res.status === 401 || res.redirected) window.location.href = '/login';
+            } catch (e) { console.error("Session check failed"); }
         }
 
-        function renderCharts() {
-            if (!currentStats) return;
-            const ctx = document.getElementById('workloadChart').getContext('2d');
-            if (workloadChart) workloadChart.destroy();
-
-            const labels = Object.keys(currentStats).sort();
-            const data = labels.map(n => currentStats[n].total);
-
-            // Use primary color for chart
-            const rootStyle = getComputedStyle(document.body);
-            const primaryColor = rootStyle.getPropertyValue('--primary-color') || '#4f46e5';
-
-            workloadChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: '周课时总数',
-                        data: data,
-                        backgroundColor: primaryColor,
-                        borderRadius: 4,
-                        maxBarThickness: 40
-                    }]
-                },
-                options: {
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
+        function toggleSidebar() {
+            const s = document.getElementById('main-sidebar');
+            s.classList.toggle('-translate-x-full');
         }
 
-        function openSettings() {
-            if (!constraintModalVar) {
-                constraintModalVar = new bootstrap.Modal(document.getElementById('constraintModal'));
-            }
-
-            const select = document.getElementById('constraint-teacher-select');
-            select.innerHTML = '<option value="">请选择...</option>';
-
-            if (globalTeachers && globalTeachers.length > 0) {
-                globalTeachers.forEach(t => {
-                    const opt = document.createElement('option');
-                    opt.value = t.name;
-                    opt.innerText = `${t.name} (${t.subject})`;
-                    select.appendChild(opt);
-                });
-            } else {
-                if (config.courses) {
-                    let names = new Set();
-                    config.courses.forEach(c => {
-                        if (c.teachers) {
-                            c.teachers.split(/[,，\s]+/).forEach(n => {
-                                if (n) names.add(n);
-                            });
-                        }
-                    });
-                    names.forEach(n => {
-                        const opt = document.createElement('option');
-                        opt.value = n;
-                        opt.innerText = n;
-                        select.appendChild(opt);
-                    });
-                }
-            }
-            document.getElementById('constraint-tbody').innerHTML = '';
-            constraintModalVar.show();
-        }
-
-        function renderConstraintGrid() {
-            const tbody = document.getElementById('constraint-tbody');
-            const teacherName = document.getElementById('constraint-teacher-select').value;
-            tbody.innerHTML = '';
-
-            if (!teacherName) return;
-            const unavailable = globalConstraints.teacher_unavailable[teacherName] || [];
-            const isUnavailable = (d, p) => unavailable.some(u => u[0] === d && u[1] === p);
-
+        function renderCurrentClass() {
+            const cid = document.getElementById('class-select').value; if (!globalSchedule[cid]) return;
+            document.getElementById('class-title').innerText = `${cid} 班课表`;
+            const tbody = document.getElementById('schedule-body'); tbody.innerHTML = '';
             for (let p = 0; p < 9; p++) {
                 const tr = document.createElement('tr');
-                const th = document.createElement('th');
-                th.innerText = p + 1;
-                tr.appendChild(th);
-
+                tr.innerHTML = `<td class="text-slate-400 font-bold bg-transparent text-xs">第 ${p + 1} 节</td>`;
                 for (let d = 0; d < 5; d++) {
                     const td = document.createElement('td');
-                    td.className = 'constraint-cell';
-                    if (isUnavailable(d, p)) {
-                        td.classList.add('unavailable');
+                    td.dataset.day = d; td.dataset.period = p;
+                    td.draggable = true; td.ondragstart = (e) => handleDragStart(e, p, d); td.ondragover = handleDragOver; td.ondrop = (e) => handleDrop(e, p, d); td.ondragend = handleDragEnd;
+
+                    const info = globalSchedule[cid][p][d];
+                    td.className = info ? "p-0" : "p-0";
+                    const innerDiv = document.createElement('div');
+                    innerDiv.className = info ? "schedule-cell mx-auto w-full h-full" : "schedule-cell empty mx-auto w-full h-full";
+
+                    if (info) {
+                        let colorClass = info.course_type === 'main' ? 'text-slate-600' : 'text-slate-400';
+                        if (info.is_sub) colorClass = info.teacher_name === "【自习】" ? 'text-red-400' : 'text-green-500';
+
+                        // [新增] 尝试匹配教室
+                        const roomName = getRoomName(info.subject);
+
+                        innerDiv.innerHTML = `<div class="${colorClass} font-black text-xl tracking-tight">${info.subject}</div>
+                                       <div class="text-[10px] text-slate-400 font-bold mt-1 bg-white/50 px-2 rounded-full">${info.teacher_name}</div>
+                                       ${roomName ? `<div class="mt-1"><span class="bg-indigo-100 text-indigo-500 text-[9px] px-1.5 py-0.5 rounded uppercase font-bold tracking-wider">${roomName}</span></div>` : ''}`;
+                    } else {
+                        innerDiv.innerHTML = `<span class="text-slate-300 font-bold text-xs">-</span>`;
                     }
-                    td.onclick = () => toggleConstraint(teacherName, d, p, td);
+                    td.appendChild(innerDiv);
                     tr.appendChild(td);
                 }
                 tbody.appendChild(tr);
             }
         }
 
-        function toggleConstraint(teacherName, day, period, td) {
-            if (!globalConstraints.teacher_unavailable[teacherName]) {
-                globalConstraints.teacher_unavailable[teacherName] = [];
-            }
-            const list = globalConstraints.teacher_unavailable[teacherName];
-            const index = list.findIndex(u => u[0] === day && u[1] === period);
+        let draggedSource = null; const tooltipEl = document.getElementById('conflict-tooltip');
 
-            if (index >= 0) {
-                list.splice(index, 1);
-                td.classList.remove('unavailable');
-            } else {
-                list.push([day, period]);
-                td.classList.add('unavailable');
-            }
+        function handleDragStart(e, p, d) {
+            const td = e.target.closest('td');
+            const cid = document.getElementById('class-select').value;
+            if (!globalSchedule[cid] || !globalSchedule[cid][p] || !globalSchedule[cid][p][d]) { e.preventDefault(); return; }
+
+            const info = globalSchedule[cid][p][d];
+            draggedSource = { period: p, day: d, teacher: info ? info.teacher_name : null, teacherId: info ? info.teacher_id : null, element: td };
+            e.dataTransfer.effectAllowed = 'move';
+
+            setTimeout(() => { if (td) td.classList.add('opacity-40', 'bg-blue-100'); }, 0);
         }
 
-        function saveSettings() {
-            constraintModalVar.hide();
-        }
+        function handleDragOver(e) {
+            e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+            const td = e.target.closest('td'); if (!td) return;
 
-        function renderSettings() {
-            document.getElementById('setting-num-classes').value = config.num_classes;
+            document.querySelectorAll('.drag-over-active').forEach(el => el.classList.remove('drag-over-active'));
+            td.classList.add('drag-over-active');
 
-            // Render optimization settings
-            if (config.optimization) {
-                document.getElementById('opt-golden-time').checked = config.optimization.golden_time;
-                document.getElementById('opt-max-consecutive').value = config.optimization.max_consecutive;
-            }
-
-            if (config.resources) {
-                const rbody = document.getElementById('resource-settings-body');
-                rbody.innerHTML = '';
-                config.resources.forEach(r => addResourceRow(r.name, r.capacity, r.subjects));
-            }
-
-            const tbody = document.getElementById('course-settings-body');
-            tbody.innerHTML = '';
-            config.courses.forEach((c) => {
-                addCourseRow(c.name, c.count, c.type || 'minor', c.teachers);
-            });
-        }
-
-        function addCourseRow(name = "", count = 2, type = "minor", teachers = "") {
-            const tbody = document.getElementById('course-settings-body');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-            <td><input type="text" class="form-control form-control-sm course-name" value="${name}" placeholder="科目"></td>
-            <td><input type="number" class="form-control form-control-sm course-count" value="${count}" onchange="updateTotalHours()"></td>
-            <td>
-                <select class="form-select form-select-sm course-type">
-                    <option value="main" ${type === 'main' ? 'selected' : ''}>主课</option>
-                    <option value="minor" ${type === 'minor' ? 'selected' : ''}>副课</option>
-                </select>
-            </td>
-            <td><input type="text" class="form-control form-control-sm course-teachers" value="${teachers}" placeholder="例如: 张三, 李四"></td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
-        `;
-            tbody.appendChild(tr);
-            updateTotalHours();
-        }
-
-        function addResourceRow(name = "", capacity = 1, subjects = "") {
-            const tbody = document.getElementById('resource-settings-body');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-            <td><input type="text" class="form-control form-control-sm res-name" value="${name}" placeholder="如：音乐室"></td>
-            <td><input type="number" class="form-control form-control-sm res-capacity" value="${capacity}" min="1"></td>
-            <td><input type="text" class="form-control form-control-sm res-subjects" value="${subjects}" placeholder="如：音乐, 舞蹈"></td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="removeRow(this)"><i class="bi bi-trash"></i></button></td>
-        `;
-            tbody.appendChild(tr);
-        }
-
-        function removeRow(btn) {
-            btn.closest('tr').remove();
-            updateTotalHours(); // Safe to call even if it's a resource row (won't find course inputs)
-        }
-
-        function updateTotalHours() {
-            const rows = document.querySelectorAll('#course-settings-body tr');
-            let total = 0;
-            rows.forEach(row => {
-                const count = parseInt(row.querySelector('.course-count').value) || 0;
-                total += count;
-            });
-            const el = document.getElementById('total-hours');
-            el.innerText = total;
-            el.className = total > 45 ? "fw-bold text-danger" : "fw-bold text-primary";
-        }
-
-        function saveSettingsAndInit() {
-            config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
-
-            // Read optimization settings
-            config.optimization = {
-                golden_time: document.getElementById('opt-golden-time').checked,
-                max_consecutive: parseInt(document.getElementById('opt-max-consecutive').value)
-            };
-
-            const rows = document.querySelectorAll('#course-settings-body tr');
-            let newCourses = [];
-            let coursesDict = {};
-            let teacherNamesDict = {};
-            let total = 0;
-
-            rows.forEach(row => {
-                const name = row.querySelector('.course-name').value.trim();
-                const count = parseInt(row.querySelector('.course-count').value);
-                const type = row.querySelector('.course-type').value;
-                const teacherStr = row.querySelector('.course-teachers').value.trim();
-
-                if (name && count > 0) {
-                    newCourses.push({ name, count, type, teachers: teacherStr });
-                    coursesDict[name] = { count: count, type: type };
-                    total += count;
-                    if (teacherStr) {
-                        const names = teacherStr.split(/[,，\s]+/).filter(n => n.length > 0);
-                        if (names.length > 0) teacherNamesDict[name] = names;
-                    }
+            const tD = td.dataset.day, tP = td.dataset.period;
+            if (draggedSource && draggedSource.teacher) {
+                const conflict = teacherScheduleMap[draggedSource.teacher]?.[`${tD}_${tP}`];
+                const cid = document.getElementById('class-select').value;
+                if (conflict && conflict.classId != cid) {
+                    tooltipEl.style.display = 'block'; tooltipEl.style.left = (e.pageX + 10) + 'px'; tooltipEl.style.top = (e.pageY + 10) + 'px';
+                    tooltipEl.innerHTML = `<i class="bi bi-exclamation-circle-fill mr-1"></i> 冲突: ${draggedSource.teacher} 在 ${conflict.classId} 班有课`;
+                    return;
                 }
-            });
-
-            config.courses = newCourses;
-
-            // 3. Save resources
-            let newResources = [];
-            document.querySelectorAll('#resource-settings-body tr').forEach(row => {
-                const name = row.querySelector('.res-name').value.trim();
-                const capacity = parseInt(row.querySelector('.res-capacity').value) || 1;
-                const subjects = row.querySelector('.res-subjects').value.trim();
-                if (name && subjects) {
-                    newResources.push({ name, capacity, subjects });
-                }
-            });
-            config.resources = newResources;
-
-            if (total > 45) {
-                alert(`⚠️ 注意：总课时 (${total}) 超过了每周容量 (45)！\n多出的课程可能无法安排。`);
             }
-
-            const payload = {
-                num_classes: config.num_classes,
-                courses: coursesDict,
-                teacher_names: teacherNamesDict,
-                resources: config.resources,  // 添加教室资源配置
-                optimization: config.optimization
-            };
-            initSystem(payload);
+            tooltipEl.style.display = 'none';
         }
 
-        async function initSystem(customPayload = null) {
-            const btn = document.getElementById('btn-init');
-            const spinner = document.getElementById('init-spinner');
-            const status = document.getElementById('system-status');
+        function handleDragEnd(e) {
+            const td = e.target.closest('td'); if (td) td.classList.remove('opacity-40', 'bg-blue-100');
+            document.querySelectorAll('td').forEach(el => el.classList.remove('opacity-40', 'bg-blue-100'));
+            tooltipEl.style.display = 'none'; draggedSource = null;
+        }
 
-            btn.disabled = true;
-            spinner.classList.remove('d-none');
-            // Use HTML for Icon
-            status.innerHTML = '<span class="text-primary"><i class="bi bi-hourglass-split"></i> 计算中...</span>';
+        async function handleDrop(e) {
+            e.preventDefault();
+            const td = e.target.closest('td');
 
-            let payload = customPayload;
-            if (!payload) {
-                // Extract teacher names for map
-                let tDict = {};
-                config.courses.forEach(c => {
-                    if (c.teachers) tDict[c.name] = c.teachers.split(/[,，\s]+/).filter(n => n);
-                });
-
-                // Ensure optimization/resources included in default payload
-                if (!config.optimization) config.optimization = { golden_time: true, max_consecutive: 2 };
-                if (!config.resources) config.resources = [];
-
-                payload = {
-                    num_classes: config.num_classes,
-                    courses: config.courses, // Send full list directly (backend now supports this)
-                    teacher_names: tDict,
-                    optimization: config.optimization,
-                    resources: config.resources
-                };
+            // 1. 安全检查：如果没有目标或没有拖拽源，直接清理并退出
+            if (!td || !draggedSource) {
+                handleDragEnd(e);
+                return;
             }
-            payload.constraints = globalConstraints;
-            // 确保资源配置也被传递 (如果点击保存按钮会走customPayload，上面的分支是点初始化按钮)
-            if (customPayload && !customPayload.resources) {
-                customPayload.resources = config.resources;
-            }
+
+            // 2. 关键修复：先获取数据，再清理样式！
+            // (如果在清理后再获取，draggedSource 就变成 null 了)
+            const tD = parseInt(td.dataset.day);
+            const tP = parseInt(td.dataset.period);
+            const sD = draggedSource.day;
+            const sP = draggedSource.period;
+
+            // 3. 立即清理样式 (移除半透明效果)
+            handleDragEnd(e);
+
+            // 4. 如果位置没变，直接返回
+            if (sD === tD && sP === tP) return;
+
+            const cid = document.getElementById('class-select').value;
+
+            // 显示加载状态
+            document.getElementById('loading-state').classList.remove('hidden');
+
+            pushHistory(); // 记录 Undo
 
             try {
-                const response = await fetch('/api/init', {
+                const res = await fetch('/api/schedule/move', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        schedule_id: currentScheduleId,
+                        class_id: cid,
+                        from_slot: [sD, sP],
+                        to_slot: [tD, tP]
+                    })
                 });
-                const data = await response.json();
+
+                const data = await res.json();
 
                 if (data.status === 'success') {
-                    // Clear history on new init
-                    historyStack = [];
-                    redoStack = [];
-                    updateUndoButtons();
-
-                    updateUI(data);
-                    status.innerHTML = '<i class="bi bi-check-circle-fill"></i> 排课成功';
-                    status.className = "text-center text-success fw-bold mb-3";
-                    clearErrorAlert();
+                    globalSchedule = data.schedule;
+                    renderCurrentClass(); // 重新渲染视图
                 } else {
-                    showErrorAlert(data);
-                    status.innerHTML = '<i class="bi bi-x-circle-fill"></i> 失败';
-                    status.className = "text-center text-danger fw-bold mb-3";
+                    alert("调课失败: " + data.message);
+                    // 如果失败，建议撤销一次历史记录以保持一致
+                    historyStack.pop();
+                    updateUndoButtons();
                 }
-            } catch (e) {
-                console.error(e);
-                showErrorAlert({
-                    error_type: "network_error",
-                    message: "网络请求失败",
-                    suggestions: ["请检查网络连接", "刷新页面重试"]
-                });
-                status.innerText = "网络错误";
+            } catch (err) {
+                console.error(err);
+                alert("网络请求失败");
+                historyStack.pop();
+                updateUndoButtons();
             } finally {
-                btn.disabled = false;
-                spinner.classList.add('d-none');
+                document.getElementById('loading-state').classList.add('hidden');
             }
         }
 
+        async function initSystem() {
+            document.getElementById('init-spinner').classList.remove('d-none'); document.getElementById('btn-init').disabled = true;
+            let tDict = {}, cDict = {}; config.courses.forEach(c => { cDict[c.name] = { count: c.count, type: c.type }; if (c.teachers) tDict[c.name] = c.teachers.split(/[,，\s]+/).filter(n => n) });
+
+            // 1. 获取开关状态
+            const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
+
+            // 2. 更新 optimization 配置
+            if (!config.optimization) config.optimization = {};
+            config.optimization.avoid_consecutive_subjects = avoidConsecutive;
+
+            const payload = { num_classes: config.num_classes, courses: cDict, teacher_names: tDict, resources: config.resources, optimization: config.optimization, constraints: globalConstraints };
+            try {
+                const res = await fetch('/api/init', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                const data = await res.json();
+                if (data.status === 'success') { currentScheduleId = data.schedule_id; updateUI(data); }
+                else {
+                    if (data.suggestions && data.suggestions.length > 0) {
+                        const ul = document.getElementById('failure-suggestions');
+                        ul.innerHTML = data.suggestions.map(s => `<li class="flex items-start gap-2"><i class="bi bi-lightbulb-fill text-yellow-400 shrink-0 mt-0.5"></i><span>${s}</span></li>`).join('');
+                        new bootstrap.Modal(document.getElementById('failureModal')).show();
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            } catch (e) { console.error(e); } finally { document.getElementById('init-spinner').classList.add('d-none'); document.getElementById('btn-init').disabled = false; }
+        }
         function updateUI(data) {
             if (data.stats) {
                 currentStats = data.stats;
                 document.getElementById('btn-stats').disabled = false;
             }
+
+            // [新增] 渲染评分卡片
+
+
             globalTeachers = data.teachers || [];
-            globalSchedule = data.schedule; // Update global variable
+            globalSchedule = data.schedule;
 
-            // === Build Teacher Schedule Map for Conflict Detection ===
             teacherScheduleMap = {};
-            if (globalSchedule) {
-                Object.entries(globalSchedule).forEach(([classId, periods]) => {
-                    Object.entries(periods).forEach(([pIndex, days]) => {
-                        Object.entries(days).forEach(([dIndex, info]) => {
-                            if (info && info.teacher_name) {
-                                // Split teachers if multiple (e.g. "Zhang, Li") - though system usually assigns one main
-                                // Assuming simple case or primary teacher
-                                const tName = info.teacher_name;
-                                if (!teacherScheduleMap[tName]) teacherScheduleMap[tName] = {};
-                                teacherScheduleMap[tName][`${dIndex}_${pIndex}`] = {
-                                    classId: classId,
-                                    subject: info.subject,
-                                    room: info.room
-                                };
-                            }
-                        });
-                    });
-                });
+            for (let c in globalSchedule) {
+                for (let p in globalSchedule[c]) {
+                    for (let d in globalSchedule[c][p]) {
+                        const i = globalSchedule[c][p][d];
+                        if (i && i.teacher_name) {
+                            if (!teacherScheduleMap[i.teacher_name]) teacherScheduleMap[i.teacher_name] = {};
+                            teacherScheduleMap[i.teacher_name][`${d}_${p}`] = { classId: c, subject: i.subject };
+                        }
+                    }
+                }
             }
-            // =========================================================
 
-            const teacherSelect = document.getElementById('teacher-select');
-            teacherSelect.innerHTML = '';
-            globalTeachers.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.name;
-                opt.innerText = t.name;
-                teacherSelect.appendChild(opt);
-            });
-
-            const teacherViewSelect = document.getElementById('teacher-view-select');
-            teacherViewSelect.innerHTML = '';
-            globalTeachers.forEach(t => {
-                const opt = document.createElement('option');
-                opt.value = t.name;
-                opt.innerText = t.name;
-                teacherViewSelect.appendChild(opt);
-            });
-
-            const classSelect = document.getElementById('class-select');
-            classSelect.innerHTML = '';
-            Object.keys(data.schedule).forEach(cid => {
-                const opt = document.createElement('option');
-                opt.value = cid;
-                opt.innerText = cid + " 班";
-                classSelect.appendChild(opt);
-            });
-
-            // globalSchedule = data.schedule; // Already updated above
+            const ts = document.getElementById('teacher-select'); ts.innerHTML = ''; globalTeachers.forEach(t => ts.add(new Option(t.name, t.name)));
+            const cs = document.getElementById('class-select'); cs.innerHTML = ''; Object.keys(globalSchedule).forEach(k => cs.add(new Option(k + " 班", k)));
+            const tvs = document.getElementById('teacher-view-select'); tvs.innerHTML = ''; globalTeachers.forEach(t => tvs.add(new Option(t.name, t.name)));
             renderCurrentClass();
-
-            teacherSelect.disabled = false;
-            document.getElementById('btn-add-leave').disabled = false;
-            document.getElementById('btn-apply').disabled = false;
-            document.getElementById('btn-save').disabled = false;
-            document.getElementById('btn-export-current').disabled = false;
-            document.getElementById('btn-export-all').disabled = false;
-            document.getElementById('btn-view-teacher').disabled = false;
+            ['btn-add-leave', 'btn-apply', 'btn-save', 'btn-export-current', 'btn-view-teacher', 'btn-undo', 'teacher-select'].forEach(i => document.getElementById(i).disabled = false);
         }
-
-        function renderCurrentClass() {
-            const classId = document.getElementById('class-select').value;
-            const tbody = document.getElementById('schedule-body');
-            const title = document.getElementById('class-title');
-
-            if (!classId || !globalSchedule[classId]) return;
-            title.innerText = `${classId} 班 课表`;
-            tbody.innerHTML = '';
-
-            const classData = globalSchedule[classId];
-            for (let p = 0; p < 9; p++) {
-                const tr = document.createElement('tr');
-                const th = document.createElement('th'); th.innerText = `第 ${p + 1} 节`; tr.appendChild(th);
-                for (let d = 0; d < 5; d++) {
-                    const td = document.createElement('td');
-                    td.className = "draggable-cell";
-                    // Add data attributes for conflict detection
-                    td.dataset.day = d;
-                    td.dataset.period = p;
-
-                    td.setAttribute('draggable', 'true');
-                    td.setAttribute('ondragstart', `handleDragStart(event, ${p}, ${d})`);
-                    td.setAttribute('ondragover', 'handleDragOver(event)');
-                    td.setAttribute('ondrop', `handleDrop(event, ${p}, ${d})`);
-                    td.setAttribute('ondragleave', 'handleDragLeave(event)');
-                    td.setAttribute('ondragend', 'handleDragEnd(event)');
-                    // Add click handler for Smart Suggestions
-                    td.setAttribute('onclick', `handleCellClick(event, ${p}, ${d})`);
-
-                    const info = classData[p][d];
-                    if (info) {
-                        // 添加课程类型样式
-                        if (info.course_type === 'main') {
-                            td.classList.add('course-main');
-                        } else {
-                            td.classList.add('course-minor');
-                        }
-
-                        if (info.is_sub) {
-                            td.classList.add(info.teacher_name === "【自习】" ? "status-empty" : "status-sub");
-                        }
-
-                        let html = `<div class="course-cell">${info.subject}</div><span class="teacher-name">${info.teacher_name}</span>`;
-                        if (info.room) {
-                            html += `<div class="mt-1"><span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.7rem;"><i class="bi bi-geo-alt-fill me-1"></i>${info.room}</span></div>`;
-                        }
-                        td.innerHTML = html;
-                    }
-                    tr.appendChild(td);
-                }
-                tbody.appendChild(tr);
-            }
-        }
-
-        let draggedSource = null;
-        const tooltipEl = document.getElementById('conflict-tooltip');
-
-        function handleDragStart(e, period, day) {
-            clearSuggestions(); // Clear any existing highlights
-            const classId = document.getElementById('class-select').value;
-            // Get teacher name from globalSchedule
-            const info = globalSchedule[classId] ? globalSchedule[classId][period][day] : null;
-            const teacher = info ? info.teacher_name : null;
-
-            draggedSource = { period, day, teacher };
-            e.target.classList.add('drag-source');
-            e.dataTransfer.setData('text/plain', JSON.stringify({ period, day }));
-            e.dataTransfer.effectAllowed = 'move';
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            const td = e.target.closest('td');
-            // Basic checks
-            if (!td || td.classList.contains('drag-source')) return;
-
-            const targetDay = td.dataset.day;
-            const targetPeriod = td.dataset.period;
-
-            // Conflict Detection Logic
-            if (draggedSource && draggedSource.teacher && targetDay !== undefined) {
-                const map = teacherScheduleMap[draggedSource.teacher];
-                const key = `${targetDay}_${targetPeriod}`;
-                const conflict = map ? map[key] : null;
-                const currentClassId = document.getElementById('class-select').value;
-
-                // Check if teacher busy elsewhere (same teacher, same slot, DIFFERENT class)
-                if (conflict && conflict.classId != currentClassId) {
-                    td.classList.add('conflict-cell');
-                    // Show Tooltip
-                    tooltipEl.style.display = 'block';
-                    tooltipEl.style.left = (e.pageX + 15) + 'px';
-                    tooltipEl.style.top = (e.pageY + 15) + 'px';
-                    tooltipEl.innerText = `⚠️ 冲突: ${draggedSource.teacher} 在 ${conflict.classId}班 有课 (${conflict.subject})`;
-
-                    e.dataTransfer.dropEffect = 'none'; // Forbidden
-                    return;
-                }
-            }
-
-            td.classList.add('drag-over');
-            e.dataTransfer.dropEffect = 'move';
-            hideTooltip();
-        }
-
-        function handleDragLeave(e) {
-            const td = e.target.closest('td');
-            if (td) {
-                td.classList.remove('drag-over');
-                td.classList.remove('conflict-cell');
-            }
-            hideTooltip();
-        }
-
-        function handleDragEnd(e) {
-            e.target.classList.remove('drag-source');
-            document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-            document.querySelectorAll('.conflict-cell').forEach(el => el.classList.remove('conflict-cell'));
-            hideTooltip();
-        }
-
-        function hideTooltip() {
-            tooltipEl.style.display = 'none';
-        }
-        async function handleDrop(e, targetPeriod, targetDay) {
-            e.preventDefault();
-            handleDragEnd(e);
-            if (!draggedSource) return;
-            const sourcePeriod = draggedSource.period;
-            const sourceDay = draggedSource.day;
-            if (sourcePeriod === targetPeriod && sourceDay === targetDay) return;
-            const classId = document.getElementById('class-select').value;
-
-            try {
-                // Save state before move
-                pushHistory();
-
-                const response = await fetch('/api/schedule/move', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        class_id: classId,
-                        from_slot: [sourceDay, sourcePeriod],
-                        to_slot: [targetDay, targetPeriod]
-                    })
-                });
-                const data = await response.json();
-                if (data.status === 'success') {
-                    globalSchedule = data.schedule;
-                    renderCurrentClass();
-                } else {
-                    alert(`调课失败: ${data.message}`);
-                }
-            } catch (err) {
-                console.error(err);
-                alert('系统错误: ' + err.message);
-            }
-            draggedSource = null;
-        }
-
-        function addLeave() {
-            const name = document.getElementById('teacher-select').value;
-            const start = document.getElementById('start-day').value;
-            const end = document.getElementById('end-day').value;
-            const map = { "周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4 };
-            if (map[start] > map[end]) { alert("日期顺序错误"); return; }
-            const days = [];
-            for (let i = map[start]; i <= map[end]; i++) days.push(DAYS[i]);
-            leaveRequests.push({ name, days });
-            updateLeaveList();
-        }
-
-        function updateLeaveList() {
-            const list = document.getElementById('leave-list');
-            if (leaveRequests.length === 0) { list.innerHTML = ''; return; }
-            list.innerHTML = leaveRequests.map((req, index) => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>
-                        <strong>${req.name}</strong>
-                        <br>
-                        <small class="text-muted">${req.days.join(', ')}</small>
-                    </span>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeLeave(${index})"><i class="bi bi-x"></i></button>
-                </li>
-            `).join('');
-        }
-        function removeLeave(index) {
-            leaveRequests.splice(index, 1);
-            updateLeaveList();
-        }
-
-        async function applySubstitutions() {
-            const btn = document.getElementById('btn-apply');
-            btn.disabled = true; btn.innerText = "计算中...";
-            try {
-                // Save state before substitution
-                pushHistory();
-
-                const resp = await fetch('/api/substitute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ leaves: leaveRequests })
-                });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    globalSchedule = data.schedule;
-                    renderCurrentClass();
-                    if (data.logs) showSubstitutionLogs(data.stats, data.logs);
-                    alert("代课安排完成！");
-                } else {
-                    alert("错误: " + data.message);
-                }
-            } finally {
-                btn.disabled = false; btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i>执行智能代课';
-            }
-        }
-
-        function showSubstitutionLogs(stats, logs) {
-            const container = document.getElementById('substitution-logs-container');
-            container.style.display = 'block';
-            document.getElementById('stat-direct').textContent = stats.direct || 0;
-            document.getElementById('stat-swap').textContent = stats.swap || 0;
-            document.getElementById('stat-self').textContent = stats.self_study || 0;
-            const totalScore = (stats.direct || 0) * 0 + (stats.swap || 0) * 1 + (stats.self_study || 0) * 999;
-            document.getElementById('stat-score').textContent = totalScore;
-
-            const logsContainer = document.getElementById('sub-logs');
-            if (logs && logs.length > 0) {
-                logsContainer.innerHTML = logs.map(log => {
-                    const colorClass = log.type === 'self_study' ? 'text-danger' : 'text-success';
-                    return `<div class="${colorClass}" style="margin-bottom: 4px;">${log.message}</div>`;
-                }).join('');
-            } else {
-                logsContainer.innerHTML = '<div class="text-muted text-center">暂无日志</div>';
-            }
-            setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
-        }
-
-        async function loadSavedList() {
-            try {
-                const resp = await fetch('/api/list');
-                const data = await resp.json();
-                const listEl = document.getElementById('saved-list');
-                if (data.status === 'success' && data.schedules && data.schedules.length > 0) {
-                    listEl.innerHTML = '';
-                    data.schedules.forEach(s => {
-                        const item = document.createElement('div');
-                        item.className = 'list-group-item d-flex justify-content-between align-items-start p-2';
-
-                        // Create content wrapper for click (Load)
-                        const content = document.createElement('div');
-                        content.className = 'flex-grow-1';
-                        content.style.cursor = 'pointer';
-                        content.onclick = function () {
-                            console.log('Click triggered for:', s.name);
-                            // alert('DEBUG: Clicked ' + s.name); // Uncomment for debugging
-                            loadSchedule(s.name);
-                        };
-                        content.innerHTML = `
-                            <strong>${s.name}</strong>
-                            <div class="text-muted" style="font-size: 0.75rem;">${s.created_at}</div>
-                        `;
-
-                        // Create delete button
-                        const delBtn = document.createElement('button');
-                        delBtn.className = 'btn btn-sm btn-outline-danger py-0 px-1';
-                        delBtn.title = '删除';
-                        delBtn.innerHTML = '<i class="bi bi-x" style="pointer-events: none;"></i>';
-                        delBtn.type = 'button'; // Prevent default form submission
-                        delBtn.style.zIndex = '100'; // Force on top
-                        delBtn.style.position = 'relative';
-                        delBtn.onclick = function (e) {
-                            // Ensure event doesn't bubble or do default action
-                            e.stopPropagation();
-                            e.preventDefault();
-
-                            console.log('Delete button clicked for:', s.name);
-                            deleteSchedule(s.name);
-                        };
-
-                        item.appendChild(content);
-                        item.appendChild(delBtn);
-                        listEl.appendChild(item);
-                    });
-                } else {
-                    listEl.innerHTML = '<div class="text-center text-muted py-2">暂无保存方案</div>';
-                }
-            } catch (e) {
-                console.error('加载方案列表失败:', e);
-            }
-        }
-
-        async function loadSchedule(name) {
-            console.log('Executing loadSchedule for:', name);
-            // Temporary removed confirm for debugging
-            // if (!confirm(`确定要加载方案 "${name}" 吗？...`)) return;
-
-            try {
-                const resp = await fetch(`/api/load/${encodeURIComponent(name)}`);
-                const data = await resp.json();
-
-                if (data.status === 'success') {
-                    // Clear history on load
-                    historyStack = [];
-                    redoStack = [];
-                    updateUndoButtons();
-
-                    // 1. Update Global Schedule
-                    globalSchedule = data.schedule;
-
-                    // Update UI Dropdowns
-                    const classSelect = document.getElementById('class-select');
-                    classSelect.innerHTML = '';
-                    Object.keys(globalSchedule).forEach(cid => {
-                        const opt = document.createElement('option');
-                        opt.value = cid;
-                        opt.innerText = cid + " 班";
-                        classSelect.appendChild(opt);
-                    });
-
-                    // Update Teacher Dropdown (for leave requests)
-                    const teacherSelect = document.getElementById('teacher-select');
-                    teacherSelect.innerHTML = '';
-                    if (data.teachers && data.teachers.length > 0) {
-                        data.teachers.forEach(t => {
-                            const opt = document.createElement('option');
-                            opt.value = t.name;
-                            opt.innerText = t.name;
-                            teacherSelect.appendChild(opt);
-                        });
-                    }
-
-                    // Enable buttons
-                    document.getElementById('teacher-select').disabled = false;
-                    document.getElementById('btn-add-leave').disabled = false;
-                    document.getElementById('btn-apply').disabled = false;
-                    document.getElementById('btn-save').disabled = false;
-                    document.getElementById('btn-export-current').disabled = false;
-                    document.getElementById('btn-export-all').disabled = false;
-                    document.getElementById('btn-view-teacher').disabled = false;
-
-                    renderCurrentClass();
-
-                    // 2. Restore Configuration
-                    if (data.config) {
-                        config = data.config;
-
-                        // Restore basic settings
-                        document.getElementById('setting-num-classes').value = config.num_classes || 10;
-                        if (config.optimization) {
-                            document.getElementById('opt-golden-time').checked = config.optimization.golden_time;
-                            document.getElementById('opt-max-consecutive').value = config.optimization.max_consecutive || 2;
-                        }
-
-                        // Restore Course Table
-                        const courseBody = document.getElementById('course-settings-body');
-                        courseBody.innerHTML = '';
-
-                        // Handle both list and dict formats for courses
-                        let coursesList = [];
-                        if (Array.isArray(config.courses)) {
-                            coursesList = config.courses;
-                        } else if (config.courses) {
-                            // Convert old dict format to list
-                            for (const [name, val] of Object.entries(config.courses)) {
-                                if (typeof val === 'object') {
-                                    coursesList.push({ name: name, ...val });
-                                } else {
-                                    coursesList.push({ name: name, count: val, type: val >= 5 ? 'main' : 'minor' });
-                                }
-                            }
-                        }
-
-                        coursesList.forEach(c => {
-                            // Re-construct teacher string from config or teacher_names mapping if available
-                            let teacherStr = c.teachers || "";
-                            if (!teacherStr && config.teacher_names && config.teacher_names[c.name]) {
-                                teacherStr = config.teacher_names[c.name].join(" ");
-                            }
-                            addCourseRow(c.name, c.count, c.type, teacherStr);
-                        });
-
-                        // Restore Resources
-                        const resBody = document.getElementById('resource-settings-body');
-                        resBody.innerHTML = '';
-                        if (config.resources && Array.isArray(config.resources)) {
-                            config.resources.forEach(r => {
-                                addResourceRow(r.name, r.capacity, r.subjects);
-                            });
-                        }
-
-                        updateTotalHours();
-                    }
-
-                    alert(`方案 "${name}" 加载成功！`);
-                    // Update system status
-                    const status = document.getElementById('system-status');
-                    status.innerHTML = `<i class="bi bi-cloud-check-fill"></i> 已加载`;
-                    status.className = "text-center text-info fw-bold mb-3";
-
-                } else {
-                    alert(`加载失败: ${data.message}`);
-                }
-            } catch (e) {
-                console.error("加载异常:", e);
-                alert("系统错误: " + e.message);
-            }
-        }
-
-        async function saveCurrentSchedule() {
-            const name = document.getElementById('save-name').value.trim();
-            if (!name) { alert('请输入方案名称'); return; }
-            if (!globalSchedule || Object.keys(globalSchedule).length === 0) { alert('没有可保存的课表'); return; }
-            try {
-                const resp = await fetch('/api/save', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, config: config })
-                });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    alert(`✅ ${data.message}`);
-                    document.getElementById('save-name').value = '';
-                    loadSavedList();
-                } else {
-                    alert(`❌ ${data.message}`);
-                }
-            } catch (e) { alert('保存失败: ' + e.message); }
-        }
-
-
-
-
-        // 第一阶段：点击删除按钮，只负责弹窗
-        function deleteSchedule(name) {
-            targetDeleteName = name; // 记下要删谁
-
-            // 更新弹窗里的文字
-            document.getElementById('delete-target-name').innerText = name;
-
-            // 显示弹窗
-            const modalEl = document.getElementById('deleteConfirmModal');
-            if (!deleteModalVar) {
-                deleteModalVar = new bootstrap.Modal(modalEl);
-            }
-            deleteModalVar.show();
-        }
-
-        function exportCurrentClass() {
-            const classId = document.getElementById('class-select').value;
-            if (!classId) { alert('请先选择要导出的班级'); return; }
-            window.location.href = `/api/export/class/${classId}`;
-        }
-
-        function exportAllClasses() {
-            if (!confirm('确定要导出所有班级的课表吗？')) return;
-            window.location.href = '/api/export/all_classes';
-        }
-
-        function switchView(mode) {
-            currentView = mode;
-            const classBtn = document.getElementById('btn-view-class');
-            const teacherBtn = document.getElementById('btn-view-teacher');
-            const classSelector = document.getElementById('class-selector-group');
-            const teacherSelector = document.getElementById('teacher-selector-group');
-            const title = document.getElementById('class-title');
-
-            if (mode === 'class') {
-                classBtn.classList.add('active');
-                teacherBtn.classList.remove('active');
-                classSelector.style.display = 'flex';
-                teacherSelector.style.display = 'none';
-                title.innerText = '班级课表';
-                renderCurrentClass();
-            } else if (mode === 'teacher') {
-                classBtn.classList.remove('active');
-                teacherBtn.classList.add('active');
-                classSelector.style.display = 'none';
-                teacherSelector.style.display = 'flex';
-                title.innerText = '老师课表';
-                renderCurrentTeacher();
-            }
+        function switchView(v) {
+            currentView = v; document.getElementById('class-selector-group').style.display = v === 'class' ? 'block' : 'none'; document.getElementById('teacher-selector-group').style.display = v === 'teacher' ? 'block' : 'none';
+            document.getElementById('btn-view-class').className = v === 'class' ? 'clay-btn px-4 py-2 text-sm text-blue-500 bg-white' : 'clay-btn px-4 py-2 text-sm text-slate-400';
+            document.getElementById('btn-view-teacher').className = v === 'teacher' ? 'clay-btn px-4 py-2 text-sm text-blue-500 bg-white' : 'clay-btn px-4 py-2 text-sm text-slate-400';
+            if (v === 'class') renderCurrentClass(); else renderCurrentTeacher();
         }
 
         async function renderCurrentTeacher() {
-            const teacherName = document.getElementById('teacher-view-select').value;
-            if (!teacherName) return;
-            try {
-                const resp = await fetch('/api/teacher_view', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ teacher_name: teacherName })
-                });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    renderTeacherSchedule(data.schedule);
-                } else {
-                    alert(`错误: ${data.message}`);
+            const name = document.getElementById('teacher-view-select').value; const res = await fetch('/api/teacher_view', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, teacher_name: name }) }); const data = await res.json(); if (data.status === 'success') {
+                const tbody = document.getElementById('schedule-body'); tbody.innerHTML = '';
+                for (let p = 0; p < 9; p++) {
+                    const tr = document.createElement('tr'); tr.innerHTML = `<td class="text-slate-400 font-bold bg-transparent text-xs">第 ${p + 1} 节</td>`;
+                    for (let d = 0; d < 5; d++) {
+                        const td = document.createElement('td'); const info = data.schedule[p][d];
+                        td.className = "p-0";
+                        td.innerHTML = `<div class="schedule-cell mx-auto w-full h-full ${info ? '' : 'empty'}">${info ? `<div class="text-blue-500 font-black">${info.class_id} 班</div><div class="text-sm text-slate-400">${info.subject}</div>` : '<span class="text-slate-300">-</span>'}</div>`; tr.appendChild(td);
+                    } tbody.appendChild(tr);
                 }
-            } catch (e) { alert('获取老师课表失败: ' + e.message); }
+                document.getElementById('class-title').innerText = `教师: ${name}`;
+            }
         }
 
-        function renderTeacherSchedule(schedule) {
-            const tbody = document.getElementById('schedule-body');
-            tbody.innerHTML = '';
+        async function loadSavedList() {
+            const res = await fetch('/api/list'); const data = await res.json(); document.getElementById('saved-list').innerHTML = data.schedules ? data.schedules.map(s => `
+            <div class="clay-btn p-2 flex justify-between items-center mb-2 group hover:bg-white transition-colors">
+                <span onclick="loadSchedule('${s.name}')" class="text-xs font-bold truncate flex-1 cursor-pointer text-slate-500 hover:text-blue-500 pl-1">${s.name}</span>
+                
+                <button onclick="targetDeleteName='${s.name}'; new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show()" 
+                        class="w-6 h-6 rounded bg-transparent text-slate-300 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition-all">
+                    <i class="bi bi-trash3 text-xs"></i>
+                </button>
+            </div>`).join('') : '<div class="text-xs text-slate-400 text-center py-2">暂无存档</div>';
+        }
+        async function loadSchedule(n) { const res = await fetch(`/api/load/${encodeURIComponent(n)}`); const data = await res.json(); if (data.status === 'success') { currentScheduleId = data.schedule_id; globalSchedule = data.schedule; config = data.config || config; renderSettings(); updateUI(data); } }
+        async function saveCurrentSchedule() { const n = document.getElementById('save-name').value; await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, name: n, config }) }); document.getElementById('save-name').value = ''; loadSavedList(); }
+
+        function openSettings() {
+            const m = new bootstrap.Modal(document.getElementById('constraintModal'));
+
+            // 1. 打开时只填充一次下拉列表，避免 onchange 时被重置
+            const t = document.getElementById('constraint-teacher-select');
+            t.innerHTML = '<option value="">选择教师...</option>';
+            globalTeachers.sort((a, b) => a.name.localeCompare(b.name)).forEach(x => {
+                t.add(new Option(x.name, x.name));
+            });
+
+            // 填充班级列表
+            const c = document.getElementById('constraint-class-select');
+            c.innerHTML = '<option value="">选择班级...</option>';
+            // 如果还没排课，config.num_classes可能有值，用它生成
+            const numC = config.num_classes || 0;
+            if (numC > 0) {
+                for (let i = 1; i <= numC; i++) c.add(new Option(`${i} 班`, `${i}`));
+            } else {
+                // 有可能用中文名
+                Object.keys(globalSchedule).forEach(k => c.add(new Option(`${k} 班`, k)));
+            }
+
+            // 重置模式
+            document.querySelector('input[name="constraint-mode"][value="teacher"]').checked = true;
+            switchConstraintMode();
+
+            // 2. 初始化开关状态 (读取当前配置，如果没有则默认为 false)
+            const isAvoid = config.optimization && config.optimization.avoid_consecutive_subjects === true;
+            document.getElementById('check-avoid-consecutive').checked = isAvoid;
+
+            // 3. 渲染一个初始的空格子（或者清空）
+            renderConstraintGrid();
+
+            m.show();
+        }
+        function switchConstraintMode() {
+            const mode = document.querySelector('input[name="constraint-mode"]:checked').value;
+            const tSel = document.getElementById('constraint-teacher-select');
+            const cSel = document.getElementById('constraint-class-select');
+
+            // 样式更新
+            document.querySelectorAll('input[name="constraint-mode"]').forEach(el => {
+                const label = el.parentElement;
+                if (el.checked) {
+                    label.classList.add('bg-blue-100', 'text-blue-600', 'font-bold');
+                } else {
+                    label.classList.remove('bg-blue-100', 'text-blue-600', 'font-bold');
+                }
+            });
+
+            if (mode === 'teacher') {
+                tSel.classList.remove('hidden');
+                cSel.classList.add('hidden');
+            } else {
+                tSel.classList.add('hidden');
+                cSel.classList.remove('hidden');
+            }
+            renderConstraintGrid();
+        }
+
+        function renderConstraintGrid() {
+            const mode = document.querySelector('input[name="constraint-mode"]:checked').value;
+            const tb = document.getElementById('constraint-tbody');
+            tb.innerHTML = '';
+
+            let currentData = null;
+            let currentTarget = null;
+
+            if (mode === 'teacher') {
+                currentTarget = document.getElementById('constraint-teacher-select').value;
+                currentData = (currentTarget && globalConstraints.teacher_unavailable[currentTarget]) ? globalConstraints.teacher_unavailable[currentTarget] : [];
+            } else {
+                currentTarget = document.getElementById('constraint-class-select').value;
+                if (!globalConstraints.fixed_courses) globalConstraints.fixed_courses = {};
+                currentData = (currentTarget && globalConstraints.fixed_courses[currentTarget]) ? globalConstraints.fixed_courses[currentTarget] : {};
+            }
+
             for (let p = 0; p < 9; p++) {
                 const tr = document.createElement('tr');
-                const th = document.createElement('th'); th.innerText = `第 ${p + 1} 节`; tr.appendChild(th);
+                tr.innerHTML = `<th class="text-slate-300 text-[10px] pr-2 align-middle">${p + 1}</th>`;
+
                 for (let d = 0; d < 5; d++) {
                     const td = document.createElement('td');
-                    const periodData = schedule[p];
-                    const info = periodData ? periodData[d] : null;
-                    if (info) {
-                        td.className = info.is_sub ? 'status-sub' : '';
-                        td.innerHTML = `<div class="course-cell">${info.class_id}班</div><span class="teacher-name">${info.subject}</span>`;
+                    td.className = "rounded-lg hover:bg-slate-100 cursor-pointer p-2 relative transition-colors";
+
+                    if (mode === 'teacher') {
+                        // 教师不排课模式
+                        const isRestricted = Array.isArray(currentData) && currentData.some(c => c[0] === d && c[1] === p);
+                        const dotClass = isRestricted ? "bg-red-400 w-4 h-4 shadow-md" : "bg-slate-200 w-2 h-2";
+                        td.innerHTML = `<div class="${dotClass} rounded-full mx-auto transition-all duration-200"></div>`;
+                        td.onclick = () => toggleTeacherConstraint(d, p, td);
+                    } else {
+                        // 班级预排模式
+                        const fixedSubj = currentData[`${d}_${p}`];
+                        if (fixedSubj) {
+                            td.innerHTML = `<div class="bg-blue-100 text-blue-600 text-[10px] font-bold px-1 py-1 rounded text-center truncate shadow-sm">${fixedSubj}</div>`;
+                        } else {
+                            td.innerHTML = `<div class="w-2 h-2 rounded-full bg-slate-200 mx-auto"></div>`;
+                        }
+                        td.onclick = () => toggleFixedConstraint(d, p, td);
                     }
                     tr.appendChild(td);
                 }
-                tbody.appendChild(tr);
+                tb.appendChild(tr);
             }
         }
 
-        function showErrorAlert(errorData) {
-            const container = document.getElementById('error-alert-container');
-            let alertClass = 'alert-warning';
-            let icon = '<i class="bi bi-exclamation-triangle-fill"></i>';
-            if (errorData.error_type === 'system_error' || errorData.error_type === 'network_error') {
-                alertClass = 'alert-danger';
-                icon = '<i class="bi bi-x-circle-fill"></i>';
+        function toggleTeacherConstraint(d, p, td) {
+            const t = document.getElementById('constraint-teacher-select').value;
+            if (!t) return alert("请先选择一位老师");
+
+            if (!globalConstraints.teacher_unavailable[t]) globalConstraints.teacher_unavailable[t] = [];
+            const idx = globalConstraints.teacher_unavailable[t].findIndex(u => u[0] == d && u[1] == p);
+
+            if (idx >= 0) {
+                globalConstraints.teacher_unavailable[t].splice(idx, 1);
+            } else {
+                globalConstraints.teacher_unavailable[t].push([d, p]);
             }
-            let suggestionsHTML = '';
-            if (errorData.suggestions && errorData.suggestions.length > 0) {
-                suggestionsHTML = '<div class="mt-2"><strong><i class="bi bi-lightbulb"></i> 建议：</strong><ul class="mb-0 mt-1">';
-                errorData.suggestions.forEach(suggestion => {
-                    suggestionsHTML += `<li>${suggestion}</li>`;
-                });
-                suggestionsHTML += '</ul></div>';
-            }
-            container.innerHTML = `
-                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                    <h6 class="alert-heading alert-title">${icon} ${errorData.message || '排课失败'}</h6>
-                    ${suggestionsHTML}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
+            renderConstraintGrid();
         }
 
-        function clearErrorAlert() {
-            document.getElementById('error-alert-container').innerHTML = '';
-        }
+        function toggleFixedConstraint(d, p, td) {
+            const c = document.getElementById('constraint-class-select').value;
+            if (!c) return alert("请先选择一个班级");
 
-        document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('btn-confirm-delete').addEventListener('click', async function () {
-                // 关闭弹窗
-                if (deleteModalVar) deleteModalVar.hide();
+            if (!globalConstraints.fixed_courses[c]) globalConstraints.fixed_courses[c] = {};
 
-                const name = targetDeleteName;
-                if (!name) return;
+            const currentSubj = globalConstraints.fixed_courses[c][`${d}_${p}`];
 
-                try {
-                    const resp = await fetch('/api/delete', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name })
-                    });
-
-                    if (!resp.ok) {
-                        const text = await resp.text();
-                        throw new Error(`服务器错误 (${resp.status}): ${text.substring(0, 50)}`);
-                    }
-
-                    const data = await resp.json();
-
-                    if (data.status === 'success') {
-                        // 不弹窗干扰用户，直接刷新列表，体验更流畅
-                        loadSavedList();
-                        // 可选：显示一个轻提示（Toast），这里简单用控制台记录
-                        console.log(`方案 ${name} 删除成功`);
+            if (currentSubj) {
+                // 已有 -> 清除
+                delete globalConstraints.fixed_courses[c][`${d}_${p}`];
+                renderConstraintGrid();
+            } else {
+                // 没有 -> 选择
+                // 收集所有可选课程
+                const subjects = config.courses.map(x => x.name);
+                // 简单起见，使用 prompt
+                // 更高级的做法是弹出一个小的 popover，但这需要写更多 DOM
+                const input = prompt(`请输入 [ ${c} 班 - ${DAYS[d]} 第${p + 1}节 ] 固定要上的科目名称：\n(可选: ${subjects.join(', ')})`);
+                if (input) {
+                    const trimmed = input.trim();
+                    // 验证一下
+                    if (subjects.includes(trimmed)) {
+                        globalConstraints.fixed_courses[c][`${d}_${p}`] = trimmed;
+                        renderConstraintGrid();
                     } else {
-                        alert(`删除失败: ${data.message}`);
+                        alert("科目不存在，请检查输入 (必须完全匹配参数设置中的科目名)");
                     }
-                } catch (e) {
-                    console.error("删除请求出错:", e);
-                    alert(`系统错误: ${e.message}`);
+                }
+            }
+        }
+
+        function saveConstraintsAndRun() {
+            // 1. 关闭模态框
+            const modalEl = document.getElementById('constraintModal');
+            const modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+
+            // 2. 给用户一点反馈，防止误触
+            // 简单的确认逻辑，因为重排会覆盖当前课表
+            if (confirm("应用新约束并重新生成课表？\n(注意：当前未保存的课表变动将会丢失)")) {
+                // 3. 调用核心排课函数
+                initSystem();
+            } else {
+                // 如果用户点了取消，重新把模态框打开（可选，为了体验更好）
+                modal.show();
+            }
+        }
+
+        function getRoomName(subject) {
+            // 简单匹配：遍历资源列表，看谁的 subjects 包含了这个科目
+            // config.resources structure: [{name: 'Lab', capacity: 1, subjects: 'Physics, Science'}]
+            if (!config.resources) return null;
+
+            // 缓存一下 Map 可能会性能更好，但这里数据量小，直接遍历也无妨
+            for (let r of config.resources) {
+                if (r.subjects) {
+                    // 支持中英文逗号
+                    const subjs = r.subjects.split(/[,，]/).map(s => s.trim());
+                    if (subjs.includes(subject)) {
+                        return r.name;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function addResourceRow(n = "", c = 1, s = "") {
+            // 统一的删除按钮样式
+            const deleteBtn = `
+                <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
+                        onclick="this.closest('tr').remove()">
+                    <i class="bi bi-trash3"></i>
+                </button>`;
+
+            const html = `
+            <tr>
+                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-name" value="${n}" placeholder="资源名"></td>
+                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 course-capacity" value="${c}" min="1"></td>
+                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-subjects" value="${s}" placeholder="适用科目"></td>
+                <td class="text-center">${deleteBtn}</td>
+            </tr>`;
+            document.getElementById('resource-settings-body').insertAdjacentHTML('beforeend', html);
+        }
+        function addCourseRow(n = "", c = 2, t = "main", ts = "") {
+            // 统一的删除按钮样式
+            const deleteBtn = `
+                <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
+                        onclick="this.closest('tr').remove(); updateTotalHours()">
+                    <i class="bi bi-trash3"></i>
+                </button>`;
+
+            const html = `
+            <tr>
+                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-name" value="${n}" placeholder="科目名"></td>
+                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 course-count" value="${c}" onchange="updateTotalHours()" oninput="updateTotalHours()"></td>
+                <td class="pr-2">
+                    <select class="clay-input w-full py-2 px-3 text-sm border-0 course-type">
+                        <option value="main" ${t === 'main' ? 'selected' : ''}>主课</option>
+                        <option value="minor" ${t === 'minor' ? 'selected' : ''}>副课</option>
+                    </select>
+                </td>
+                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-teachers text-xs" value="${ts}" placeholder="张三, 李四"></td>
+                <td class="text-center">${deleteBtn}</td>
+            </tr>`;
+
+            document.getElementById('course-settings-body').insertAdjacentHTML('beforeend', html);
+            updateTotalHours(); // 添加行后立即重新计算
+        }
+
+        function updateTotalHours() {
+            let t = 0;
+            // 遍历所有科目数量输入框
+            document.querySelectorAll('.course-count').forEach(i => t += parseInt(i.value) || 0);
+
+            // 更新界面显示
+            const displayEl = document.getElementById('current-hours');
+            const containerEl = document.getElementById('total-hours-display');
+
+            if (displayEl) {
+                displayEl.innerText = t;
+                // 简单的超限预警逻辑 (假设一周5天*9节 = 45节)
+                if (t > 45) {
+                    displayEl.className = "text-red-500 text-lg font-black"; // 超限变红变大
+                    containerEl.classList.add("!border-red-200", "!bg-red-50");
+                } else {
+                    displayEl.className = "text-blue-500 text-sm";
+                    containerEl.classList.remove("!border-red-200", "!bg-red-50");
+                }
+            }
+        }
+        function renderSettings() {
+            document.getElementById('setting-num-classes').value = config.num_classes;
+
+            // 更新：传递 subjects 参数 (r.subjects)
+            document.getElementById('resource-settings-body').innerHTML = '';
+            (config.resources || []).forEach(r => addResourceRow(r.name, r.capacity, r.subjects));
+
+            document.getElementById('course-settings-body').innerHTML = '';
+            config.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers));
+        }
+        function saveSettingsAndInit() {
+            config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
+
+            // 保存科目设置
+            let nc = [], td = {};
+            document.querySelectorAll('#course-settings-body tr').forEach(r => {
+                const n = r.querySelector('.course-name').value;
+                const c = parseInt(r.querySelector('.course-count').value);
+                if (n && c > 0) {
+                    nc.push({
+                        name: n,
+                        count: c,
+                        type: r.querySelector('.course-type').value,
+                        teachers: r.querySelector('.course-teachers').value
+                    });
+                    if (r.querySelector('.course-teachers').value) {
+                        td[n] = r.querySelector('.course-teachers').value.split(/[,，\s]+/).filter(x => x);
+                    }
                 }
             });
-        });
+            config.courses = nc;
+            config.teacher_names = td;
 
-        // ================= Undo/Redo Logic =================
-        function pushHistory() {
-            if (!globalSchedule || Object.keys(globalSchedule).length === 0) return;
-            // Deep copy
-            const snapshot = JSON.parse(JSON.stringify(globalSchedule));
-            historyStack.push(snapshot);
-            if (historyStack.length > MAX_HISTORY) historyStack.shift();
-            redoStack = []; // Clear redo on new action
-            updateUndoButtons();
+            // === 更新：保存资源设置 (包含适用科目) ===
+            let nr = [];
+            document.querySelectorAll('#resource-settings-body tr').forEach(r => {
+                const n = r.querySelector('.course-name').value;
+                const cap = parseInt(r.querySelector('.course-capacity').value);
+                const subj = r.querySelector('.course-subjects').value; // 获取适用科目
+
+                if (n) {
+                    nr.push({
+                        name: n,
+                        capacity: cap || 1,
+                        subjects: subj // 保存为字符串，后端 normal.py 会处理逗号分割
+                    });
+                }
+            });
+            config.resources = nr;
+
+            initSystem();
+        }
+        async function handleConfigUpload(input) {
+            if (!input.files || !input.files[0]) return;
+            const formData = new FormData(); formData.append('file', input.files[0]);
+            try {
+                const res = await fetch('/api/import_config', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (data.status === 'success') {
+                    let newCourses = [];
+                    for (let [name, info] of Object.entries(data.courses)) { newCourses.push({ name: name, count: info.count, type: info.type, teachers: info.teachers.join(', ') }); }
+                    config.courses = newCourses; config.resources = data.resources; renderSettings(); alert(data.message);
+                } else { alert(data.message); }
+            } catch (e) { alert("上传失败"); }
+            input.value = '';
         }
 
         async function performUndo() {
-            if (historyStack.length === 0) return;
-            // Save current state to redo stack
-            const currentState = JSON.parse(JSON.stringify(globalSchedule));
-            redoStack.push(currentState);
-
-            const prevState = historyStack.pop();
-            await applyRestoredState(prevState);
-            updateUndoButtons();
+            if (historyStack.length) {
+                redoStack.push(JSON.parse(JSON.stringify(globalSchedule)));
+                const prevSchedule = historyStack.pop();
+                try {
+                    const res = await fetch('/api/restore', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, schedule: prevSchedule }) });
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        globalSchedule = prevSchedule; updateUndoButtons();
+                        if (currentView === 'class') renderCurrentClass(); else renderCurrentTeacher();
+                    }
+                    else { alert("撤销失败: " + data.message); historyStack.push(prevSchedule); redoStack.pop(); }
+                } catch (e) { console.error(e); alert("同步服务器失败"); }
+            }
         }
-
         async function performRedo() {
-            if (redoStack.length === 0) return;
-            // Save current state to history
-            const currentState = JSON.parse(JSON.stringify(globalSchedule));
-            historyStack.push(currentState);
-
-            const nextState = redoStack.pop();
-            await applyRestoredState(nextState);
-            updateUndoButtons();
+            if (redoStack.length) {
+                historyStack.push(JSON.parse(JSON.stringify(globalSchedule)));
+                const nextSchedule = redoStack.pop();
+                try {
+                    await fetch('/api/restore', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, schedule: nextSchedule }) });
+                    globalSchedule = nextSchedule; updateUndoButtons();
+                    if (currentView === 'class') renderCurrentClass(); else renderCurrentTeacher();
+                } catch (e) { console.error(e); }
+            }
+        }
+        function pushHistory() { if (Object.keys(globalSchedule).length) { historyStack.push(JSON.parse(JSON.stringify(globalSchedule))); if (historyStack.length > MAX_HISTORY) historyStack.shift(); redoStack = []; updateUndoButtons(); } }
+        function updateUndoButtons() { document.getElementById('btn-undo').disabled = !historyStack.length; document.getElementById('btn-redo').disabled = !redoStack.length; }
+        function exportCurrentClass() {
+            if (currentView === 'class') {
+                const c = document.getElementById('class-select').value; if (c) window.location.href = `/api/export/class/${c}?schedule_id=${currentScheduleId}`;
+            } else {
+                const t = document.getElementById('teacher-view-select').value; if (t) window.location.href = `/api/export/teacher/${encodeURIComponent(t)}?schedule_id=${currentScheduleId}`;
+            }
+        }
+        function exportAllClasses() {
+            window.location.href = `/api/export/all_classes?schedule_id=${currentScheduleId}`;
         }
 
-        async function applyRestoredState(scheduleData) {
-            try {
-                const resp = await fetch('/api/restore', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ schedule: scheduleData })
+        function openStatistics() {
+            new bootstrap.Modal(document.getElementById('statisticsModal')).show(); setTimeout(() => {
+                const ctx = document.getElementById('workloadChart').getContext('2d'); if (workloadChart) workloadChart.destroy();
+                const lb = Object.keys(currentStats).sort(); workloadChart = new Chart(ctx, { type: 'bar', data: { labels: lb, datasets: [{ label: 'Hours', data: lb.map(n => currentStats[n].total), backgroundColor: '#63b3ed', borderRadius: 20 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { display: false } }, x: { grid: { display: false } } } } });
+            }, 300);
+        }
+        document.getElementById('btn-confirm-delete').onclick = async () => { await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: targetDeleteName }) }); bootstrap.Modal.getInstance(document.getElementById('deleteConfirmModal')).hide(); loadSavedList(); }
+        function addLeave() {
+            const n = document.getElementById('teacher-select').value;
+            // 获取下拉框的数值 (0-4 代表周一到周五, 0-8 代表第1-9节)
+            const sd = parseInt(document.getElementById('start-day').value);
+            const sp = parseInt(document.getElementById('start-period').value);
+            const ed = parseInt(document.getElementById('end-day').value);
+            const ep = parseInt(document.getElementById('end-period').value);
+
+            if (n) {
+                // 推送新格式的数据结构
+                leaveRequests.push({
+                    name: n,
+                    start: { day: sd, period: sp },
+                    end: { day: ed, period: ep }
                 });
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    // Update global variable
-                    globalSchedule = scheduleData;
-
-                    // Re-calculate derived data (teacher map)
-                    updateUI({ schedule: globalSchedule, teachers: globalTeachers, stats: data.stats });
-
-                    // Re-render current view
-                    if (currentView === 'class') renderCurrentClass();
-                    else if (currentView === 'teacher') renderCurrentTeacher();
-
-                } else {
-                    alert('恢复状态失败: ' + data.message);
-                }
-            } catch (e) {
-                console.error(e);
-                alert('系统错误: ' + e.message);
+                renderLeaveList();
             }
         }
+        function renderLeaveList() {
+            const dayText = ["周一", "周二", "周三", "周四", "周五"];
 
-        function updateUndoButtons() {
-            const btnUndo = document.getElementById('btn-undo');
-            const btnRedo = document.getElementById('btn-redo');
-            if (btnUndo) btnUndo.disabled = historyStack.length === 0;
-            if (btnRedo) btnRedo.disabled = redoStack.length === 0;
+            document.getElementById('leave-list').innerHTML = leaveRequests.map((r, i) => {
+                // 格式化显示文本，例如：周一第1节 - 周一第2节
+                const startText = `${dayText[r.start.day]}第${r.start.period + 1}节`;
+                const endText = `${dayText[r.end.day]}第${r.end.period + 1}节`;
+
+                return `
+                <li class="flex justify-between items-center text-xs bg-white p-2 rounded-xl border border-slate-100 shadow-sm mb-2">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-600">${r.name}</span>
+                        <span class="scale-90 origin-left text-slate-400 font-mono">${startText} -> ${endText}</span>
+                    </div>
+                    <button onclick="leaveRequests.splice(${i},1);renderLeaveList()" 
+                            class="w-7 h-7 rounded-lg bg-red-50 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all">
+                        <i class="bi bi-trash3"></i>
+                    </button>
+                </li>`;
+            }).join('');
         }
+        function applySubstitutions() {
+            const btn = document.getElementById('btn-apply');
+            // 防止重复点击
+            btn.disabled = true;
+            const originalText = btn.innerText;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 计算中...';
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function (e) {
-            // Check if input/textarea is focused to avoid conflict? (optional)
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            fetch('/api/substitute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ schedule_id: currentScheduleId, leaves: leaveRequests })
+            })
+                .then(r => r.json())
+                .then(d => {
+                    if (d.status === 'success') {
+                        globalSchedule = d.schedule;
+                        updateUI(d); // 更新界面数据
 
-            if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
-                e.preventDefault();
-                performUndo();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
-                e.preventDefault();
-                performRedo();
-            }
-        });
+                        // === 核心修复：构建成功反馈弹窗 ===
+                        const stats = d.stats || { direct: 0, swap: 0, self_study: 0 };
 
-        async function handleConfigUpload(input) {
-            if (!input.files || input.files.length === 0) return;
+                        // 1. 生成统计 HTML
+                        let resultHtml = `
+                <div class="flex gap-2 mb-4">
+                    <div class="bg-green-100 text-green-700 px-3 py-2 rounded-xl text-xs font-bold flex-1 text-center shadow-sm">
+                        <div class="text-[10px] opacity-60 uppercase">直接代课</div>
+                        <div class="text-lg">${stats.direct}</div>
+                    </div>
+                    <div class="bg-blue-100 text-blue-700 px-3 py-2 rounded-xl text-xs font-bold flex-1 text-center shadow-sm">
+                        <div class="text-[10px] opacity-60 uppercase">课程互换</div>
+                        <div class="text-lg">${stats.swap}</div>
+                    </div>
+                    <div class="bg-red-100 text-red-700 px-3 py-2 rounded-xl text-xs font-bold flex-1 text-center shadow-sm">
+                        <div class="text-[10px] opacity-60 uppercase">自习</div>
+                        <div class="text-lg">${stats.self_study}</div>
+                    </div>
+                </div>
+            `;
 
-            const file = input.files[0];
-            const formData = new FormData();
-            formData.append('file', file);
+                        // 2. 生成详细日志列表
+                        if (d.logs && d.logs.length > 0) {
+                            resultHtml += '<div class="text-xs font-bold text-slate-400 mb-2 pl-1">调整明细：</div>';
+                            resultHtml += '<ul class="space-y-2 text-xs font-bold text-slate-600 max-h-60 overflow-y-auto pr-1 custom-scrollbar">';
+                            d.logs.forEach(log => {
+                                const icon = log.type === 'self_study'
+                                    ? '<i class="bi bi-x-circle-fill text-red-400 text-lg"></i>'
+                                    : '<i class="bi bi-check-circle-fill text-green-500 text-lg"></i>';
+                                const bgClass = log.type === 'self_study' ? 'bg-red-50 border-red-100' : 'bg-green-50 border-green-100';
 
-            try {
-                // Show loading state?
-                const btn = input.nextElementSibling; // The button is actually next next.. getting via ID is safer but button triggered click.
-                // Doesn't matter, just fetch.
-
-                const resp = await fetch('/api/import_config', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!resp.ok) {
-                    const text = await resp.text();
-                    throw new Error(`Import failed: ${text}`);
-                }
-
-                const data = await resp.json();
-                if (data.status === 'success') {
-                    // Convert courses dict to array
-                    const newCourses = [];
-                    for (const [subj, info] of Object.entries(data.courses)) {
-                        newCourses.push({
-                            name: subj,
-                            count: info.count,
-                            type: info.type,
-                            teachers: info.teachers.join(', ')
-                        });
-                    }
-                    config.courses = newCourses;
-
-                    // Resources
-                    const newResources = data.resources.map(r => ({
-                        name: r.name,
-                        capacity: r.capacity,
-                        subjects: r.subjects.join(', ')
-                    }));
-                    config.resources = newResources;
-
-                    renderSettings();
-                    alert(`✅ ${data.message}`);
-                } else {
-                    alert(`❌ 导入失败: ${data.message}`);
-                }
-            } catch (e) {
-                console.error(e);
-                alert(`系统错误: ${e.message}`);
-            } finally {
-                input.value = ''; // Reset input
-            }
-        }
-
-
-        // ================= Smart Suggestions =================
-        function handleCellClick(e, srcPeriod, srcDay) {
-            // If dragging, ignore click
-            if (e.target.closest('.drag-source')) return;
-
-            // Clear previous suggestions
-            clearSuggestions();
-
-            const classId = document.getElementById('class-select').value;
-            const info = globalSchedule[classId] ? globalSchedule[classId][srcPeriod][srcDay] : null;
-
-            if (!info || !info.teacher_name) return; // Clicked empty cell
-
-            const teacher = info.teacher_name;
-
-            // [~] Implement smart suggestions (highlight feasible slots for a selected class) <!-- id: 7 -->
-            // Highlight feasible slots
-            // Feasible = Empty slot AND Teacher is free
-            const tbody = document.getElementById('schedule-body');
-            const rows = tbody.querySelectorAll('tr');
-
-            for (let p = 0; p < 9; p++) {
-                for (let d = 0; d < 5; d++) {
-                    // Skip self
-                    if (p === srcPeriod && d === srcDay) continue;
-
-                    // Check if slot is empty in current class
-                    const targetInfo = globalSchedule[classId][p][d];
-                    if (!targetInfo) {
-                        // Slot is empty from class perspective.
-                        // Check teacher availability
-                        // Teacher is busy if teacherScheduleMap[teacher] has entry at (d,p)
-                        // AND that entry is NOT the current class (moving within same class is fine, but we are checking empty slots so no entry should be there for current class)
-
-                        // Wait, if teacher teaches Class 2 at (d,p), they are busy. 
-                        const map = teacherScheduleMap[teacher];
-                        const key = `${d}_${p}`;
-                        const conflict = map ? map[key] : null;
-
-                        if (!conflict) {
-                            // Feasible!
-                            // Find the TD
-                            const targetTd = rows[p].children[d + 1]; // +1 because of TH
-                            if (targetTd) targetTd.classList.add('feasible-cell');
+                                resultHtml += `
+                        <li class="flex items-center gap-3 ${bgClass} p-3 rounded-xl border">
+                            ${icon} 
+                            <span>${log.message}</span>
+                        </li>`;
+                            });
+                            resultHtml += '</ul>';
+                        } else {
+                            resultHtml += '<div class="text-center text-slate-400 text-xs py-8 bg-slate-50 rounded-xl border border-dashed border-slate-200">没有发现需要调整的课程</div>';
                         }
+
+                        // 3. 操作模态框 DOM
+                        const modalEl = document.getElementById('failureModal');
+
+                        // 修改标题区域样式（变成绿色）
+                        const headerIcon = modalEl.querySelector('.bi-exclamation-triangle-fill');
+                        if (headerIcon) {
+                            headerIcon.className = "bi bi-check-circle-fill text-2xl text-green-500";
+                        }
+
+                        const headerTitle = modalEl.querySelector('h5');
+                        if (headerTitle) {
+                            headerTitle.innerText = "智能代课执行成功";
+                            headerTitle.parentElement.className = "flex items-center gap-3 mb-4 text-green-500";
+                        }
+
+                        const headerSub = modalEl.querySelector('p.text-sm');
+                        if (headerSub) headerSub.innerText = "系统已自动完成以下课程调整：";
+
+                        // 填充内容
+                        const contentBox = modalEl.querySelector('.clay-card');
+                        contentBox.innerHTML = resultHtml;
+
+                        // 显示模态框
+                        new bootstrap.Modal(modalEl).show();
+
+                    } else {
+                        alert("代课计算出错: " + d.message);
                     }
-                }
-            }
+                })
+                .catch(e => {
+                    console.error(e);
+                    alert("请求失败，请检查网络或控制台日志");
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                });
         }
-
-        function clearSuggestions() {
-            document.querySelectorAll('.feasible-cell').forEach(el => el.classList.remove('feasible-cell'));
-        }
-
-        // Hide suggestions when clicking outside table
-        document.addEventListener('click', function (e) {
-            if (!e.target.closest('.schedule-table')) {
-                clearSuggestions();
-            }
-        });
-    </script>
-    <script>
-        // 开屏动画控制
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const splash = document.getElementById('splash-screen');
-                if (splash) {
-                    splash.classList.add('hidden');
-                    setTimeout(() => {
-                        splash.remove(); // 动画结束后从DOM移除
-                    }, 800);
-                }
-            }, 1000); // 至少显示1秒
-        });
     </script>
 </body>
 

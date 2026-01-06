@@ -29,19 +29,21 @@ class InvalidConfigError(ScheduleError):
 
 
 def analyze_failure(config):
-    """分析排课失败的可能原因并生成建议
-    
-    Args:
-        config: 排课配置字典
-        
-    Returns:
-        dict: 包含错误类型、消息和建议的字典
-    """
+    """分析排课失败的可能原因并生成建议 (已修复兼容性)"""
     num_classes = config.get('num_classes', 0)
     courses = config.get('courses', {})
     
-    total_hours = sum(courses.values())
-    max_capacity = 45  # 一周5天x9节课 (修正：原为30)
+    # === [修复 1] 正确计算总课时 ===
+    total_hours = 0
+    for c_data in courses.values():
+        if isinstance(c_data, dict):
+            # 新格式：从字典取 count
+            total_hours += int(c_data.get('count', 0))
+        else:
+            # 旧格式：直接是数字
+            total_hours += int(c_data)
+
+    max_capacity = 45  # 一周5天x9节课
     
     suggestions = []
     error_type = "unknown"
@@ -52,54 +54,41 @@ def analyze_failure(config):
         error_type = "schedule_overload"
         message = f"总课时({total_hours})超过每周容量({max_capacity})"
         
-        # 计算需要减少的课时
         excess = total_hours - max_capacity
-        suggestions.append(f"需要减少 {excess} 节课时")
-        
-        # 建议减少课时最多的科目
-        sorted_courses = sorted(courses.items(), key=lambda x: x[1], reverse=True)
-        for subject, count in sorted_courses[:3]:
-            if count > 2:
-                suggestions.append(f"可考虑减少「{subject}」从 {count} 节到 {count-1} 节")
-                if len(suggestions) >= 4:
-                    break
+        suggestions.append(f"严重警告：每个班级每周只有 {max_capacity} 个格子，但您安排了 {total_hours} 节课！")
+        suggestions.append(f"必须减少至少 {excess} 节课才能排课。")
     
-    # 检查2：老师数量是否足够
+    # 检查2：老师资源是否枯竭
+    # 比如：数学王军，如果6个班每班7节，总共42节。一周只有45节课。
+    # 只要稍微有一点点冲突（比如开会、教研、或者禁排），他就排不出来了。
     teacher_names = config.get('teacher_names', {})
-    for subject, count in courses.items():
-        provided_teachers = len(teacher_names.get(subject, []))
-        
-        # 简单估算需要的老师数量（假设每个老师最多带3个班级的同一科目）
-        if count >= 5:
-            max_classes_per_teacher = 2
-        elif count >= 3:
-            max_classes_per_teacher = 3
-        else:
-            max_classes_per_teacher = 6
-            
-        required_teachers = (num_classes + max_classes_per_teacher - 1) // max_classes_per_teacher
-        
-        # if provided_teachers > 0 and provided_teachers < required_teachers:
-        #     error_type = "insufficient_teachers"
-        #     message = f"{subject}老师不足"
-        #     suggestions.append(f"「{subject}」需要至少 {required_teachers} 位老师，当前只提供了 {provided_teachers} 位")
-        pass
     
-    # 检查3：每日课程均衡性
-    for subject, count in courses.items():
-        if count > 10:  # 一周超过10节的科目
-            error_type = "unbalanced_schedule"
-            message = "课程分布不均衡"
-            suggestions.append(f"「{subject}」课时过多({count}节)，可能难以均匀分配到每天")
-    
-    # 如果没有明确的问题，给出通用建议
+    for subject, val in courses.items():
+        count = val.get('count', 0) if isinstance(val, dict) else val
+        teachers = teacher_names.get(subject, [])
+        if not teachers: continue
+        
+        # 计算该科目总课时需求
+        total_subject_lessons = count * num_classes
+        # 计算老师总运力 (假设极限是每人每周45节)
+        total_teacher_capacity = len(teachers) * 45
+        
+        if total_subject_lessons > total_teacher_capacity:
+             error_type = "teacher_overload"
+             message = f"{subject}老师课时超限"
+             suggestions.append(f"「{subject}」全校共需 {total_subject_lessons} 节，但老师最大运力只有 {total_teacher_capacity} 节。")
+        elif total_subject_lessons > len(teachers) * 40:
+             # 警告阈值
+             suggestions.append(f"「{subject}」老师平均周课时超过40节，极易导致排课失败。")
+
+    # 通用建议
     if error_type == "unknown":
         error_type = "constraint_too_tight"
-        message = "约束条件过于严格，求解器无法找到可行方案"
+        message = "约束条件过于严格，求解器在规定时间内无法找到解"
         suggestions.extend([
-            "尝试减少某些课程的每周节数",
-            "增加班级数量或减少必修科目",
-            "检查自定义老师配置是否合理"
+            "1. 您的课表是否已满(45/45)? 尝试减少一节非主课。",
+            "2. 是否有老师的课时量接近45节? 请增加老师。",
+            "3. 检查是否有互斥的'不排课'时间设置。"
         ])
     
     return {

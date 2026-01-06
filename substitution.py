@@ -92,37 +92,46 @@ class SubstitutionSystem:
 
     def process_leaves(self, leave_requests):
         """
-        处理请假请求，采用三级代课策略
-        
-        Level 1: 直接代课（找到空闲的同科目老师）
-        Level 2: 课程互换（通过调整课程时间来安排代课）
-        Level 3: 标记自习（实在找不到解决方案）
+        处理请假请求 (支持精确节次)
+        leave_requests: [{name, start:{day, period}, end:{day, period}}]
         """
-        # 1. 识别请假老师ID
+        # 1. 识别请假老师ID集合
         all_leave_tids = set()
         for req in leave_requests:
             if req['name'] in self.name_to_id:
                 all_leave_tids.add(self.name_to_id[req['name']])
 
-        # 统计信息
-        stats = {
-            'direct': 0,  # 直接代课次数
-            'swap': 0,    # 课程互换次数
-            'self_study': 0  # 自习次数
-        }
+        stats = { 'direct': 0, 'swap': 0, 'self_study': 0 }
 
         # 2. 遍历查找代课
         slots = list(self.final_schedule.keys())
         for (c, d, p) in slots:
+            # ================= [修复 1] 安全检查 =================
+            # 必须检查key是否存在！因为在之前的互换(Swap)操作中，
+            # 某些后续的课程可能已经被移动/删除了。如果不查，会报 KeyError 导致 500 崩溃。
+            if (c, d, p) not in self.final_schedule:
+                continue
+            # ====================================================
+
             info = self.final_schedule[(c, d, p)]
             original_tid = info['teacher_id']
             
-            # 检查是否请假
+            # === 核心修复：检查当前课程是否在请假范围内 ===
             is_on_leave = False
             for req in leave_requests:
-                if req['name'] == info['teacher_name'] and d in req['days']:
-                    is_on_leave = True
-                    break
+                if req['name'] == info['teacher_name']:
+                    # 比较时间范围 (将 day*100 + period 转换为整数进行比较)
+                    # 例如: 周一第1节(0,0) -> 0, 周一第2节(0,1) -> 1
+                    current_val = d * 100 + p
+                    
+                    s = req['start']
+                    e = req['end']
+                    start_val = s['day'] * 100 + s['period']
+                    end_val = e['day'] * 100 + e['period']
+                    
+                    if start_val <= current_val <= end_val:
+                        is_on_leave = True
+                        break
             
             if is_on_leave:
                 # === Level 1: 尝试直接代课 ===
@@ -133,7 +142,7 @@ class SubstitutionSystem:
                     self.final_schedule[(c, d, p)]['is_sub'] = True
                     self.teacher_busy.add((sub_tid, d, p))
                     stats['direct'] += 1
-                    continue  # 成功，处理下一个
+                    continue
                 
                 # === Level 2: 尝试课程互换 ===
                 swap_candidates = self._find_swap_candidates(
@@ -144,20 +153,14 @@ class SubstitutionSystem:
                     best_swap = self._select_best_swap(swap_candidates)
                     self._execute_swap(best_swap, d, p, c, original_tid, all_leave_tids)
                     stats['swap'] += 1
-                    logger.info(f"✓ 课程互换: {self.id_to_name[best_swap.substitute_tid]} "
-                          f"周{d+1}第{p+1}节去{c}班代课, "
-                          f"原课调至周{best_swap.swap_day+1}第{best_swap.swap_period+1}节")
-                    continue  # 成功，处理下一个
+                    logger.info(f"✓ 课程互换: {self.id_to_name[best_swap.substitute_tid]} 代课")
+                    continue
                 
                 # === Level 3: 标记自习 ===
                 self.final_schedule[(c, d, p)]['teacher_name'] = "【自习】"
                 self.final_schedule[(c, d, p)]['is_sub'] = True
                 stats['self_study'] += 1
                 logger.info(f"✗ 无法安排代课: {c}班 周{d+1}第{p+1}节 标记为自习")
-        
-        # 输出统计信息
-        logger.info(f"代课统计: 直接代课: {stats['direct']}次, 课程互换: {stats['swap']}次, 标记自习: {stats['self_study']}次")
-        logger.info(f"总扰动度: {stats['direct'] * 0 + stats['swap'] * 1 + stats['self_study'] * 999}分")
         
         return stats
 
@@ -339,9 +342,17 @@ class SubstitutionSystem:
         self.teacher_busy.add((swap.substitute_tid, swap.swap_day, swap.swap_period))
         
         # 步骤3: 从原时段移除代课老师的课程
-        if (swap.substitute_class, original_day, original_period) in self.final_schedule:
-            old_tid = self.final_schedule[(swap.substitute_class, original_day, original_period)]['teacher_id']
+        # ================= [修复 2] 彻底删除 =================
+        # 原代码只 discard 了 busy 状态，但没有从课表字典中删除该节课
+        # 这会导致代课老师同时出现在两个地方（分身）
+        target_key = (swap.substitute_class, original_day, original_period)
+        if target_key in self.final_schedule:
+            old_tid = self.final_schedule[target_key]['teacher_id']
             self.teacher_busy.discard((old_tid, original_day, original_period))
+            
+            # 必须删除这一条！
+            del self.final_schedule[target_key]
+        # ====================================================
 
     def move_course(self, class_id, from_slot, to_slot):
         """

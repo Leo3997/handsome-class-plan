@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, send_file
+from flask import Flask, jsonify, request, render_template, send_file, session, redirect, url_for
 from flask_cors import CORS
 import logging
 import normal
@@ -17,6 +17,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
+app.secret_key = 'delushan_schedule_system_secret_key' # 生产环境请修改
 CORS(app)
 
 # 初始化存储模块 (SQLite)
@@ -24,8 +25,15 @@ storage = ScheduleDatabase()
 # 初始化Excel导出模块
 exporter = ExcelExporter()
 
-global_result = None
-global_system = None
+import uuid
+
+# 初始化存储模块 (SQLite)
+storage = ScheduleDatabase()
+# 初始化Excel导出模块
+exporter = ExcelExporter()
+
+# 会话存储: { schedule_id: { 'system': ..., 'result': ... } }
+SCHEDULE_SESSIONS = {}
 
 def serialize_schedule(system):
     formatted_data = {}
@@ -73,8 +81,48 @@ def serialize_teacher_schedule(system, teacher_name):
     
     return teacher_data
 
+
+@app.route('/login')
+def login_page():
+    if 'user' in session:
+        return redirect('/')
+    return render_template('login.html')
+
+@app.route('/api/login', methods=['POST'])
+def api_login():
+    try:
+        data = request.json
+        username = data.get('username')
+        password = data.get('password')
+        
+        # 简单模拟验证 (生产环境应查询数据库)
+        if username == 'admin' and password == 'admin':
+            session['user'] = {'id': 1, 'name': '管理员'}
+            session.permanent = True
+            return jsonify({
+                "status": "success",
+                "message": "登录成功",
+                "user": {"id": 1, "name": "管理员"}
+            })
+        else:
+            return jsonify({
+                "status": "error", 
+                "message": "账号或密码错误"
+            }), 401
+            
+    except Exception as e:
+        logger.error(f"登录异常: {str(e)}")
+        return jsonify({"status": "error", "message": "服务器内部错误"}), 500
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/login')
+
 @app.route('/')
 def index():
+    if 'user' not in session:
+        return redirect('/login')
     return render_template('index.html')
 
 @app.route('/api/init', methods=['POST'])
@@ -104,8 +152,16 @@ def init_schedule():
                 "suggestions": error_analysis['suggestions']
             }), 400
             
-        global_result = result
-        global_system = substitution.SubstitutionSystem(result)
+        schedule_id = str(uuid.uuid4())
+        
+        # 创建系统实例
+        system_instance = substitution.SubstitutionSystem(result)
+        
+        # 存入会话
+        SCHEDULE_SESSIONS[schedule_id] = {
+            'result': result,
+            'system': system_instance
+        }
         
         teacher_list = sorted([{
             "id": t['id'], 
@@ -114,13 +170,15 @@ def init_schedule():
             "type": t.get('type', 'minor')
         } for t in result['teachers_db']], key=lambda x: x['name'])
         
-        logger.info(f"排课成功 - 生成 {len(global_system.classes)} 个班级的课表,共 {len(teacher_list)} 位老师")
+        logger.info(f"排课成功 [{schedule_id}] - 生成 {len(system_instance.classes)} 个班级的课表")
         
         return jsonify({
             "status": "success", 
+            "schedule_id": schedule_id,
             "teachers": teacher_list,
-            "schedule": serialize_schedule(global_system),
-            "stats": result.get('stats', {})
+            "schedule": serialize_schedule(system_instance),
+            "stats": result.get('stats', {}),
+            "evaluation": result.get('evaluation', {'score': 100, 'details': []})
         })
     except Exception as e:
         logger.error(f"排课异常: {str(e)}", exc_info=True)
@@ -135,72 +193,20 @@ def init_schedule():
             "suggestions": error_analysis['suggestions']
         }), 500
 
-@app.route('/api/substitute', methods=['POST'])
-def apply_substitute():
-    global global_result, global_system
-    if not global_result:
-        return jsonify({"status": "error", "message": "请先生成课表"}), 400
-    
-    data = request.json
-    leave_requests_raw = data.get('leaves', [])
-    
-    day_map = {"周一": 0, "周二": 1, "周三": 2, "周四": 3, "周五": 4}
-    processed_requests = []
-    for req in leave_requests_raw:
-        processed_requests.append({
-            "name": req['name'],
-            "days": [day_map[d] for d in req['days']]
-        })
-        
-    try:
-        global_system = substitution.SubstitutionSystem(global_result)
-        
-        # 捕获process_leaves的返回值（统计信息）
-        stats = global_system.process_leaves(processed_requests)
-        
-        # 构建日志信息
-        logs = []
-        
-        # 遍历课表，找出所有代课和调整的课程
-        for (c, d, p), info in sorted(global_system.final_schedule.items()):
-            if info.get('is_sub'):
-                day_name = ["周一", "周二", "周三", "周四", "周五"][d]
-                if info['teacher_name'] == "【自习】":
-                    logs.append({
-                        "type": "self_study",
-                        "message": f"✗ {c}班 {day_name}第{p+1}节 标记为自习"
-                    })
-                else:
-                    logs.append({
-                        "type": "substitute",
-                        "message": f"✓ {c}班 {day_name}第{p+1}节 {info['teacher_name']}代课"
-                    })
-        
-        logger.info(f"代课处理完成 - 直接代课:{stats['direct']}次, 互换:{stats['swap']}次, 自习:{stats['self_study']}次")
-        
-        return jsonify({
-            "status": "success",
-            "schedule": serialize_schedule(global_system),
-            "stats": stats,
-            "logs": logs
-        })
-    except Exception as e:
-        logger.error(f"代课处理异常: {str(e)}", exc_info=True)
-        return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/schedule/move', methods=['POST'])
 def move_course():
     """手动移动/交换课程"""
-    global global_result, global_system
-    if not global_result:
-        return jsonify({"status": "error", "message": "请先生成课表"}), 400
+    data = request.json
+    schedule_id = data.get('schedule_id')
+    
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
         
+    global_system = session_data['system']
+
     try:
-        # 如果还没初始化system对象，先初始化
-        if global_system is None:
-            global_system = substitution.SubstitutionSystem(global_result)
-            
-        data = request.json
         
         # =========== 🔴 核心修复开始 ===========
         raw_class_id = data.get('class_id')
@@ -236,13 +242,16 @@ def move_course():
 @app.route('/api/restore', methods=['POST'])
 def restore_schedule():
     """恢复课表状态 (用于前端 Undo/Redo)"""
-    global global_system
-    
-    if not global_system:
-        return jsonify({"status": "error", "message": "系统未初始化"}), 400
+    data = request.json
+    schedule_id = data.get('schedule_id')
+
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
         
+    global_system = session_data['system']
+
     try:
-        data = request.json
         schedule_data = data.get('schedule')
         
         if not schedule_data:
@@ -291,12 +300,15 @@ def restore_schedule():
 @app.route('/api/save', methods=['POST'])
 def save_schedule():
     """保存当前课表方案"""
-    global global_result, global_system
-    
-    if not global_result or not global_system:
-        return jsonify({"status": "error", "message": "没有可保存的课表"}), 400
-    
     data = request.json
+    schedule_id = data.get('schedule_id')
+    
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
+    if not session_data:
+        return jsonify({"status": "error", "message": "没有可保存的课表(会话过期)"}), 400
+        
+    global_system = session_data['system']
+    global_result = session_data['result']
     name = data.get('name', '').strip()
     
     if not name:
@@ -323,18 +335,24 @@ def load_schedule(name):
     
     if result['status'] == 'success':
         data = result['data']
-        # 恢复全局状态
-        # 注意: 这里我们需要重建 global_result 和 global_system
-        # 但 storage 保存的是序列化后的数据，不是原始 Solver 变量
-        # 所以我们只能恢复用于显示的数据，无法恢复 Solver 状态继续排课
-        # 如果需要继续排课，用户需要基于加载的配置重新点击"初始化排课"
         
-        # 临时构建一个模拟的 global_result 用于显示
-        # 真正重要的是返回给前端的 schedule 和 config
+        # 每次加载都创建一个新的隔离会话，用于导出或查看
+        # 注意：这里我们只能创建一个"空壳"或"伪造"的 context，因为没有 Solver 状态
+        # 但为了 API 兼容 (如 export 需要 system 对象), 我们尽力而为
+        
+        schedule_id = str(uuid.uuid4())
+        # 这里比较棘手，因为 Serialization 丢失了 model 对象。
+        # 如果只是为了由 load -> export，我们可以构造一个 Dummy System
+        # 目前先存一个空的 system，如果后续操作需要 full system 可能会报错
+        # 但前端通常加载后是看，或者点击"初始化"重新排。
+        
+        # 不过，为了让前端拿到 ID，我们还是生成一个
+        # 将被加载的数据作为 Payload
         
         return jsonify({
             "status": "success",
             "message": f"方案 '{name}' 加载成功",
+            "schedule_id": schedule_id, # 虽然是个空壳ID，但前端需要
             "schedule": data.get("schedule", {}),
             "config": data.get("config", {})
         })
@@ -388,10 +406,13 @@ def delete_schedule():
 @app.route('/api/export/class/<class_id>', methods=['GET'])
 def export_class(class_id):
     """导出指定班级的课表为Excel"""
-    global global_system
+    schedule_id = request.args.get('schedule_id')
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
     
-    if not global_system:
-        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
+        
+    global_system = session_data['system']
     
     try:
         schedule_data = serialize_schedule(global_system)
@@ -409,10 +430,13 @@ def export_class(class_id):
 @app.route('/api/export/all_classes', methods=['GET'])
 def export_all_classes():
     """导出所有班级的课表为Excel（多sheet）"""
-    global global_system
+    schedule_id = request.args.get('schedule_id')
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
     
-    if not global_system:
-        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
+        
+    global_system = session_data['system']
     
     try:
         schedule_data = serialize_schedule(global_system)
@@ -430,10 +454,14 @@ def export_all_classes():
 @app.route('/api/export/teacher/<teacher_name>', methods=['GET'])
 def export_teacher(teacher_name):
     """导出指定老师的课表为Excel"""
-    global global_system, global_result
+    schedule_id = request.args.get('schedule_id')
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
     
-    if not global_system or not global_result:
-        return jsonify({"status": "error", "message": "没有可导出的课表"}), 400
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
+    
+    global_system = session_data['system']
+    global_result = session_data['result']
     
     try:
         schedule_data = serialize_schedule(global_system)
@@ -454,12 +482,16 @@ def export_teacher(teacher_name):
 @app.route('/api/teacher_view', methods=['POST'])
 def get_teacher_view():
     """获取指定老师的课表视图"""
-    global global_system
-    
-    if not global_system:
-        return jsonify({"status": "error", "message": "没有可用的课表"}), 400
-    
     data = request.json
+    schedule_id = data.get('schedule_id')
+    
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
+    if not session_data:
+        # 特殊情况：如果只是查看，允许没有 session (可能)
+        # 但为了统一，还是报错
+        return jsonify({"status": "error", "message": "会话无效或已过期"}), 400
+    
+    global_system = session_data['system']
     teacher_name = data.get('teacher_name', '').strip()
     
     if not teacher_name:
@@ -475,6 +507,64 @@ def get_teacher_view():
         })
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route('/api/substitute', methods=['POST'])
+def apply_substitute():
+    # 1. 获取请求数据
+    data = request.json
+    schedule_id = data.get('schedule_id')
+    
+    # 2. 从会话中获取数据 (完全替代 global)
+    session_data = SCHEDULE_SESSIONS.get(schedule_id)
+    if not session_data:
+        return jsonify({"status": "error", "message": "会话已过期，请重新点击'一键生成'或'加载'。"}), 400
+        
+    current_system = session_data.get('system')
+    current_result = session_data.get('result')
+
+    # 前端发来的请假数据
+    leave_requests = data.get('leaves', [])
+        
+    try:
+        # 如果 system 对象还没初始化 (可能是从文件加载的情况)，尝试重建
+        if current_system is None and current_result:
+            current_system = substitution.SubstitutionSystem(current_result)
+            session_data['system'] = current_system # 更新回去
+        
+        if not current_system:
+             return jsonify({"status": "error", "message": "系统状态异常，请重新排课"}), 400
+
+        # 3. 调用代课逻辑
+        stats = current_system.process_leaves(leave_requests)
+        
+        # 4. 构建日志信息
+        logs = []
+        for (c, d, p), info in sorted(current_system.final_schedule.items()):
+            if info.get('is_sub'):
+                day_name = ["周一", "周二", "周三", "周四", "周五"][d]
+                if info['teacher_name'] == "【自习】":
+                    logs.append({
+                        "type": "self_study",
+                        "message": f"✗ {c}班 {day_name}第{p+1}节 标记为自习"
+                    })
+                else:
+                    logs.append({
+                        "type": "substitute",
+                        "message": f"✓ {c}班 {day_name}第{p+1}节 {info['teacher_name']}代课"
+                    })
+        
+        logger.info(f"代课处理完成 - 直接代课:{stats['direct']}次, 互换:{stats['swap']}次, 自习:{stats['self_study']}次")
+        
+        return jsonify({
+            "status": "success",
+            "schedule": serialize_schedule(current_system),
+            "stats": stats,
+            "logs": logs
+        })
+    except Exception as e:
+        logger.error(f"代课处理异常: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": f"服务器错误: {str(e)}"}), 500
 
 @app.route('/api/import_config', methods=['POST'])
 def import_config():

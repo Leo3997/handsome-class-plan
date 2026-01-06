@@ -2,6 +2,7 @@ from ortools.sat.python import cp_model
 import pandas as pd
 import sys
 import collections
+import statistics
 
 # 默认配置
 DEFAULT_CONFIG = {
@@ -31,22 +32,22 @@ def generate_teachers_and_map(num_classes, courses, custom_names=None):
     if custom_names is None: custom_names = {}
 
     # 为了不破坏传入的原始列表，做个深拷贝
-    available_names = {k: v[:] for k, v in custom_names.items()}
+    # 1. 建立全局老师注册表 (Name -> ID)
+    # 只要名字一样，ID就一样，这样求解器就知道是同一个人
+    name_to_id_map = {}
     
-    # 辅助函数：创建老师
-    def create_teacher(subj, idx, course_type):
-        tid = f"t_{subj}_{idx}"
-        
-        # 核心逻辑：优先从用户名单里取名字
-        if subj in available_names and available_names[subj]:
-            # 取出第一个名字
-            name = available_names[subj].pop(0)
-        else:
-            # 名单用完了，或者没提供，使用自动命名
-            name = f"{subj}老师{idx}"
-            
-        teachers_db.append({"id": tid, "name": name, "subject": subj, "type": course_type})
-        return tid
+    def get_or_create_teacher_id(name, subject, type_):
+        if name not in name_to_id_map:
+            # 如果是第一次出现，生成新ID并存入DB
+            tid = f"t_{name}" # 使用名字作为ID的一部分
+            name_to_id_map[name] = tid
+            teachers_db.append({
+                "id": tid, 
+                "name": name, 
+                "subject": subject, 
+                "type": type_
+            })
+        return name_to_id_map[name]
 
     # 标准化课程配置格式(兼容旧格式)
     normalized_courses = {}
@@ -54,50 +55,140 @@ def generate_teachers_and_map(num_classes, courses, custom_names=None):
         if isinstance(config, dict):
             normalized_courses[subj] = config
         else:
-            # 旧格式兼容：默认按课时数判断类型
+            # 旧格式兼容
             course_type = "main" if config >= 5 else "minor"
             normalized_courses[subj] = {"count": config, "type": course_type}
 
-    # 差异化负载策略
-    teacher_load_policy = {}
+    # 2. 准备每科的候选老师队列
+    subject_teacher_queues = {}
+    
     for subj, config in normalized_courses.items():
         course_type = config.get("type", "minor")
-        course_count = config.get("count", 0)
         
-        if course_type == "main":
-            # 主课：每位老师带1-3个班(根据班级数动态调整)
-            if num_classes <= 3:
-                max_classes = 1
-            elif num_classes <= 9:
-                max_classes = 2
-            else:
-                max_classes = 3
-        else:
-            # 副课：每位老师带3-6个班
-            if course_count >= 3:
-                max_classes = min(6, max(3, num_classes // 2))
-            else:
-                max_classes = min(6, num_classes)
+        # 获取该科目配置的老师名单
+        # 先做个拷贝避免影响原数据
+        names_list = custom_names.get(subj, [])[:]
         
-        teacher_load_policy[subj] = max_classes
-
-    # 分配老师
-    for subject, config in normalized_courses.items():
-        course_type = config.get("type", "minor")
-        max_classes = teacher_load_policy.get(subject, 4)
-        current_teacher_idx = 1
-        classes_assigned_count = 0
-        current_tid = None
-        
-        for class_id in range(1, num_classes + 1):
-            if classes_assigned_count % max_classes == 0:
-                current_tid = create_teacher(subject, current_teacher_idx, course_type)
-                current_teacher_idx += 1
+        # 如果没配置名单，我们自动生成虚拟老师
+        # 逻辑：根据班级数估算需要几个虚拟老师
+        if not names_list:
+            # 简单估算：假设每人带3个班
+            needed = max(1, (num_classes + 2) // 3)
+            names_list = [f"{subj}老师{i+1}" for i in range(needed)]
             
-            class_teacher_map[(class_id, subject)] = current_tid
-            classes_assigned_count += 1
+        subject_teacher_queues[subj] = {
+            "names": names_list,
+            "type": course_type,
+            "ptr": 0 # 轮询指针
+        }
+
+    # 3. 分配老师给班级 (轮询分配)
+    for class_id in range(1, num_classes + 1):
+        for subj, queue_data in subject_teacher_queues.items():
+            names = queue_data["names"]
+            ptr = queue_data["ptr"]
+            
+            # 取出名字
+            teacher_name = names[ptr]
+            
+            # 获取唯一ID (关键步骤)
+            tid = get_or_create_teacher_id(teacher_name, subj, queue_data["type"])
+            
+            # 绑定映射
+            class_teacher_map[(class_id, subj)] = tid
+            
+            # 移动指针 (轮询)
+            queue_data["ptr"] = (ptr + 1) % len(names)
             
     return teachers_db, class_teacher_map
+
+def evaluate_quality(schedule_vars, solver, classes, days, periods, course_requirements, class_teacher_map, teachers_db):
+    """
+    对生成的课表进行多维度打分 (满分100)
+    """
+    score = 100
+    logs = []
+    
+    # 辅助数据准备
+    schedule_data = {} # (c, d, p) -> subj
+    teacher_schedule = {t['id']: [] for t in teachers_db} # tid -> [(d, p)]
+    
+    for c in classes:
+        for d in range(days):
+            for p in range(periods):
+                for subj in course_requirements:
+                    if solver.Value(schedule_vars[(c, d, p, subj)]):
+                        schedule_data[(c, d, p)] = subj
+                        tid = class_teacher_map.get((c, subj))
+                        if tid:
+                            teacher_schedule[tid].append((d, p))
+
+    # 1. 黄金时间评估 (Main subjects should be in p <= 3)
+    # 权重：每发现一节主课在下午(p>=4)，扣 1 分
+    main_subjects = [s for s, conf in course_requirements.items() if conf.get('type') == 'main']
+    bad_time_count = 0
+    for (c, d, p), subj in schedule_data.items():
+        if subj in main_subjects and p >= 4:
+            bad_time_count += 1
+            score -= 1 # 扣分
+    if bad_time_count > 0:
+        logs.append(f"黄金时间: 发现 {bad_time_count} 节主课被排在了下午")
+
+    # 2. 教师连堂评估 (Consecutive > 2)
+    # 权重：每发现一次连堂超过2节，扣 5 分
+    fatigue_count = 0
+    for tid, slots in teacher_schedule.items():
+        # 按天分组
+        daily_slots = {d: [] for d in range(days)}
+        for (d, p) in slots:
+            daily_slots[d].append(p)
+        
+        for d, periods_list in daily_slots.items():
+            periods_list.sort()
+            consecutive = 1
+            for i in range(len(periods_list) - 1):
+                if periods_list[i+1] == periods_list[i] + 1:
+                    consecutive += 1
+                else:
+                    if consecutive > 2:
+                        fatigue_count += 1
+                        score -= 5
+                    consecutive = 1
+            if consecutive > 2: # Check last run
+                fatigue_count += 1
+                score -= 5
+    if fatigue_count > 0:
+        logs.append(f"教师疲劳: 发现 {fatigue_count} 人次连续上课超过 2 节")
+
+    # 3. 教师负载均衡评估 (Variance)
+    # 权重：根据方差扣分
+    minor_teachers = [t['id'] for t in teachers_db if t.get('type') == 'minor']
+    if len(minor_teachers) > 1:
+        workloads = [len(teacher_schedule[tid]) for tid in minor_teachers]
+        if workloads:
+            stdev = statistics.stdev(workloads) if len(workloads) > 1 else 0
+            if stdev > 2:
+                deduction = int(stdev * 2)
+                score -= deduction
+                logs.append(f"负载均衡: 副科老师课时方差较大 ({stdev:.1f})，扣 {deduction} 分")
+
+    # 4. 班级课时总数一致性 (Check Consistency)
+    # 权重：如果有班级总课时不对，大幅扣分
+    for c in classes:
+        total = sum(1 for d in range(days) for p in range(periods) if (c, d, p) in schedule_data)
+        expected = sum(conf.get('count', 0) for conf in course_requirements.values())
+        if total != expected:
+            score -= 10
+            logs.append(f"课时异常: {c}班 排课总数({total})与预期({expected})不符")
+
+    # 保底分数 0
+    score = max(0, score)
+    
+    return {
+        "score": score,
+        "details": logs
+    }
+
 
 def run_scheduler(config=None):
     if config is None: config = DEFAULT_CONFIG
@@ -159,6 +250,39 @@ def run_scheduler(config=None):
                 for subj in COURSE_REQUIREMENTS.keys():
                     schedule[(c, d, p, subj)] = model.NewBoolVar(f'c{c}_{d}_{p}_{subj}')
 
+    # === [新增] 特定老师的课时约束 ===
+    # config 示例: teacher_limits = {"张伟": {"min": 4, "max": 8}}
+    teacher_limits = config.get("teacher_limits", {})
+    
+    # 将名字映射回 ID
+    name_to_tid = {t['name']: t['id'] for t in TEACHERS_DB}
+    
+    # 建立 ID -> Assignments 索引
+    teacher_assignments = collections.defaultdict(list)
+    for (c, s), t_id in CLASS_TEACHER_MAP.items():
+        teacher_assignments[t_id].append((c, s))
+
+    for t_name, limits in teacher_limits.items():
+        if t_name not in name_to_tid: continue
+            
+        tid = name_to_tid[t_name]
+        assignments = teacher_assignments.get(tid, [])
+        if not assignments: continue
+            
+        # 计算该老师的总排课量 (Expression)
+        total_workload = sum(schedule[(c, d, p, s)] 
+                             for (c, s) in assignments 
+                             for d, p in SLOTS)
+        
+        # 添加最小课时约束
+        if "min" in limits:
+            model.Add(total_workload >= int(limits["min"]))
+            
+        # 添加最大课时约束
+        if "max" in limits:
+            model.Add(total_workload <= int(limits["max"]))
+    # =================================
+
     # --- 约束条件 (包含之前的修复：允许空堂) ---
     
     # 1. 唯一性: 每个格子 <= 1 门课 (修复了之前的 400 错误)
@@ -209,6 +333,29 @@ def run_scheduler(config=None):
         
     # 处理老师禁排
     unavailable_settings = CONSTRAINTS.get('teacher_unavailable', {})
+    fixed_courses = CONSTRAINTS.get('fixed_courses', {})
+
+    # [新增] 约束：固定课程 (Fixed Courses / Pre-scheduling)
+    # 格式: fixed_courses = { "1": { "0_0": "语文" } }
+    if fixed_courses:
+        logger.info(f"Fixed Course Constraints: {len(fixed_courses)} classes")
+        for c_str, fixes in fixed_courses.items():
+            try:
+                c = int(c_str)
+            except:
+                continue
+            if c not in CLASSES: continue
+            
+            for slot_key, subj_name in fixes.items():
+                if subj_name not in COURSE_REQUIREMENTS: continue
+                try:
+                    d_str, p_str = slot_key.split('_')
+                    d, p = int(d_str), int(p_str)
+                    if 0 <= d < DAYS and 0 <= p < PERIODS:
+                        model.Add(schedule[(c, d, p, subj_name)] == 1)
+                except Exception as e:
+                     pass
+
     for t_name, slots in unavailable_settings.items():
         tids = name_to_tids.get(t_name, [])
         for tid in tids:
@@ -245,10 +392,41 @@ def run_scheduler(config=None):
     
     optimization_config = config.get('optimization', {})
     enable_golden_time = optimization_config.get('golden_time', True) 
+    # [新增] 读取禁止连排配置
+    avoid_consecutive_subjects = optimization_config.get('avoid_consecutive_subjects', False)
+
     max_consecutive = int(optimization_config.get('max_consecutive', 2))
     
+    # [新增] 插入这段逻辑：禁止科目连排
+    if avoid_consecutive_subjects:
+        logger.info("启用约束: 禁止科目连排 (Avoid Consecutive Subjects)")
+        for c in CLASSES:
+            for d in range(DAYS):
+                for subj in COURSE_REQUIREMENTS:
+                    # 遍历每天的节次，检查相邻两节 (p, p+1)
+                    for p in range(PERIODS - 1):
+                        # 逻辑：如果 第p节是subj AND 第p+1节也是subj => 惩罚
+                        
+                        # 定义一个布尔变量表示 "是否连堂"
+                        is_consecutive = model.NewBoolVar(f'cons_subj_{c}_{d}_{p}_{subj}')
+                        
+                        # 只有当两节课都排了该科目，is_consecutive 才为 True
+                        model.AddBoolAnd([
+                            schedule[(c, d, p, subj)], 
+                            schedule[(c, d, p+1, subj)]
+                        ]).OnlyEnforceIf(is_consecutive)
+                        
+                        # 只要有一节没排，is_consecutive 就为 False (这一步其实在Minimize中非必须，但为了严谨加上)
+                        model.AddBoolOr([
+                            schedule[(c, d, p, subj)].Not(), 
+                            schedule[(c, d, p+1, subj)].Not()
+                        ]).OnlyEnforceIf(is_consecutive.Not())
+                        
+                        # 增加惩罚权重 (权重设大一点，比如 500分，保证尽量不发生)
+                        penalties.append(is_consecutive * 500)
+
     # [优化目标 1] 黄金时间安排 (语数英优先排在上午前4节)
-    # 权重: 每一节下午的主科课惩罚 10 分
+    # 权重: 每一节下午的主科课惩罚 15 分 (提高权重)
     if enable_golden_time:
         main_subjects_list = [subj for subj, config in normalized_courses.items() if config.get("type") == "main"]
         for c in CLASSES:
@@ -256,7 +434,7 @@ def run_scheduler(config=None):
                 for p in range(4, PERIODS): # 下午时段 (第5节及以后)
                     for subj in main_subjects_list:
                         # 如果在该时段排了主科，则惩罚
-                        penalties.append(schedule[(c, d, p, subj)] * 10)
+                        penalties.append(schedule[(c, d, p, subj)] * 15)
     
     # [优化目标 2] 主课老师固定班级 (最小化跨班)
     # 权重: 每个主课老师每多带一个班级惩罚 50 分
@@ -380,6 +558,8 @@ def run_scheduler(config=None):
     solver = cp_model.CpSolver()
     # 增加一点求解时间以应对更复杂的优化目标
     solver.parameters.max_time_in_seconds = 20 
+    solver.parameters.num_search_workers = 8 # 启用多线程求解
+    solver.parameters.randomize_search = True # [新增] 启用随机搜索，每次生成不同结果 
     solver.parameters.num_search_workers = 8 # 启用多线程求解 
     status = solver.Solve(model)
     logger.info(f"Solver status: {solver.StatusName(status)}")
@@ -405,9 +585,16 @@ def run_scheduler(config=None):
                                 stats[t_name]["total"] += 1
                                 stats[t_name]["daily"][d] += 1
 
+        # [新增] 调用评估函数
+        evaluation = evaluate_quality(
+            schedule, solver, CLASSES, DAYS, PERIODS, 
+            COURSE_REQUIREMENTS, CLASS_TEACHER_MAP, TEACHERS_DB
+        )
+
         return {
             "status": "success",
             "stats": stats,
+            "evaluation": evaluation,
             "solver": solver,
             "vars": schedule,
             "teachers_db": TEACHERS_DB,
