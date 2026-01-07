@@ -6209,3 +6209,153 @@ NameError: name 'resources' is not defined
 2026-01-07 15:34:55,903 - INFO -  * Restarting with stat
 2026-01-07 15:34:57,561 - WARNING -  * Debugger is active!
 2026-01-07 15:34:57,576 - INFO -  * Debugger PIN: 570-250-899
+2026-01-07 15:35:20,054 - INFO - 接收到排课请求 - 班级数: None, 科目数: 0
+2026-01-07 15:35:20,054 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理']
+2026-01-07 15:35:20,054 - INFO - Received config courses type: <class 'dict'>
+2026-01-07 15:35:20,054 - INFO - Subject 语文 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:35:20,054 - INFO - Subject 数学 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:35:20,055 - INFO - Subject 英语 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:35:20,055 - INFO - Subject 科学 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:35:20,055 - INFO - Subject 社会 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:35:20,055 - INFO - Subject 体育 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 10)
+2026-01-07 15:35:20,055 - INFO - Subject 美术 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:35:20,055 - INFO - Subject 音乐 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:35:20,055 - INFO - Subject 信息 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:35:20,055 - INFO - Subject 心理 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:35:20,055 - INFO - ===== 排课诊断信息 =====
+2026-01-07 15:35:20,055 - INFO - 班级数: 60, 科目数: 10
+2026-01-07 15:35:20,056 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-07 15:35:20,056 - INFO - 样本班级 (1) 课时需求: 32 节
+2026-01-07 15:35:20,056 - INFO - =========================
+2026-01-07 15:35:20,056 - INFO - Generated 128 teachers after sharding. Total subjects in model: 10
+2026-01-07 15:35:20,057 - INFO - 最繁忙老师: 体育AA, 周课时: 24, 分配班级数: 8
+2026-01-07 15:36:23,069 - INFO - Solver status: FEASIBLE
+2026-01-07 15:36:23,302 - INFO - 排课成功 [d82b7ed5-b6f8-4be9-b09b-59cdb2332636] - 生成 60 个班级的课表
+2026-01-07 15:36:23,356 - INFO - 127.0.0.1 - - [07/Jan/2026 15:36:23] "POST /api/init HTTP/1.1" 200 -
+2026-01-07 15:37:17,599 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "GET / HTTP/1.1" 200 -
+2026-01-07 15:37:17,625 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-07 15:37:17,844 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:37:17,939 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:37:17,941 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-07 15:37:17,942 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-07 15:37:17,948 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:17] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-07 15:37:18,265 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:18] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-07 15:37:19,578 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:19] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:37:19,897 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:19] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:37:22,451 - INFO - 接收到排课请求 - 班级数: None, 科目数: 0
+2026-01-07 15:37:22,451 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理']
+2026-01-07 15:37:22,451 - INFO - Received config courses type: <class 'dict'>
+2026-01-07 15:37:22,451 - INFO - Subject 心理 triggers Smart Sharding Pro. (Total Classes: 18, Limit: 15)
+2026-01-07 15:37:22,451 - INFO - ===== 排课诊断信息 =====
+2026-01-07 15:37:22,451 - INFO - 班级数: 18, 科目数: 10
+2026-01-07 15:37:22,451 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-07 15:37:22,452 - INFO - 样本班级 (1) 课时需求: 32 节
+2026-01-07 15:37:22,452 - INFO - =========================
+2026-01-07 15:37:22,452 - INFO - Generated 64 teachers after sharding. Total subjects in model: 10
+2026-01-07 15:37:22,452 - INFO - 最繁忙老师: 体育A, 周课时: 15, 分配班级数: 5
+2026-01-07 15:37:33,480 - INFO - Solver status: OPTIMAL
+2026-01-07 15:37:33,539 - INFO - 排课成功 [6a5c5aa4-31e3-49a9-bd9c-ed13943077cc] - 生成 18 个班级的课表
+2026-01-07 15:37:33,558 - INFO - 127.0.0.1 - - [07/Jan/2026 15:37:33] "POST /api/init HTTP/1.1" 200 -
+2026-01-07 15:39:56,939 - INFO - 接收到排课请求 - 班级数: None, 科目数: 0
+2026-01-07 15:39:56,939 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理']
+2026-01-07 15:39:56,939 - INFO - Received config courses type: <class 'dict'>
+2026-01-07 15:39:56,940 - INFO - Subject 美术 triggers Smart Sharding Pro. (Total Classes: 32, Limit: 15)
+2026-01-07 15:39:56,940 - INFO - Subject 音乐 triggers Smart Sharding Pro. (Total Classes: 32, Limit: 15)
+2026-01-07 15:39:56,940 - INFO - Subject 信息 triggers Smart Sharding Pro. (Total Classes: 32, Limit: 15)
+2026-01-07 15:39:56,940 - INFO - Subject 心理 triggers Smart Sharding Pro. (Total Classes: 32, Limit: 15)
+2026-01-07 15:39:56,940 - INFO - ===== 排课诊断信息 =====
+2026-01-07 15:39:56,940 - INFO - 班级数: 32, 科目数: 10
+2026-01-07 15:39:56,940 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-07 15:39:56,940 - INFO - 样本班级 (1) 课时需求: 32 节
+2026-01-07 15:39:56,940 - INFO - =========================
+2026-01-07 15:39:56,941 - INFO - Generated 71 teachers after sharding. Total subjects in model: 10
+2026-01-07 15:39:56,941 - INFO - 最繁忙老师: 体育A, 周课时: 24, 分配班级数: 8
+2026-01-07 15:40:58,663 - INFO - Solver status: FEASIBLE
+2026-01-07 15:40:58,774 - INFO - 排课成功 [b1538b26-05bd-4803-8f9e-a115fcf8fc2f] - 生成 32 个班级的课表
+2026-01-07 15:40:58,809 - INFO - 127.0.0.1 - - [07/Jan/2026 15:40:58] "POST /api/init HTTP/1.1" 200 -
+2026-01-07 15:41:51,892 - INFO - 接收到排课请求 - 班级数: None, 科目数: 0
+2026-01-07 15:41:51,892 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理']
+2026-01-07 15:41:51,892 - INFO - Received config courses type: <class 'dict'>
+2026-01-07 15:41:51,892 - INFO - Subject 语文 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:41:51,893 - INFO - Subject 数学 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:41:51,893 - INFO - Subject 英语 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:41:51,893 - INFO - Subject 科学 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:41:51,893 - INFO - Subject 社会 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 4)
+2026-01-07 15:41:51,893 - INFO - Subject 体育 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 10)
+2026-01-07 15:41:51,893 - INFO - Subject 美术 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:41:51,893 - INFO - Subject 音乐 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:41:51,893 - INFO - Subject 信息 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:41:51,894 - INFO - Subject 心理 triggers Smart Sharding Pro. (Total Classes: 60, Limit: 15)
+2026-01-07 15:41:51,894 - INFO - ===== 排课诊断信息 =====
+2026-01-07 15:41:51,894 - INFO - 班级数: 60, 科目数: 10
+2026-01-07 15:41:51,894 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-07 15:41:51,894 - INFO - 样本班级 (1) 课时需求: 32 节
+2026-01-07 15:41:51,894 - INFO - =========================
+2026-01-07 15:41:51,895 - INFO - Generated 128 teachers after sharding. Total subjects in model: 10
+2026-01-07 15:41:51,895 - INFO - 最繁忙老师: 体育AA, 周课时: 24, 分配班级数: 8
+2026-01-07 15:42:54,842 - INFO - Solver status: FEASIBLE
+2026-01-07 15:42:55,020 - INFO - 排课成功 [2a630ef7-0f70-4717-a822-1731829e02cd] - 生成 60 个班级的课表
+2026-01-07 15:42:55,075 - INFO - 127.0.0.1 - - [07/Jan/2026 15:42:55] "POST /api/init HTTP/1.1" 200 -
+2026-01-07 15:43:13,489 - INFO - 127.0.0.1 - - [07/Jan/2026 15:43:13] "POST /api/teacher_view HTTP/1.1" 200 -
+2026-01-07 15:51:24,398 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "GET / HTTP/1.1" 200 -
+2026-01-07 15:51:24,421 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-07 15:51:24,628 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:51:24,739 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:51:24,739 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-07 15:51:24,739 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-07 15:51:24,743 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:24] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-07 15:51:25,079 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:25] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-07 15:51:26,404 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:26] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:51:26,723 - INFO - 127.0.0.1 - - [07/Jan/2026 15:51:26] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:56:33,269 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "GET / HTTP/1.1" 200 -
+2026-01-07 15:56:33,294 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,500 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,611 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,613 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,614 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,809 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-07 15:56:33,934 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:33] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-07 15:56:35,649 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:35] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:56:35,897 - INFO - 127.0.0.1 - - [07/Jan/2026 15:56:35] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:57:50,374 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET / HTTP/1.1" 200 -
+2026-01-07 15:57:50,399 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/css/output.css HTTP/1.1" 200 -
+2026-01-07 15:57:50,641 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-07 15:57:50,720 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-07 15:57:50,721 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/logo.png HTTP/1.1" 200 -
+2026-01-07 15:57:50,722 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-07 15:57:50,722 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:50] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-07 15:57:52,603 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:52] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-07 15:57:53,124 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:53] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:57:53,438 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:53] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:57:53,443 - INFO - 127.0.0.1 - - [07/Jan/2026 15:57:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-07 15:59:04,703 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:04] "GET / HTTP/1.1" 200 -
+2026-01-07 15:59:04,725 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:04] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-07 15:59:04,953 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:04] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,033 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,033 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,035 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,042 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,357 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-07 15:59:05,620 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:59:05,700 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:05] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:59:35,137 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET / HTTP/1.1" 200 -
+2026-01-07 15:59:35,447 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/css/output.css HTTP/1.1" 200 -
+2026-01-07 15:59:35,478 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-07 15:59:35,480 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-07 15:59:35,480 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-07 15:59:35,802 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-07 15:59:35,803 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/logo.png HTTP/1.1" 200 -
+2026-01-07 15:59:35,806 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:35] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-07 15:59:36,050 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:36] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 15:59:36,237 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-07 15:59:36,237 - INFO - 127.0.0.1 - - [07/Jan/2026 15:59:36] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 16:01:11,974 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:11] "GET / HTTP/1.1" 200 -
+2026-01-07 16:01:11,994 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:11] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,223 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,301 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,303 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,308 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,313 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,625 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-07 16:01:12,892 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "GET /api/list HTTP/1.1" 200 -
+2026-01-07 16:01:12,953 - INFO - 127.0.0.1 - - [07/Jan/2026 16:01:12] "GET /api/list HTTP/1.1" 200 -
