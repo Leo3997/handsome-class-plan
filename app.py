@@ -195,6 +195,7 @@ def init_schedule():
             "teachers": teacher_list,
             "schedule": serialize_schedule(system_instance),
             "stats": result.get('stats', {}),
+            "class_names": result.get('class_names', {}), # [新增]
             "sharding_info": result.get('sharding_info', []), # [新增]
             "evaluation": result.get('evaluation', {'score': 100, 'details': []})
         })

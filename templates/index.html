@@ -170,11 +170,11 @@
 
             <!-- Buttons Grid -->
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="openSettings()"
+                <button data-bs-toggle="modal" data-bs-target="#constraintModal"
                     class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-blue-500">
                     <i class="bi bi-sliders text-xl text-blue-400"></i> 高级
                 </button>
-                <button data-bs-toggle="modal" data-bs-target="#settingsModal"
+                <button onclick="openSettings()"
                     class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-indigo-500">
                     <i class="bi bi-gear-fill text-xl text-indigo-400"></i> 参数
                 </button>
@@ -380,12 +380,25 @@
                             </a>
                         </div>
                     </div>
-                    <div class="clay-card p-6 mb-4 !bg-[#ebf8ff]">
-                        <h6 class="text-blue-500 font-bold mb-3 uppercase tracking-wide text-xs">核心设置</h6>
-                        <div class="row">
-                            <label class="col-sm-2 font-bold text-slate-600">班级数量</label>
-                            <div class="col-sm-4"><input type="number" id="setting-num-classes"
-                                    class="clay-input w-full" value="6"></div>
+                    <div class="clay-card p-4 mb-4 !bg-[#ebf8ff]">
+                        <div class="flex justify-between items-center mb-4">
+                            <h6 class="text-blue-500 font-bold uppercase tracking-wide text-xs m-0">年级管理</h6>
+                            <div class="flex bg-white/50 rounded-lg p-1 gap-1" id="grade-tabs">
+                                <!-- Tabs 动态渲染 -->
+                            </div>
+                        </div>
+
+                        <div class="row items-center">
+                            <div class="col-sm-6">
+                                <label class="text-xs font-bold text-slate-500">当前年级班级数</label>
+                                <input type="number" id="grade-count-input" class="clay-input w-full mt-1" min="0"
+                                    value="6">
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="text-xs font-bold text-slate-500">起始班号 (例如: 1, 21)</label>
+                                <input type="number" id="grade-start-input" class="clay-input w-full mt-1" min="1"
+                                    value="1">
+                            </div>
                         </div>
                     </div>
 
@@ -397,21 +410,35 @@
                                 </h6>
                                 <span id="total-hours-display"
                                     class="text-xs font-bold px-3 py-1 bg-white rounded-lg text-slate-400 border border-slate-100">
-                                    周课时: <span id="current-hours" class="text-blue-500 text-sm">0</span> / 45
+                                    周课时: <span id="current-hours" class="text-blue-500 text-sm">0</span> / 40
                                 </span>
                             </div>
                             <div class="clay-card p-4 !shadow-clay-inner h-64 overflow-y-auto">
-                                <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                                <style>
+                                    #course-settings-table input {
+                                        min-width: 0 !important;
+                                    }
+
+                                    .narrow-input {
+                                        width: 100% !important;
+                                        padding-left: 4px !important;
+                                        padding-right: 4px !important;
+                                    }
+                                </style>
+                                <table id="course-settings-table"
+                                    class="w-full text-sm text-left border-separate border-spacing-y-1 border-spacing-x-0 table-fixed"
+                                    style="width: 100%; table-layout: fixed;">
                                     <thead>
-                                        <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
-                                            <th class="pl-2 pb-2 w-[25%]">科目名称</th>
-                                            <th class="pb-2 w-[15%]">每周节数</th>
-                                            <th class="pb-2 w-[15%]">类型</th>
-                                            <th class="pb-2 w-[35%]">固定老师 (选填)</th>
-                                            <th class="text-center pb-2 w-[10%]">操作</th>
+                                        <tr class="text-slate-400 text-[10px] font-bold sticky top-0 bg-[#eef2f6] z-10">
+                                            <th style="width: 80px;" class="pl-2 pb-2">科目名称</th>
+                                            <th style="width: 50px;" class="pb-2">节数</th>
+                                            <th style="width: 80px;" class="pb-2 text-center">类型</th>
+                                            <th style="width: 120px;" class="pb-2 text-center">分布</th>
+                                            <th style="width: auto;" class="pb-2">固定老师 (尽量填全)</th>
+                                            <th style="width: 50px;" class="text-center pb-2">操作</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="course-settings-body" class="space-y-2"></tbody>
+                                    <tbody id="course-settings-body"></tbody>
                                 </table>
                             </div>
                             <button
@@ -426,13 +453,13 @@
                                 <i class="bi bi-building-gear text-green-400"></i> 实验室 / 功能室
                             </h6>
                             <div class="clay-card p-4 !shadow-clay-inner h-64 overflow-y-auto">
-                                <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                                <table class="w-full text-sm text-left border-separate border-spacing-y-1 table-fixed">
                                     <thead>
                                         <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
-                                            <th class="pl-2 pb-2 w-[30%]">资源名称</th>
-                                            <th class="pb-2 w-[15%]">容量(间)</th>
-                                            <th class="pb-2 w-[45%]">适用科目 (用逗号分隔)</th>
-                                            <th class="text-center pb-2 w-[10%]">操作</th>
+                                            <th class="pl-2 pb-2 w-[25%]">资源名称</th>
+                                            <th class="pb-2 w-[12%]">容量(间)</th>
+                                            <th class="pb-2 w-[55%]">适用科目 (用逗号分隔)</th>
+                                            <th class="text-center pb-2 w-[8%]">操作</th>
                                         </tr>
                                     </thead>
                                     <tbody id="resource-settings-body" class="space-y-2"></tbody>
@@ -458,13 +485,14 @@
                             </div>
                         </div>
                         <div class="clay-card p-4 !shadow-clay-inner h-48 overflow-y-auto">
-                            <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                            <table
+                                class="w-full text-sm text-left border-separate border-spacing-y-1 border-spacing-x-0 table-fixed">
                                 <thead>
                                     <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
-                                        <th class="pl-2 pb-2 w-[30%]">教师姓名</th>
-                                        <th class="pb-2 w-[25%]">最小课时/周</th>
-                                        <th class="pb-2 w-[25%]">最大课时/周</th>
-                                        <th class="text-center pb-2 w-[20%]">操作</th>
+                                        <th class="pl-2 pb-2 w-[40%]">教师姓名</th>
+                                        <th class="pb-2 w-[26%] text-center">最小/周</th>
+                                        <th class="pb-2 w-[26%] text-center">最大/周</th>
+                                        <th class="text-center pb-2 w-[8%]">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody id="teacher-limits-body" class="space-y-2"></tbody>
@@ -654,39 +682,154 @@
     <script src="/static/js/chart.js"></script>
     <script>
         // ... Logic Reuse ...
-        let globalSchedule = {}, deleteModalVar = null, targetDeleteName = '', globalTeachers = [], teacherScheduleMap = {}, historyStack = [], redoStack = [], MAX_HISTORY = 20, currentView = 'class', leaveRequests = [], DAYS = ["周一", "周二", "周三", "周四", "周五"], globalConstraints = { teacher_unavailable: {}, fixed_courses: {} }, currentStats = null, workloadChart = null;
+        let globalSchedule = {}, deleteModalVar = null, targetDeleteName = '', globalTeachers = [], globalClassNames = {}, teacherScheduleMap = {}, historyStack = [], redoStack = [], MAX_HISTORY = 20, currentView = 'class', leaveRequests = [], DAYS = ["周一", "周二", "周三", "周四", "周五"], globalConstraints = { teacher_unavailable: {}, fixed_courses: {} }, currentStats = null, workloadChart = null;
         let currentScheduleId = null;
         let config = {
             num_classes: 6,
             courses: [
-                { name: "语文", count: 7, type: "main", teachers: "张伟, 李娜" },
-                { name: "数学", count: 7, type: "main", teachers: "王军" },
-                { name: "英语", count: 6, type: "main", teachers: "Miss Li" },
-                { name: "物理", count: 5, type: "main" },
-                { name: "化学", count: 4, type: "main" },
-                { name: "生物", count: 3, type: "main" },
-                { name: "历史", count: 3, type: "main" },
-                { name: "地理", count: 2, type: "main" },
-                { name: "政治", count: 2, type: "main" },
-                { name: "体育", count: 3, type: "minor" },
-                { name: "美术", count: 1, type: "minor" },
-                { name: "音乐", count: 1, type: "minor" },
-                { name: "信息技术", count: 1, type: "minor" }
+                {
+                    name: "语文",
+                    count: 5,
+                    type: "main",
+                    teachers: "张伟, 李娜, 王强, 赵敏, 陈杰, 刘洋, 黄磊, 周婷, 吴刚, 郑霞"
+                },
+                {
+                    name: "数学",
+                    count: 5,
+                    type: "main",
+                    teachers: "数A, 数B, 数C, 数D, 数E, 数F, 数G, 数H, 数I, 数J"
+                },
+                {
+                    name: "英语",
+                    count: 5,
+                    type: "main",
+                    teachers: "Miss Li, Mr. Wang, Mrs. Chen, Mr. Zhang, Miss Liu, Mr. Wu, Miss Zhao, Mr. Sun, Miss Wu, Mr. Zheng"
+                },
+                {
+                    name: "科学",
+                    count: 5,
+                    type: "main",
+                    teachers: "科A, 科B, 科C, 科D, 科E, 科F, 科G, 科H, 科I, 科J"
+                },
+                {
+                    name: "社会",
+                    count: 5,
+                    type: "main",
+                    teachers: "社A, 社B, 社C, 社D, 社E, 社F, 社G, 社H, 社I, 社J"
+                },
+                { name: "体育", count: 3, type: "minor", teachers: "体育A, 体育B, 体育C, 体育D" },
+                { name: "美术", count: 1, type: "minor", teachers: "美术A, 美术B" },
+                { name: "音乐", count: 1, type: "minor", teachers: "音乐A, 音乐B" },
+                { name: "信息", count: 1, type: "minor", teachers: "信息A, 信息B" },
+                { name: "心理", count: 1, type: "minor", teachers: "心理A" }
             ],
             optimization: {
                 golden_time: true,
                 avoid_consecutive_subjects: false
             },
             resources: [
-                { name: "物理实验室", capacity: 1, subjects: "物理" },
-                { name: "化学实验室", capacity: 1, subjects: "化学" },
-                { name: "生物实验室", capacity: 1, subjects: "生物" },
+                { name: "科学实验室", capacity: 2, subjects: "科学" },
                 { name: "音乐教室", capacity: 1, subjects: "音乐" },
                 { name: "美术教室", capacity: 1, subjects: "美术" },
-                { name: "计算机房", capacity: 2, subjects: "信息技术" },
+                { name: "计算机房", capacity: 2, subjects: "信息" },
                 { name: "大操场", capacity: 4, subjects: "体育" }
             ]
         };
+
+        //多年级配置数据结构
+        let gradesData = {
+            "初一": { count: 6, start: 1, courses: JSON.parse(JSON.stringify(config.courses)) },
+            "初二": { count: 6, start: 7, courses: JSON.parse(JSON.stringify(config.courses)) },
+            "初三": { count: 6, start: 13, courses: JSON.parse(JSON.stringify(config.courses)) }
+        };
+        let currentActiveGrade = "初一";
+
+        /**
+         * 班级名称翻译函数：将 ID (21) 转换为中文名 (初三1班)
+         */
+        function getClassName(id) {
+            id = id.toString();
+            // 优先使用后端返回的元数据名称 (包含年级前缀)
+            if (globalClassNames && globalClassNames[id]) {
+                return globalClassNames[id];
+            }
+            // 备选：如果元数据尚未加载，尝试基于 gradesData 猜测 (旧逻辑兼容)
+            const numId = parseInt(id);
+            for (let gradeName in gradesData) {
+                const g = gradesData[gradeName];
+                if (numId >= g.start && numId < (g.start + g.count)) {
+                    return `${gradeName}${numId - g.start + 1}班`;
+                }
+            }
+            return id + "班";
+        }
+
+        function initGradeTabs() {
+            const container = document.getElementById('grade-tabs');
+            if (!container) return;
+            container.innerHTML = '';
+
+            Object.keys(gradesData).forEach(grade => {
+                const btn = document.createElement('button');
+                const isActive = grade === currentActiveGrade;
+                btn.className = `px-4 py-1.5 rounded-md text-xs font-bold transition-all ${isActive ? 'bg-blue-400 text-white shadow-md' : 'text-slate-500 hover:bg-white'
+                    }`;
+                btn.innerText = grade;
+                btn.onclick = () => switchGrade(grade);
+                container.appendChild(btn);
+            });
+        }
+
+        function switchGrade(targetGrade) {
+            saveCurrentGradeToMemory();
+            currentActiveGrade = targetGrade;
+            initGradeTabs();
+
+            const data = gradesData[targetGrade];
+            document.getElementById('grade-count-input').value = data.count;
+            document.getElementById('grade-start-input').value = data.start;
+
+            const tbody = document.getElementById('course-settings-body');
+            tbody.innerHTML = '';
+            data.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers, c.am_count, c.pm_count));
+            updateTotalHours();
+        }
+
+        function saveCurrentGradeToMemory() {
+            const countInput = document.getElementById('grade-count-input');
+            const startInput = document.getElementById('grade-start-input');
+            if (!countInput || !startInput) return;
+
+            const count = parseInt(countInput.value) || 0;
+            const start = parseInt(startInput.value) || 1;
+
+            let currentCourses = [];
+            document.querySelectorAll('#course-settings-body tr').forEach(r => {
+                const n = r.querySelector('.course-name').value;
+                const c = parseInt(r.querySelector('.course-count').value);
+                const t = r.querySelector('.course-type').value;
+                const teachers = r.querySelector('.course-teachers').value;
+                const am = r.querySelector('.course-am').value;
+                const pm = r.querySelector('.course-pm').value;
+
+                if (n && c > 0) {
+                    currentCourses.push({
+                        name: n,
+                        count: c,
+                        type: t,
+                        teachers: teachers,
+                        am_count: am !== "" ? parseInt(am) : null,
+                        pm_count: pm !== "" ? parseInt(pm) : null
+                    });
+                }
+            });
+
+            gradesData[currentActiveGrade] = {
+                count: count,
+                start: start,
+                courses: currentCourses
+            };
+        }
 
         window.onload = () => {
             setTimeout(() => document.getElementById('splash-screen').style.opacity = 0, 800);
@@ -709,9 +852,9 @@
 
         function renderCurrentClass() {
             const cid = document.getElementById('class-select').value; if (!globalSchedule[cid]) return;
-            document.getElementById('class-title').innerText = `${cid} 班课表`;
+            document.getElementById('class-title').innerText = `${getClassName(cid)} 课表`;
             const tbody = document.getElementById('schedule-body'); tbody.innerHTML = '';
-            for (let p = 0; p < 9; p++) {
+            for (let p = 0; p < 8; p++) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td class="text-slate-400 font-bold bg-transparent text-xs">第 ${p + 1} 节</td>`;
                 for (let d = 0; d < 5; d++) {
@@ -848,39 +991,14 @@
         }
 
         async function initSystem() {
-            document.getElementById('init-spinner').classList.remove('d-none'); document.getElementById('btn-init').disabled = true;
-            let tDict = {}, cDict = {}; config.courses.forEach(c => { cDict[c.name] = { count: c.count, type: c.type }; if (c.teachers) tDict[c.name] = c.teachers.split(/[,，\s]+/).filter(n => n) });
-
-            // 1. 获取开关状态
+            // 1. 获取优化开关状态
             const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
-
-            // 2. 更新 optimization 配置
             if (!config.optimization) config.optimization = {};
             config.optimization.avoid_consecutive_subjects = avoidConsecutive;
 
-            const payload = {
-                num_classes: config.num_classes,
-                courses: cDict,
-                teacher_names: tDict,
-                resources: config.resources,
-                optimization: config.optimization,
-                constraints: globalConstraints,
-                teacher_limits: config.teacher_limits || {}
-            };
-            try {
-                const res = await fetch('/api/init', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-                const data = await res.json();
-                if (data.status === 'success') { currentScheduleId = data.schedule_id; updateUI(data); }
-                else {
-                    if (data.suggestions && data.suggestions.length > 0) {
-                        const ul = document.getElementById('failure-suggestions');
-                        ul.innerHTML = data.suggestions.map(s => `<li class="flex items-start gap-2"><i class="bi bi-lightbulb-fill text-yellow-400 shrink-0 mt-0.5"></i><span>${s}</span></li>`).join('');
-                        new bootstrap.Modal(document.getElementById('failureModal')).show();
-                    } else {
-                        alert(data.message);
-                    }
-                }
-            } catch (e) { console.error(e); } finally { document.getElementById('init-spinner').classList.add('d-none'); document.getElementById('btn-init').disabled = false; }
+            // 2. 直接调用核心排课函数
+            // saveSettingsAndInit 负责收集所有数据 (年级、课程、资源) 并发送 fetch 请求
+            saveSettingsAndInit();
         }
         function updateUI(data) {
             if (data.stats) {
@@ -939,6 +1057,7 @@
             }
 
             globalTeachers = data.teachers || [];
+            globalClassNames = data.class_names || {}; // [新增] 缓存班级 ID -> 名称映射
             globalSchedule = data.schedule;
 
             teacherScheduleMap = {};
@@ -955,7 +1074,10 @@
             }
 
             const ts = document.getElementById('teacher-select'); ts.innerHTML = ''; globalTeachers.forEach(t => ts.add(new Option(t.name, t.name)));
-            const cs = document.getElementById('class-select'); cs.innerHTML = ''; Object.keys(globalSchedule).forEach(k => cs.add(new Option(k + " 班", k)));
+            const cs = document.getElementById('class-select');
+            cs.innerHTML = '';
+            Object.keys(globalSchedule).sort((a, b) => parseInt(a) - parseInt(b)).forEach(k => cs.add(new Option(getClassName(k), k)));
+
             const tvs = document.getElementById('teacher-view-select'); tvs.innerHTML = ''; globalTeachers.forEach(t => tvs.add(new Option(t.name, t.name)));
             renderCurrentClass();
             ['btn-add-leave', 'btn-apply', 'btn-save', 'btn-export-current', 'btn-view-teacher', 'btn-undo', 'teacher-select'].forEach(i => document.getElementById(i).disabled = false);
@@ -970,12 +1092,12 @@
         async function renderCurrentTeacher() {
             const name = document.getElementById('teacher-view-select').value; const res = await fetch('/api/teacher_view', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, teacher_name: name }) }); const data = await res.json(); if (data.status === 'success') {
                 const tbody = document.getElementById('schedule-body'); tbody.innerHTML = '';
-                for (let p = 0; p < 9; p++) {
+                for (let p = 0; p < 8; p++) {
                     const tr = document.createElement('tr'); tr.innerHTML = `<td class="text-slate-400 font-bold bg-transparent text-xs">第 ${p + 1} 节</td>`;
                     for (let d = 0; d < 5; d++) {
                         const td = document.createElement('td'); const info = data.schedule[p][d];
                         td.className = "p-0";
-                        td.innerHTML = `<div class="schedule-cell mx-auto w-full h-full ${info ? '' : 'empty'}">${info ? `<div class="text-blue-500 font-black">${info.class_id} 班</div><div class="text-sm text-slate-400">${info.subject}</div>` : '<span class="text-slate-300">-</span>'}</div>`; tr.appendChild(td);
+                        td.innerHTML = `<div class="schedule-cell mx-auto w-full h-full ${info ? '' : 'empty'}">${info ? `<div class="text-blue-500 font-black">${getClassName(info.class_id)}</div><div class="text-sm text-slate-400">${info.subject}</div>` : '<span class="text-slate-300">-</span>'}</div>`; tr.appendChild(td);
                     } tbody.appendChild(tr);
                 }
                 document.getElementById('class-title').innerText = `教师: ${name}`;
@@ -997,38 +1119,29 @@
         async function saveCurrentSchedule() { const n = document.getElementById('save-name').value; await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, name: n, config }) }); document.getElementById('save-name').value = ''; loadSavedList(); }
 
         function openSettings() {
-            const m = new bootstrap.Modal(document.getElementById('constraintModal'));
+            // 初始化三个年级的 Tabs
+            initGradeTabs();
+            // 默认加载当前已存的数据 (切到初一)
+            switchGrade("初一");
 
-            // 1. 打开时只填充一次下拉列表，避免 onchange 时被重置
+            const m = new bootstrap.Modal(document.getElementById('settingsModal'));
+            // ... (其余原有的老师和班级下拉填充逻辑，需调整或保留兼容性) ...
+
             const t = document.getElementById('constraint-teacher-select');
             t.innerHTML = '<option value="">选择教师...</option>';
             globalTeachers.sort((a, b) => a.name.localeCompare(b.name)).forEach(x => {
                 t.add(new Option(x.name, x.name));
             });
 
-            // 填充班级列表
             const c = document.getElementById('constraint-class-select');
             c.innerHTML = '<option value="">选择班级...</option>';
-            // 如果还没排课，config.num_classes可能有值，用它生成
-            const numC = config.num_classes || 0;
-            if (numC > 0) {
-                for (let i = 1; i <= numC; i++) c.add(new Option(`${i} 班`, `${i}`));
-            } else {
-                // 有可能用中文名
-                Object.keys(globalSchedule).forEach(k => c.add(new Option(`${k} 班`, k)));
-            }
+            Object.keys(globalSchedule).forEach(k => c.add(new Option(`${k} 班`, k)));
 
-            // 重置模式
             document.querySelector('input[name="constraint-mode"][value="teacher"]').checked = true;
             switchConstraintMode();
-
-            // 2. 初始化开关状态 (读取当前配置，如果没有则默认为 false)
             const isAvoid = config.optimization && config.optimization.avoid_consecutive_subjects === true;
             document.getElementById('check-avoid-consecutive').checked = isAvoid;
-
-            // 3. 渲染一个初始的空格子（或者清空）
             renderConstraintGrid();
-
             m.show();
         }
         function switchConstraintMode() {
@@ -1073,7 +1186,7 @@
                 currentData = (currentTarget && globalConstraints.fixed_courses[currentTarget]) ? globalConstraints.fixed_courses[currentTarget] : {};
             }
 
-            for (let p = 0; p < 9; p++) {
+            for (let p = 0; p < 8; p++) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<th class="text-slate-300 text-[10px] pr-2 align-middle">${p + 1}</th>`;
 
@@ -1195,9 +1308,9 @@
 
             const html = `
             <tr>
-                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 limit-name" value="${name}" placeholder="输入准确姓名"></td>
-                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 limit-min" value="${min}" placeholder="默认"></td>
-                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 limit-max" value="${max}" placeholder="默认"></td>
+                <td class="pr-0"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg limit-name" value="${name}" placeholder="姓名"></td>
+                <td class="pr-0"><input type="number" class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg limit-min text-center" value="${min}" placeholder="不限"></td>
+                <td class="pr-0"><input type="number" class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg limit-max text-center" value="${max}" placeholder="不限"></td>
                 <td class="text-center">${deleteBtn}</td>
             </tr>`;
             document.getElementById('teacher-limits-body').insertAdjacentHTML('beforeend', html);
@@ -1213,14 +1326,14 @@
 
             const html = `
             <tr>
-                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-name" value="${n}" placeholder="资源名"></td>
-                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 course-capacity" value="${c}" min="1"></td>
-                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-subjects" value="${s}" placeholder="适用科目"></td>
+                <td class="pr-0"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg course-name" value="${n}" placeholder="资源名"></td>
+                <td class="pr-0"><input type="number" class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg course-capacity text-center" value="${c}" min="1"></td>
+                <td class="pr-0"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg course-subjects" value="${s}" placeholder="适用科目"></td>
                 <td class="text-center">${deleteBtn}</td>
             </tr>`;
             document.getElementById('resource-settings-body').insertAdjacentHTML('beforeend', html);
         }
-        function addCourseRow(n = "", c = 2, t = "main", ts = "") {
+        function addCourseRow(n = "", c = 2, t = "main", ts = "", am = "", pm = "") {
             // 统一的删除按钮样式
             const deleteBtn = `
                 <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
@@ -1229,17 +1342,26 @@
                 </button>`;
 
             const html = `
-            <tr>
-                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-name" value="${n}" placeholder="科目名"></td>
-                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 course-count" value="${c}" onchange="updateTotalHours()" oninput="updateTotalHours()"></td>
-                <td class="pr-2">
-                    <select class="clay-input w-full py-2 px-3 text-sm border-0 course-type">
+            <tr class="group">
+                <td style="width: 80px;"><input class="clay-input text-sm border-0 !rounded-lg course-name" style="width:100%; padding: 8px 4px !important;" value="${n}" placeholder="科目"></td>
+                <td style="width: 50px;"><input type="number" class="clay-input text-sm border-0 !rounded-lg course-count text-center" style="width:100%; padding: 8px 0 !important;" value="${c}" onchange="updateTotalHours()" oninput="updateTotalHours()"></td>
+                <td style="width: 80px;">
+                    <select class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg course-type">
                         <option value="main" ${t === 'main' ? 'selected' : ''}>主课</option>
                         <option value="minor" ${t === 'minor' ? 'selected' : ''}>副课</option>
                     </select>
                 </td>
-                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 course-teachers text-xs" value="${ts}" placeholder="张三, 李四"></td>
-                <td class="text-center">${deleteBtn}</td>
+                <td style="width: 120px;" class="text-center">
+                    <div class="flex items-center gap-1 justify-center bg-[#eef2f6] p-1 rounded-lg !shadow-[inset_2px_2px_4px_#dce1e8,inset_-2px_-2px_4px_#ffffff] mx-1">
+                        <input type="number" class="bg-transparent w-7 py-0.5 px-0 text-center text-xs font-bold text-blue-500 course-am" 
+                               value="${am}" placeholder="AM" min="0">
+                        <span class="text-slate-300">/</span>
+                        <input type="number" class="bg-transparent w-7 py-0.5 px-0 text-center text-xs font-bold text-orange-400 course-pm" 
+                               value="${pm}" placeholder="PM" min="0">
+                    </div>
+                </td>
+                <td style="width: auto;"><input class="clay-input w-full py-2 px-3 text-sm border-0 !rounded-lg course-teachers text-xs" value="${ts}" placeholder="老师姓名..."></td>
+                <td style="width: 50px;" class="text-center">${deleteBtn}</td>
             </tr>`;
 
             document.getElementById('course-settings-body').insertAdjacentHTML('beforeend', html);
@@ -1257,8 +1379,8 @@
 
             if (displayEl) {
                 displayEl.innerText = t;
-                // 简单的超限预警逻辑 (假设一周5天*9节 = 45节)
-                if (t > 45) {
+                // 简单的超限预警逻辑 (假设一周5天*8节 = 40节)
+                if (t > 40) {
                     displayEl.className = "text-red-500 text-lg font-black"; // 超限变红变大
                     containerEl.classList.add("!border-red-200", "!bg-red-50");
                 } else {
@@ -1268,80 +1390,185 @@
             }
         }
         function renderSettings() {
-            document.getElementById('setting-num-classes').value = config.num_classes;
+            // 如果 config 中包含 grades 字段，则恢复 gradesData
+            if (config.grades) {
+                gradesData = {};
+                for (let gName in config.grades) {
+                    const g = config.grades[gName];
+                    const cList = [];
+                    // 转换字典格式回 UI 数组格式
+                    for (let cName in g.courses) {
+                        const info = g.courses[cName];
+                        // 尝试从全局 teacher_names 找回老师
+                        const teachers = (config.teacher_names && config.teacher_names[cName]) ? config.teacher_names[cName].join(', ') : '';
+                        cList.push({
+                            name: cName,
+                            count: info.count,
+                            type: info.type,
+                            teachers: teachers,
+                            am_count: info.am_count,
+                            pm_count: info.pm_count
+                        });
+                    }
+                    gradesData[gName] = {
+                        count: g.count,
+                        start: g.start_class_id,
+                        courses: cList
+                    };
+                }
+            } else if (config.courses) {
+                // 如果是旧版扁平配置，默认归入“初一”
+                const cList = config.courses.map(c => ({
+                    name: c.name, count: c.count, type: c.type, teachers: c.teachers
+                }));
+                gradesData["初一"] = { count: config.num_classes || 6, start: 1, courses: cList };
+            }
 
-            // 更新：传递 subjects 参数 (r.subjects)
+            // 更新：资源设置
             document.getElementById('resource-settings-body').innerHTML = '';
             (config.resources || []).forEach(r => addResourceRow(r.name, r.capacity, r.subjects));
 
-            document.getElementById('course-settings-body').innerHTML = '';
-            config.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers));
-
-            // [新增] 渲染教师限制
+            // 更新：教师限制
             document.getElementById('teacher-limits-body').innerHTML = '';
             const limits = config.teacher_limits || {};
             Object.keys(limits).forEach(name => {
                 addTeacherLimitRow(name, limits[name].min, limits[name].max);
             });
+
+            // 初始渲染当前年级
+            initGradeTabs();
+            // 注意：不在这里调用 switchGrade，因为它会尝试保存。
+            // 这里我们直接手动填入 UI 或者调用一个不保存的 switch。
+            const data = gradesData[currentActiveGrade] || Object.values(gradesData)[0];
+            if (data) {
+                document.getElementById('grade-count-input').value = data.count;
+                document.getElementById('grade-start-input').value = data.start;
+                const tbody = document.getElementById('course-settings-body');
+                tbody.innerHTML = '';
+                data.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers));
+                updateTotalHours();
+            }
         }
         function saveSettingsAndInit() {
-            config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
+            // 1. 先保存当前正在 UI 上编辑的年级数据
+            saveCurrentGradeToMemory();
 
-            // 保存科目设置
-            let nc = [], td = {};
-            document.querySelectorAll('#course-settings-body tr').forEach(r => {
-                const n = r.querySelector('.course-name').value;
-                const c = parseInt(r.querySelector('.course-count').value);
-                if (n && c > 0) {
-                    nc.push({
-                        name: n,
-                        count: c,
-                        type: r.querySelector('.course-type').value,
-                        teachers: r.querySelector('.course-teachers').value
-                    });
-                    if (r.querySelector('.course-teachers').value) {
-                        td[n] = r.querySelector('.course-teachers').value.split(/[,，\s]+/).filter(x => x);
+            // 2. 构造后端需要的分层年级配置
+            const finalGradesConfig = {};
+            const globalTeacherNames = {}; // 用于收集所有年级的老师
+
+            Object.keys(gradesData).forEach(gradeName => {
+                const gData = gradesData[gradeName];
+                const coursesDict = {};
+
+                gData.courses.forEach(c => {
+                    coursesDict[c.name] = {
+                        count: c.count,
+                        type: c.type,
+                        am_count: c.am_count,
+                        pm_count: c.pm_count
+                    };
+
+                    // 收集老师名单 (合并各年级的同名科目老师)
+                    if (c.teachers) {
+                        const tList = c.teachers.split(/[,，\s]+/).filter(x => x);
+                        if (!globalTeacherNames[c.name]) {
+                            globalTeacherNames[c.name] = new Set();
+                        }
+                        tList.forEach(t => globalTeacherNames[c.name].add(t));
                     }
-                }
-            });
-            config.courses = nc;
-            config.teacher_names = td;
+                });
 
-            // === 更新：保存资源设置 (包含适用科目) ===
+                finalGradesConfig[gradeName] = {
+                    start_class_id: gData.start,
+                    count: gData.count,
+                    courses: coursesDict
+                };
+            });
+
+            // 转换 Set 为 Array
+            const finalTeacherNames = {};
+            for (let k in globalTeacherNames) {
+                finalTeacherNames[k] = Array.from(globalTeacherNames[k]);
+            }
+
+            // 3. 收集资源设置
             let nr = [];
             document.querySelectorAll('#resource-settings-body tr').forEach(r => {
                 const n = r.querySelector('.course-name').value;
                 const cap = parseInt(r.querySelector('.course-capacity').value);
-                const subj = r.querySelector('.course-subjects').value; // 获取适用科目
-
+                const subj = r.querySelector('.course-subjects').value;
                 if (n) {
-                    nr.push({
-                        name: n,
-                        capacity: cap || 1,
-                        subjects: subj // 保存为字符串，后端 normal.py 会处理逗号分割
-                    });
+                    nr.push({ name: n, capacity: cap || 1, subjects: subj });
                 }
             });
-            config.resources = nr;
 
-            // ================= [新增] 必须加上这段保存逻辑！ =================
+            // 4. 收集教师限制
             let limitConfig = {};
             document.querySelectorAll('#teacher-limits-body tr').forEach(r => {
                 const name = r.querySelector('.limit-name').value.trim();
                 const min = r.querySelector('.limit-min').value;
                 const max = r.querySelector('.limit-max').value;
-
                 if (name) {
                     limitConfig[name] = {};
-                    // 只有填了数字才保存
                     if (min !== "") limitConfig[name].min = parseInt(min);
                     if (max !== "") limitConfig[name].max = parseInt(max);
                 }
             });
-            config.teacher_limits = limitConfig;
-            // ==============================================================
 
-            initSystem();
+            // 5. 更新全局 config
+            config.resources = nr;
+            config.teacher_limits = limitConfig;
+
+            // 构造最终 Payload
+            const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
+            const payload = {
+                grades: finalGradesConfig,      // <--- 核心变化：使用 grades 字段
+                teacher_names: finalTeacherNames,
+                resources: nr,
+                teacher_limits: limitConfig,
+                optimization: {
+                    golden_time: true,
+                    avoid_consecutive_subjects: avoidConsecutive
+                },
+                constraints: globalConstraints
+            };
+
+            // UI 状态反馈
+            const btn = document.getElementById('btn-init');
+            const spinner = document.getElementById('init-spinner');
+            if (btn) btn.disabled = true;
+            if (spinner) spinner.classList.remove('d-none');
+
+            // 发起请求
+            fetch('/api/init', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        currentScheduleId = data.schedule_id;
+                        updateUI(data);
+                    } else {
+                        if (data.suggestions && data.suggestions.length > 0) {
+                            const ul = document.getElementById('failure-suggestions');
+                            ul.innerHTML = data.suggestions.map(s => `<li class="flex items-start gap-2"><i class="bi bi-lightbulb-fill text-yellow-400 shrink-0 mt-0.5"></i><span>${s}</span></li>`).join('');
+                            new bootstrap.Modal(document.getElementById('failureModal')).show();
+                        } else {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(e => {
+                    console.error(e);
+                    alert("排课请求失败，请检查控制台。");
+                })
+                .finally(() => {
+                    if (btn) btn.disabled = false;
+                    if (spinner) spinner.classList.add('d-none');
+                });
         }
         async function handleConfigUpload(input) {
             if (!input.files || !input.files[0]) return;
