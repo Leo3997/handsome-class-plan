@@ -83,12 +83,18 @@
             box-shadow: 3px 3px 6px #dce1e8, -3px -3px 6px #ffffff;
             transition: transform 0.2s;
             cursor: move;
-            min-height: 80px;
+
+            /* [修改] 强制固定高度，不再使用 min-height */
+            height: 90px;
+
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 4px;
+
+            /* [新增] 防止内容撑大格子 */
+            overflow: hidden;
         }
 
         .schedule-cell:hover {
@@ -324,7 +330,7 @@
                 <div class="spinner-border text-blue-300" style="width: 3rem; height: 3rem;"></div>
             </div>
 
-            <table class="w-full text-center border-separate border-spacing-x-4 border-spacing-y-4">
+            <table class="w-full text-center border-separate border-spacing-2 table-fixed">
                 <thead>
                     <tr>
                         <th class="w-16"></th>
@@ -439,6 +445,38 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- [新增] 教师限制配置板块 -->
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center mb-3 pl-2 pr-2">
+                            <h6 class="font-bold text-slate-600 flex items-center gap-2 m-0">
+                                <i class="bi bi-person-fill-gear text-orange-400"></i> 教师特殊限制 (兼课/行政)
+                            </h6>
+                            <div class="text-[10px] text-slate-400">
+                                <i class="bi bi-info-circle mr-1"></i>提示: 在上方科目中输入<span
+                                    class="text-blue-500 font-bold">相同名字</span>即可实现一人兼多课
+                            </div>
+                        </div>
+                        <div class="clay-card p-4 !shadow-clay-inner h-48 overflow-y-auto">
+                            <table class="w-full text-sm text-left border-separate border-spacing-y-2">
+                                <thead>
+                                    <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
+                                        <th class="pl-2 pb-2 w-[30%]">教师姓名</th>
+                                        <th class="pb-2 w-[25%]">最小课时/周</th>
+                                        <th class="pb-2 w-[25%]">最大课时/周</th>
+                                        <th class="text-center pb-2 w-[20%]">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teacher-limits-body" class="space-y-2"></tbody>
+                            </table>
+                        </div>
+                        <button
+                            class="clay-btn w-full mt-3 py-3 text-xs text-orange-400 font-bold hover:text-orange-500"
+                            onclick="addTeacherLimitRow()">
+                            <i class="bi bi-plus-lg mr-1"></i> 添加教师限制
+                        </button>
+                    </div>
+
                 </div>
                 <div class="modal-footer border-0">
                     <button class="clay-btn px-6 py-2" data-bs-dismiss="modal">关闭</button>
@@ -558,7 +596,36 @@
         </div>
     </div>
 
-    <!-- Failure Suggestion Modal -->
+    <!-- Failure Suggestion Modal --> <!-- [新增] 智能调配报告模态框 -->
+    <div class="modal fade" id="shardingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content clay-card overflow-hidden">
+                <div class="modal-header border-0 pb-0">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center shadow-sm">
+                            <i class="bi bi-magic text-xl"></i>
+                        </div>
+                        <div>
+                            <h5 class="modal-title font-black text-slate-700">智能调配报告</h5>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Smart Sharding Pro Report</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-6">
+                    <div id="sharding-content" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- 动态内容渲染 -->
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button"
+                        class="w-full py-3 rounded-2xl bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-all"
+                        data-bs-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="failureModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-6">
@@ -791,7 +858,15 @@
             if (!config.optimization) config.optimization = {};
             config.optimization.avoid_consecutive_subjects = avoidConsecutive;
 
-            const payload = { num_classes: config.num_classes, courses: cDict, teacher_names: tDict, resources: config.resources, optimization: config.optimization, constraints: globalConstraints };
+            const payload = {
+                num_classes: config.num_classes,
+                courses: cDict,
+                teacher_names: tDict,
+                resources: config.resources,
+                optimization: config.optimization,
+                constraints: globalConstraints,
+                teacher_limits: config.teacher_limits || {}
+            };
             try {
                 const res = await fetch('/api/init', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                 const data = await res.json();
@@ -813,8 +888,55 @@
                 document.getElementById('btn-stats').disabled = false;
             }
 
-            // [新增] 渲染评分卡片
+            // [新增] 弹出智能调配报告 (Sharding Report)
+            if (data.sharding_info && data.sharding_info.length > 0) {
+                const container = document.getElementById('sharding-content');
 
+                // 按班级分组展示
+                const grouped = {};
+                data.sharding_info.forEach(item => {
+                    const key = `${item.class_id} 班`;
+                    if (!grouped[key]) grouped[key] = [];
+                    grouped[key].push(item);
+                });
+
+                let html = "";
+                for (let className in grouped) {
+                    html += `
+                    <div class="clay-inner p-4 rounded-3xl bg-white/50 border border-orange-50/50">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="bi bi-mortarboard text-orange-400"></i>
+                            <span class="font-black text-slate-600">${className}</span>
+                        </div>
+                        <div class="space-y-2">`;
+
+                    grouped[className].forEach(info => {
+                        html += `
+                        <div class="flex items-center justify-between p-3 rounded-2xl bg-white shadow-sm border border-slate-50">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">${info.subject}</span>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-slate-400 line-through text-xs">${info.original}</span>
+                                    <i class="bi bi-arrow-right text-orange-500"></i>
+                                    <span class="text-slate-700 font-black text-sm">${info.substitute}</span>
+                                </div>
+                            </div>
+                            <div class="px-2 py-1 rounded-lg bg-orange-50 text-orange-600 font-black text-[10px]">
+                                ${info.count} 节
+                            </div>
+                        </div>`;
+                    });
+
+                    html += `</div></div>`;
+                }
+
+                container.innerHTML = html || `<div class="text-center py-8 text-slate-400 italic">暂无自动调配记录</div>`;
+
+                // 延迟弹出，让主 UI 先更新
+                setTimeout(() => {
+                    new bootstrap.Modal(document.getElementById('shardingModal')).show();
+                }, 800);
+            }
 
             globalTeachers = data.teachers || [];
             globalSchedule = data.schedule;
@@ -1063,6 +1185,24 @@
             return null;
         }
 
+        // [新增] 1. 添加教师限制行的函数
+        function addTeacherLimitRow(name = "", min = "", max = "") {
+            const deleteBtn = `
+                <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
+                        onclick="this.closest('tr').remove()">
+                    <i class="bi bi-trash3"></i>
+                </button>`;
+
+            const html = `
+            <tr>
+                <td class="pr-2"><input class="clay-input w-full py-2 px-3 text-sm border-0 limit-name" value="${name}" placeholder="输入准确姓名"></td>
+                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 limit-min" value="${min}" placeholder="默认"></td>
+                <td class="pr-2"><input type="number" class="clay-input w-full py-2 px-3 text-sm border-0 limit-max" value="${max}" placeholder="默认"></td>
+                <td class="text-center">${deleteBtn}</td>
+            </tr>`;
+            document.getElementById('teacher-limits-body').insertAdjacentHTML('beforeend', html);
+        }
+
         function addResourceRow(n = "", c = 1, s = "") {
             // 统一的删除按钮样式
             const deleteBtn = `
@@ -1136,6 +1276,13 @@
 
             document.getElementById('course-settings-body').innerHTML = '';
             config.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers));
+
+            // [新增] 渲染教师限制
+            document.getElementById('teacher-limits-body').innerHTML = '';
+            const limits = config.teacher_limits || {};
+            Object.keys(limits).forEach(name => {
+                addTeacherLimitRow(name, limits[name].min, limits[name].max);
+            });
         }
         function saveSettingsAndInit() {
             config.num_classes = parseInt(document.getElementById('setting-num-classes').value);
@@ -1176,6 +1323,23 @@
                 }
             });
             config.resources = nr;
+
+            // ================= [新增] 必须加上这段保存逻辑！ =================
+            let limitConfig = {};
+            document.querySelectorAll('#teacher-limits-body tr').forEach(r => {
+                const name = r.querySelector('.limit-name').value.trim();
+                const min = r.querySelector('.limit-min').value;
+                const max = r.querySelector('.limit-max').value;
+
+                if (name) {
+                    limitConfig[name] = {};
+                    // 只有填了数字才保存
+                    if (min !== "") limitConfig[name].min = parseInt(min);
+                    if (max !== "") limitConfig[name].max = parseInt(max);
+                }
+            });
+            config.teacher_limits = limitConfig;
+            // ==============================================================
 
             initSystem();
         }

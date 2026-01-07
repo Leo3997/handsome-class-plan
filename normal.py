@@ -194,51 +194,201 @@ def run_scheduler(config=None):
     if config is None: config = DEFAULT_CONFIG
     
     NUM_CLASSES = int(config.get('num_classes', 10))
-    COURSE_REQUIREMENTS = config.get('courses', DEFAULT_CONFIG['courses'])
+    original_courses = config.get('courses', DEFAULT_CONFIG['courses'])
+    teacher_names_config = config.get('teacher_names', {})
+    teacher_limits = config.get("teacher_limits", {})
 
     # Debug logging
     import logging
     logger = logging.getLogger(__name__)
-    logger.info(f"Received config courses type: {type(COURSE_REQUIREMENTS)}")
-    if isinstance(COURSE_REQUIREMENTS, list):
-         logger.info(f"List content (first 1): {COURSE_REQUIREMENTS[:1]}")
+    logger.info(f"Received config courses type: {type(original_courses)}")
 
-    # 如果传入的是列表（前端新版格式），转换为字典
-    if isinstance(COURSE_REQUIREMENTS, list):
-        new_courses = {}
-        for item in COURSE_REQUIREMENTS:
-            name = item.get('name')
-            if name:
-                new_courses[name] = item
-        COURSE_REQUIREMENTS = new_courses
-        logger.info(f"Converted courses dict keys: {list(COURSE_REQUIREMENTS.keys())}")
-
-    # 获取自定义名字配置
-    TEACHER_NAMES = config.get('teacher_names', {})
-    logger.info(f"Teacher Names Config: {TEACHER_NAMES}")
+    # -------------------------------------------------------------------------
+    # [架构升级] 智能分片层 Pro (Smart Sharding Layer - Full Scan)
+    # 逻辑：扫描所有任课老师，只要有一人有限制，就触发全局拆分，并对齐老师名单。
+    # -------------------------------------------------------------------------
     
-    # 标准化课程配置格式(兼容旧格式)
-    normalized_courses = {}
-    for subj, course_config in COURSE_REQUIREMENTS.items():
-        if isinstance(course_config, dict):
-            # Ensure count is int
-            if 'count' in course_config:
-                 course_config['count'] = int(course_config['count'])
-            normalized_courses[subj] = course_config
+    # 1. 预处理课程格式
+    COURSE_REQUIREMENTS_BASE = {}
+    if isinstance(original_courses, list):
+        for item in original_courses:
+            if item.get('name'): COURSE_REQUIREMENTS_BASE[item['name']] = item
+    else:
+        COURSE_REQUIREMENTS_BASE = original_courses.copy()
+
+    # 2. 自动拆分与名单重构
+    final_courses = {}
+    final_teacher_names = {}
+    sharding_report = [] # [新增] 用于存储替换详情
+    
+    # 辅助函数：获取老师的最大限制
+    def get_teacher_max_limit(t_name):
+        clean_name = t_name.strip()
+        for k, v in teacher_limits.items():
+            if k.strip() == clean_name and v.get('max') is not None and str(v['max']).strip() != "":
+                return int(v['max'])
+        return 999 # 没有限制则默认无穷大
+
+    for subj, info in COURSE_REQUIREMENTS_BASE.items():
+        # 标准化 info
+        if not isinstance(info, dict): 
+            course_type = "main" if int(info) >= 5 else "minor"
+            info = {"count": int(info), "type": course_type}
         else:
-            # 旧格式兼容
-            course_type = "main" if course_config >= 5 else "minor"
-            normalized_courses[subj] = {"count": course_config, "type": course_type}
+            info = info.copy()
+            info['count'] = int(info['count'])
+            
+        total_count = info['count']
+        assigned_teachers = teacher_names_config.get(subj, [])
+        
+        # [步骤 A] 扫描该科目所有老师，寻找“短板”（限制最严格的那个数）
+        min_limit_found = 999
+        limited_teachers = set() # 记录哪些老师受限
+        
+        if assigned_teachers:
+            for t_name in assigned_teachers:
+                limit = get_teacher_max_limit(t_name)
+                if limit < total_count:
+                    min_limit_found = min(min_limit_found, limit)
+                    limited_teachers.add(t_name)
+        
+        # [步骤 B] 判断是否需要拆分
+        if limited_teachers and min_limit_found < total_count:
+            # 需要拆分！
+            main_count = min_limit_found
+            overflow_count = total_count - main_count
+            
+            # 1. 创建“本体”课程 (所有人都要上)
+            final_courses[subj] = info.copy()
+            final_courses[subj]['count'] = main_count
+            final_teacher_names[subj] = assigned_teachers # 所有人名单保持不变
+            
+            # 2. 创建“分身”课程 (溢出部分)
+            sub_name = f"{subj}_AUTO_SUB"
+            final_courses[sub_name] = info.copy()
+            final_courses[sub_name]['count'] = overflow_count
+            
+            # [关键步骤] 构建分身课的老师名单 (List Alignment)
+            sub_teacher_list = []
+            
+            # 尝试找一个“默认替补”：优先找名单里没受限的人，找不到就用【自习】
+            default_sub = "【自习】"
+            for t in assigned_teachers:
+                if t not in limited_teachers:
+                    default_sub = t 
+                    break
+            
+            for idx, t in enumerate(assigned_teachers):
+                if t in limited_teachers:
+                    # 这是一个受限老师，他上不了分身课，给替补
+                    sub_teacher_list.append(default_sub)
+                    # [新增] 记录替换详情：哪个班(轮询决定) 的 哪个老师 被 谁 替了
+                    # 注意：轮询逻辑在 generate_teachers_and_map 里，
+                    # 班级 C 的老师索引是 (C-1) % len(assigned_teachers)
+                    for c_idx in range(NUM_CLASSES):
+                        if (c_idx % len(assigned_teachers)) == idx:
+                            sharding_report.append({
+                                "class_id": c_idx + 1,
+                                "subject": subj,
+                                "original": t,
+                                "substitute": default_sub,
+                                "count": overflow_count
+                            })
+                else:
+                    # 这是一个普通老师，他自己上分身课
+                    sub_teacher_list.append(t)
+            
+            final_teacher_names[sub_name] = sub_teacher_list
+            logger.info(f"Course {subj} split: {main_count} + {overflow_count} (AUTO_SUB teachers: {sub_teacher_list})")
+        else:
+            # 不需要拆分，保持原样
+            final_courses[subj] = info
+            if assigned_teachers:
+                final_teacher_names[subj] = assigned_teachers
+
+    # 覆盖供后续使用的变量
+    COURSE_REQUIREMENTS = final_courses
+    TEACHER_NAMES = final_teacher_names
     
+    # 标准化课程配置格式供预检逻辑使用
+    normalized_courses = COURSE_REQUIREMENTS 
+    
+    # -------------------------------------------------------------------------
+    # [架构升级结束] 接回原有流程
+    # -------------------------------------------------------------------------
+
     CLASSES = list(range(1, NUM_CLASSES + 1))
     DAYS = 5
     PERIODS = 9 
     SLOTS = [(d, p) for d in range(DAYS) for p in range(PERIODS)]
 
-    # 1. 生成数据 (传入自定义名字)
+    # 1. 生成数据 (传入处理后的 COURSE_REQUIREMENTS 和 TEACHER_NAMES)
     TEACHERS_DB, CLASS_TEACHER_MAP = generate_teachers_and_map(NUM_CLASSES, COURSE_REQUIREMENTS, TEACHER_NAMES)
-    logger.info(f"Generated {len(TEACHERS_DB)} teachers.")
-    # logger.info(f"First 5 teachers: {TEACHERS_DB[:5]}")
+    logger.info(f"Generated {len(TEACHERS_DB)} teachers after sharding.")
+
+    # ================= [新增] 限制条件预检逻辑 (Pre-check) =================
+    # 原因：如果分配给老师的课时已经超过了Max限制，求解器会直接无解。
+    # 我们需要在建模前拦截这种情况，并给出明确提示。
+    
+    teacher_limits = config.get("teacher_limits", {})
+    if teacher_limits:
+        # 1. 计算每位老师被分配的实际总课时
+        # 建立 tid -> assigned_count
+        actual_workload = collections.defaultdict(int)
+        
+        # 遍历所有班级和科目的映射关系
+        # CLASS_TEACHER_MAP: {(class_id, subject): tid}
+        for (class_id, subject), tid in CLASS_TEACHER_MAP.items():
+            # 获取该科目的周课时数
+            course_cfg = normalized_courses.get(subject, {})
+            count = course_cfg.get("count", 0)
+            actual_workload[tid] += count
+            
+        # 2. 对比限制条件
+        # 建立 name -> tid 的映射 (注意去除空格，增强容错)
+        name_to_tid = {t['name'].strip(): t['id'] for t in TEACHERS_DB}
+        
+        for limit_name, limit_cfg in teacher_limits.items():
+            clean_name = limit_name.strip() # 清理输入的姓名空格
+            
+            # ================= [修改开始] 严格校验姓名 =================
+            if clean_name not in name_to_tid:
+                # 之前是 continue (忽略)，现在改为直接报错返回
+                available_teachers = list(name_to_tid.keys())
+                # 只显示前5个老师名字作为提示
+                hint_teachers = ", ".join(available_teachers[:5]) + ("..." if len(available_teachers) > 5 else "")
+                
+                return {
+                    "status": "error", # 让前端识别为错误
+                    "error_type": "invalid_name",
+                    "message": f"【配置错误】在“教师特殊限制”中输入的姓名“{clean_name}”不存在！",
+                    "suggestions": [
+                        f"1. 请检查有没有错别字或多余空格。",
+                        f"2. 请确认“{clean_name}”是否已经出现在上方的【科目设置-固定老师】名单中。",
+                        f"3. 当前识别到的老师有：{hint_teachers}"
+                    ]
+                }
+            # ================= [修改结束] =================
+                
+            tid = name_to_tid[clean_name]
+            current_load = actual_workload.get(tid, 0)
+            max_limit = limit_cfg.get("max")
+            
+            # 检查最大课时 (保持不变，但确保类型转换安全)
+            if max_limit is not None and str(max_limit).strip() != "":
+                max_val = int(max_limit)
+                if current_load > max_val:
+                    return {
+                        "status": "fail", # 排课失败状态
+                        "error_type": "constraint_conflict",
+                        "message": f"【排课冲突】教师【{clean_name}】被分配了 {current_load} 节课，但您设置的最大限制为 {max_val} 节。",
+                        "suggestions": [
+                            f"1. 请在「科目设置」中，为提示的【{clean_name}】老师任教的科目增加其他老师名字（用逗号分隔），系统会自动分摊课时。",
+                            f"2. 调高【{clean_name}】的最大课时限制。",
+                            f"3. 减少该科目的每周节数。"
+                        ]
+                    }
+    # ====================================================================
 
     # 2. 建模
     model = cp_model.CpModel()
@@ -251,35 +401,35 @@ def run_scheduler(config=None):
                     schedule[(c, d, p, subj)] = model.NewBoolVar(f'c{c}_{d}_{p}_{subj}')
 
     # === [新增] 特定老师的课时约束 ===
-    # config 示例: teacher_limits = {"张伟": {"min": 4, "max": 8}}
+    # [修改版] 更健壮的名字匹配
     teacher_limits = config.get("teacher_limits", {})
+    name_to_tid = {t['name'].strip(): t['id'] for t in TEACHERS_DB} # 这里的 Key 去除空格
     
-    # 将名字映射回 ID
-    name_to_tid = {t['name']: t['id'] for t in TEACHERS_DB}
-    
-    # 建立 ID -> Assignments 索引
     teacher_assignments = collections.defaultdict(list)
     for (c, s), t_id in CLASS_TEACHER_MAP.items():
         teacher_assignments[t_id].append((c, s))
 
     for t_name, limits in teacher_limits.items():
-        if t_name not in name_to_tid: continue
+        clean_name = t_name.strip() # 输入的名字也去除空格
+        
+        if clean_name not in name_to_tid:
+            continue
             
-        tid = name_to_tid[t_name]
+        tid = name_to_tid[clean_name]
         assignments = teacher_assignments.get(tid, [])
         if not assignments: continue
-            
+        
         # 计算该老师的总排课量 (Expression)
         total_workload = sum(schedule[(c, d, p, s)] 
                              for (c, s) in assignments 
                              for d, p in SLOTS)
         
         # 添加最小课时约束
-        if "min" in limits:
+        if "min" in limits and str(limits["min"]).strip().isdigit():
             model.Add(total_workload >= int(limits["min"]))
             
         # 添加最大课时约束
-        if "max" in limits:
+        if "max" in limits and str(limits["max"]).strip().isdigit():
             model.Add(total_workload <= int(limits["max"]))
     # =================================
 
@@ -593,6 +743,7 @@ def run_scheduler(config=None):
 
         return {
             "status": "success",
+            "sharding_info": sharding_report, # [新增] 向前端传递替换详情
             "stats": stats,
             "evaluation": evaluation,
             "solver": solver,

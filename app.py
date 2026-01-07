@@ -44,8 +44,12 @@ def serialize_schedule(system):
             for d in range(system.days):
                 info = system.final_schedule.get((c_id, d, p))
                 if info:
+                    # === [核心修复] 移除内部后缀 ===
+                    display_subject = info['subject'].replace('_AUTO_SUB', '')
+                    # ============================
+                    
                     cell_data = {
-                        "subject": info['subject'],
+                        "subject": display_subject, # 使用处理后的名字
                         "teacher_name": info['teacher_name'],
                         "teacher_id": info.get('teacher_id'),
                         "is_sub": info['is_sub'],
@@ -73,9 +77,13 @@ def serialize_teacher_schedule(system, teacher_name):
             for d in range(system.days):
                 info = system.final_schedule.get((c_id, d, p))
                 if info and info['teacher_name'] == teacher_name:
+                    # === [核心修复] 移除内部后缀 ===
+                    display_subject = info['subject'].replace('_AUTO_SUB', '')
+                    # ============================
+                    
                     teacher_data[p][d] = {
                         "class_id": str(c_id),
-                        "subject": info['subject'],
+                        "subject": display_subject, # 使用处理后的名字
                         "is_sub": info['is_sub']
                     }
     
@@ -140,9 +148,18 @@ def init_schedule():
         result = normal.run_scheduler(config)
         
         if result['status'] != 'success':
-            # 分析失败原因
+            # 如果 result 已经包含了具体的错误信息(由 normal.py 预检逻辑返回)
+            if 'error_type' in result:
+                logger.warning(f"排课拦截 - {result['error_type']}: {result['message']}")
+                return jsonify({
+                    "status": "error",
+                    "error_type": result['error_type'],
+                    "message": result['message'],
+                    "suggestions": result.get('suggestions', [])
+                }), 400
+                
+            # 否则执行通用故障分析
             error_analysis = analyze_failure(config)
-            
             logger.warning(f"排课失败 - {error_analysis['error_type']}: {error_analysis['message']}")
             
             return jsonify({
@@ -178,6 +195,7 @@ def init_schedule():
             "teachers": teacher_list,
             "schedule": serialize_schedule(system_instance),
             "stats": result.get('stats', {}),
+            "sharding_info": result.get('sharding_info', []), # [新增]
             "evaluation": result.get('evaluation', {'score': 100, 'details': []})
         })
     except Exception as e:
@@ -556,11 +574,24 @@ def apply_substitute():
         
         logger.info(f"代课处理完成 - 直接代课:{stats['direct']}次, 互换:{stats['swap']}次, 自习:{stats['self_study']}次")
         
+        # === [修改] 重新构建老师列表，防止前端下拉框消失 ===
+        # 从 current_result 中获取原始老师数据
+        teacher_list = []
+        if current_result and 'teachers_db' in current_result:
+            teacher_list = sorted([{
+                "id": t['id'], 
+                "name": t['name'],
+                "subject": t.get('subject', ''),
+                "type": t.get('type', 'minor')
+            } for t in current_result['teachers_db']], key=lambda x: x['name'])
+        # =================================================
+
         return jsonify({
             "status": "success",
             "schedule": serialize_schedule(current_system),
             "stats": stats,
-            "logs": logs
+            "logs": logs,
+            "teachers": teacher_list
         })
     except Exception as e:
         logger.error(f"代课处理异常: {str(e)}", exc_info=True)
