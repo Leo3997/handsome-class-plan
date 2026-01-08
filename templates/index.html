@@ -76,6 +76,24 @@
             box-shadow: inset 8px 8px 16px #dce1e8, inset -8px -8px 16px #ffffff;
         }
 
+        /* Nav Pills Clay Style */
+        .nav-pills .nav-link {
+            background: transparent;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+
+        .nav-pills .nav-link:hover {
+            color: #64748b;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-pills .nav-link.active {
+            background: #fff !important;
+            color: #3b82f6 !important;
+            box-shadow: 4px 4px 8px #dce1e8, -4px -4px 8px #ffffff;
+        }
+
         /* Schedule Table */
         .schedule-cell {
             background: #eef2f6;
@@ -262,6 +280,11 @@
 
         <!-- Footer -->
         <div class="px-4 pb-4 space-y-2">
+            <!-- AI 智能助手按钮 -->
+            <button onclick="new bootstrap.Modal(document.getElementById('aiRuleModal')).show()"
+                class="w-full clay-btn py-3 bg-gradient-to-r from-indigo-500 to-purple-600 !text-black text-sm font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all">
+                <i class="bi bi-robot"></i> AI 智能助手
+            </button>
 
             <a href="/logout"
                 class="block w-full text-center clay-btn py-3 text-red-400 hover:text-red-500 text-sm font-bold">
@@ -432,8 +455,9 @@
                                         <tr class="text-slate-400 text-[10px] font-bold sticky top-0 bg-[#eef2f6] z-10">
                                             <th style="width: 80px;" class="pl-2 pb-2">科目名称</th>
                                             <th style="width: 50px;" class="pb-2">节数</th>
-                                            <th style="width: 80px;" class="pb-2 text-center">类型</th>
-                                            <th style="width: 120px;" class="pb-2 text-center">分布</th>
+                                            <th style="width: 70px;" class="pb-2 text-center">类型</th>
+                                            <th style="width: 100px;" class="pb-2 text-center">分布</th>
+                                            <th style="width: 100px;" class="pb-2">标签 (用,分隔)</th>
                                             <th style="width: auto;" class="pb-2">固定老师 (尽量填全)</th>
                                             <th style="width: 50px;" class="text-center pb-2">操作</th>
                                         </tr>
@@ -473,41 +497,13 @@
                         </div>
                     </div>
 
-                    <!-- [新增] 教师限制配置板块 -->
-                    <div class="mt-6">
-                        <div class="flex justify-between items-center mb-3 pl-2 pr-2">
-                            <h6 class="font-bold text-slate-600 flex items-center gap-2 m-0">
-                                <i class="bi bi-person-fill-gear text-orange-400"></i> 教师特殊限制 (兼课/行政)
-                            </h6>
-                            <div class="text-[10px] text-slate-400">
-                                <i class="bi bi-info-circle mr-1"></i>提示: 在上方科目中输入<span
-                                    class="text-blue-500 font-bold">相同名字</span>即可实现一人兼多课
-                            </div>
-                        </div>
-                        <div class="clay-card p-4 !shadow-clay-inner h-48 overflow-y-auto">
-                            <table
-                                class="w-full text-sm text-left border-separate border-spacing-y-1 border-spacing-x-0 table-fixed">
-                                <thead>
-                                    <tr class="text-slate-400 text-xs font-bold sticky top-0 bg-[#eef2f6] z-10">
-                                        <th class="pl-2 pb-2 w-[40%]">教师姓名</th>
-                                        <th class="pb-2 w-[26%] text-center">最小/周</th>
-                                        <th class="pb-2 w-[26%] text-center">最大/周</th>
-                                        <th class="text-center pb-2 w-[8%]">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="teacher-limits-body" class="space-y-2"></tbody>
-                            </table>
-                        </div>
-                        <button
-                            class="clay-btn w-full mt-3 py-3 text-xs text-orange-400 font-bold hover:text-orange-500"
-                            onclick="addTeacherLimitRow()">
-                            <i class="bi bi-plus-lg mr-1"></i> 添加教师限制
-                        </button>
-                    </div>
 
                 </div>
                 <div class="modal-footer border-0">
-                    <button class="clay-btn px-6 py-2" data-bs-dismiss="modal">关闭</button>
+                    <button class="clay-btn px-6 py-2 text-slate-500" data-bs-dismiss="modal"
+                        onclick="syncUItoConfig()">
+                        <i class="bi bi-floppy mr-1"></i> 暂存配置
+                    </button>
                     <button class="clay-btn px-6 py-2 !text-white !bg-blue-400 shadow-none hover:bg-blue-500"
                         data-bs-dismiss="modal" onclick="saveSettingsAndInit()">保存并生成</button>
                 </div>
@@ -515,81 +511,307 @@
         </div>
     </div>
 
-    <!-- Constraint Modal -->
+    <!-- Constraint Modal (重构版：带 Tabs 布局) -->
     <div class="modal fade" id="constraintModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-black text-slate-700">高级约束与规则</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body pt-2">
+                    <ul class="nav nav-pills mb-4 p-1 bg-white/50 rounded-xl gap-2" role="tablist">
+                        <li class="nav-item flex-1" role="presentation">
+                            <button class="nav-link w-full active rounded-lg font-bold text-xs py-2.5" id="tab-time-btn"
+                                data-bs-toggle="pill" data-bs-target="#tab-time" type="button" role="tab">
+                                <i class="bi bi-calendar-x mr-1"></i> 时间禁排
+                            </button>
+                        </li>
+                        <li class="nav-item flex-1" role="presentation">
+                            <button class="nav-link w-full rounded-lg font-bold text-xs py-2.5" id="tab-limits-btn"
+                                data-bs-toggle="pill" data-bs-target="#tab-limits" type="button" role="tab">
+                                <i class="bi bi-person-fill-gear mr-1"></i> 教师工作量
+                            </button>
+                        </li>
+                        <li class="nav-item flex-1" role="presentation">
+                            <button class="nav-link w-full rounded-lg font-bold text-xs py-2.5" id="tab-rules-btn"
+                                data-bs-toggle="pill" data-bs-target="#tab-rules" type="button" role="tab">
+                                <i class="bi bi-shield-lock-fill mr-1"></i> 规则中心 Pro
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade show active" id="tab-time" role="tabpanel">
+                            <div
+                                class="bg-indigo-50 text-indigo-500 p-3 rounded-xl mb-3 text-xs font-bold flex items-start gap-2">
+                                <i class="bi bi-exclamation-circle-fill mt-0.5"></i>
+                                <div>点击格子标记为 <span class="text-red-400">红色</span> 表示【不排课】。</div>
+                            </div>
+
+                            <div class="clay-card p-3 mb-4 flex items-center justify-between !bg-white">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-black text-slate-700">禁止科目连排</span>
+                                    <span class="text-[10px] text-slate-400 font-bold">同一门课尽量不连续上2节</span>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input cursor-pointer" type="checkbox"
+                                        id="check-avoid-consecutive" style="width: 3em; height: 1.5em;">
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 mb-3">
+                                <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
+                                    <input type="radio" name="constraint-mode" value="teacher" class="hidden" checked
+                                        onchange="switchConstraintMode()">
+                                    <i class="bi bi-person-x-fill mr-1"></i> 教师不排课
+                                </label>
+                                <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
+                                    <input type="radio" name="constraint-mode" value="fixed" class="hidden"
+                                        onchange="switchConstraintMode()">
+                                    <i class="bi bi-pin-angle-fill mr-1"></i> 班级预排课
+                                </label>
+                            </div>
+
+                            <select id="constraint-teacher-select" class="clay-input w-full mb-4"
+                                onchange="renderConstraintGrid()"></select>
+                            <select id="constraint-class-select" class="clay-input w-full mb-4 hidden"
+                                onchange="renderConstraintGrid()"></select>
+
+                            <div class="clay-card p-4 !shadow-clay-inner flex justify-center">
+                                <table class="table-auto border-separate border-spacing-2" id="constraint-grid">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>一</th>
+                                            <th>二</th>
+                                            <th>三</th>
+                                            <th>四</th>
+                                            <th>五</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="constraint-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-limits" role="tabpanel">
+                            <div class="flex justify-between items-center mb-3">
+                                <h6 class="font-bold text-slate-600 text-sm">特殊课时限制</h6>
+                                <span class="text-[10px] text-slate-400">控制兼课或行政老师的周课时上下限</span>
+                            </div>
+                            <div class="clay-card p-4 !shadow-clay-inner h-[300px] overflow-y-auto custom-scrollbar">
+                                <table
+                                    class="w-full text-sm text-left border-separate border-spacing-y-2 border-spacing-x-0 table-fixed">
+                                    <thead>
+                                        <tr class="text-slate-400 text-[10px] font-bold sticky top-0 bg-[#eef2f6] z-10">
+                                            <th class="pl-2 pb-2 w-[25%]">姓名</th>
+                                            <th class="pb-2 w-[18%] text-center">最小</th>
+                                            <th class="pb-2 w-[18%] text-center">最大</th>
+                                            <th class="pb-2 w-[30%]">标签</th>
+                                            <th class="text-center pb-2 w-[9%]"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="teacher-limits-body"></tbody>
+                                </table>
+                            </div>
+                            <button
+                                class="clay-btn w-full mt-3 py-3 text-xs text-orange-400 font-bold hover:text-orange-500"
+                                onclick="addTeacherLimitRow()">
+                                <i class="bi bi-plus-lg mr-1"></i> 添加限制人员
+                            </button>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-rules" role="tabpanel">
+                            <div class="flex justify-between items-center mb-3">
+                                <h6 class="font-bold text-slate-600 text-sm">自定义规则库</h6>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] text-slate-400">权重越高越严格</span>
+                                    <div class="dropdown">
+                                        <button
+                                            class="clay-btn px-3 py-1.5 text-[10px] text-blue-500 font-bold dropdown-toggle"
+                                            type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-collection-fill mr-1"></i> 导入模板
+                                        </button>
+                                        <ul class="dropdown-menu shadow-lg border-0 rounded-xl">
+                                            <li><a class="dropdown-item text-xs font-bold py-2" href="#"
+                                                    onclick="loadRuleTemplate('shaoxing')">🏫 绍兴一中标准规则</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item text-xs font-bold py-2 text-red-400" href="#"
+                                                    onclick="loadRuleTemplate('empty')">🗑️ 清空所有规则</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="rules-container"
+                                class="space-y-3 h-[400px] overflow-y-auto pr-2 custom-scrollbar p-1">
+                            </div>
+
+                            <button
+                                class="clay-btn w-full mt-3 py-3 text-xs text-purple-500 font-bold hover:text-purple-600"
+                                onclick="addRuleRow()">
+                                <i class="bi bi-plus-lg mr-1"></i> 新增规则
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 flex justify-between items-center pt-2">
+                    <div class="text-[10px] text-slate-400 font-bold ml-2">
+                        <i class="bi bi-info-circle-fill mr-1"></i> 需重新生成生效
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="clay-btn px-4 py-2" data-bs-dismiss="modal">暂存</button>
+                        <button onclick="saveConstraintsAndRun()"
+                            class="clay-btn px-6 py-2 !text-green-400 !bg-blue-600 hover:!bg-blue-700 text-sm font-black tracking-wider shadow-lg">
+                            保存并重排
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rule Slot Picker Modal -->
+    <div class="modal fade" id="ruleSlotModal" tabindex="-1" style="z-index: 1070;">
+        <div class="modal-dialog">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4 text-center">
                 <div class="modal-header border-0">
-                    <h5 class="modal-title font-black text-slate-700">高级约束</h5><button type="button" class="btn-close"
-                        data-bs-dismiss="modal"></button>
+                    <h5 class="modal-title font-black text-slate-700">选择时段 (Slots Picker)</h5><button type="button"
+                        class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div <div
-                        class="bg-indigo-50 text-indigo-500 p-3 rounded-xl mb-3 text-xs font-bold flex items-start gap-2">
-                        <i class="bi bi-exclamation-circle-fill mt-0.5"></i>
-                        <div>
-                            <p>点击格子标记为 <span class="text-red-400">红色</span> 表示该时段【不排课】。</p>
-                            <p class="opacity-70 mt-1">注意：设置完成后，必须点击右下角的“保存并重排”才会生效。</p>
-                        </div>
+                    <div
+                        class="bg-purple-50 text-purple-500 p-3 rounded-xl mb-3 text-[10px] font-bold flex items-start gap-2 text-left">
+                        <i class="bi bi-info-circle-fill mt-0.5"></i>
+                        <div>点击下方格子标记规则生效的时段。紫色表示“选中”。</div>
                     </div>
-
-                    <div class="clay-card p-3 mb-4 flex items-center justify-between !bg-white">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-black text-slate-700">禁止科目连排</span>
-                            <span class="text-[10px] text-slate-400 font-bold">同一门课尽量不连续上2节 (如：语文不连上)</span>
-                        </div>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input cursor-pointer" type="checkbox" id="check-avoid-consecutive"
-                                style="width: 3em; height: 1.5em;">
-                        </div>
-                    </div>
-
-                    <!-- Mode Switcher -->
-                    <div class="flex gap-4 mb-3">
-                        <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
-                            <input type="radio" name="constraint-mode" value="teacher" class="hidden" checked
-                                onchange="switchConstraintMode()">
-                            <i class="bi bi-person-x-fill mr-1"></i> 教师不排课
-                        </label>
-                        <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
-                            <input type="radio" name="constraint-mode" value="fixed" class="hidden"
-                                onchange="switchConstraintMode()">
-                            <i class="bi bi-pin-angle-fill mr-1"></i> 班级预排课
-                        </label>
-                    </div>
-
-                    <select id="constraint-teacher-select" class="clay-input w-full mb-4"
-                        onchange="renderConstraintGrid()"></select>
-
-                    <select id="constraint-class-select" class="clay-input w-full mb-4 hidden"
-                        onchange="renderConstraintGrid()"></select>
-
-                    <div class="clay-card p-4 !shadow-clay-inner flex justify-center">
-                        <table class="table-auto border-separate border-spacing-2" id="constraint-grid">
+                    <div class="clay-card p-4 !shadow-clay-inner flex justify-center mb-4">
+                        <table class="table-fixed border-separate border-spacing-1" id="rule-slot-grid"
+                            style="width: 250px;">
                             <thead>
                                 <tr>
-                                    <th></th>
-                                    <th>一</th>
-                                    <th>二</th>
-                                    <th>三</th>
-                                    <th>四</th>
-                                    <th>五</th>
+                                    <th style="width: 20px;"></th>
+                                    <th class="text-[10px] text-slate-400 text-center font-black" style="width: 45px;">一
+                                    </th>
+                                    <th class="text-[10px] text-slate-400 text-center font-black" style="width: 45px;">二
+                                    </th>
+                                    <th class="text-[10px] text-slate-400 text-center font-black" style="width: 45px;">三
+                                    </th>
+                                    <th class="text-[10px] text-slate-400 text-center font-black" style="width: 45px;">四
+                                    </th>
+                                    <th class="text-[10px] text-slate-400 text-center font-black" style="width: 45px;">五
+                                    </th>
                                 </tr>
                             </thead>
-                            <tbody id="constraint-tbody"></tbody>
+                            <tbody id="rule-slot-tbody"></tbody>
                         </table>
                     </div>
                 </div>
-                <div class="modal-footer border-0 flex justify-between items-center">
-                    <div class="text-xs text-slate-400 font-bold ml-2">
-                        <i class="bi bi-info-circle-fill mr-1"></i> 修改后需重新生成生效
+                <div class="modal-footer border-0 flex justify-end gap-2">
+                    <button class="clay-btn px-6 py-2" data-bs-dismiss="modal">取消</button>
+                    <button class="clay-btn px-6 py-1 !text-white !bg-purple-400 hover:!bg-purple-500"
+                        onclick="confirmRuleSlots()">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Rule Generator Modal -->
+    <div class="modal fade" id="aiRuleModal" tabindex="-1" style="z-index: 1080;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-black text-slate-700 flex items-center gap-2">
+                        <i class="bi bi-stars text-purple-500"></i> 智能规则生成
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-xs text-slate-400 mb-2 font-bold">请用自然语言描述您的要求：</p>
+                    <textarea id="ai-input-text" class="clay-input w-full h-32 text-sm p-3 mb-3 resize-none"
+                        placeholder="例如：&#10;- 初一的数学老师周三下午不要排课&#10;- 语文数学英语在上午必须排满4节&#10;- 所有体育课不能排在第一节"></textarea>
+
+                    <div id="ai-loading" class="hidden text-center py-4">
+                        <div class="spinner-border text-purple-500 w-8 h-8" role="status"></div>
+                        <p class="text-xs text-purple-400 font-bold mt-2">Qwen 正在思考中...</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button class="clay-btn px-4 py-2" data-bs-dismiss="modal">暂存 (不生成)</button>
-                        <button onclick="saveConstraintsAndRun()"
-                            class="clay-btn px-8 py-3 !text-green-400 !bg-blue-600 hover:!bg-blue-700 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all text-base font-black tracking-widest">
-                            <i class="bi bi-lightning-charge-fill mr-1"></i> 保存并重排
-                        </button>
+
+                    <div id="ai-result-preview" class="hidden clay-card p-3 bg-white mb-3 border border-purple-100">
+                        <div class="text-[10px] text-slate-400 font-bold mb-1">识别结果：</div>
+                        <pre id="json-preview"
+                            class="text-xs text-slate-600 font-mono bg-slate-50 p-2 rounded max-h-40 overflow-auto"></pre>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button id="btn-ai-gen"
+                        class="clay-btn px-6 py-2 !bg-purple-500 !text-white w-full shadow-lg hover:scale-[1.02] transition-transform"
+                        onclick="callAiGeneration()">
+                        <i class="bi bi-magic mr-1"></i> 生成并应用
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 规则详情弹窗 -->
+    <div class="modal fade" id="ruleDetailModal" tabindex="-1" style="z-index: 1085;">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-black text-slate-700 flex items-center gap-2">
+                        <i class="bi bi-info-circle-fill text-blue-500"></i> 规则详情
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- 规则摘要 -->
+                    <div class="clay-card p-4 bg-white mb-3">
+                        <div class="grid grid-cols-2 gap-3 text-xs">
+                            <div>
+                                <span class="text-slate-400 font-bold">规则类型：</span>
+                                <span id="detail-type" class="text-slate-600 font-bold"></span>
+                            </div>
+                            <div>
+                                <span class="text-slate-400 font-bold">权重：</span>
+                                <span id="detail-weight" class="text-blue-500 font-bold"></span>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="text-slate-400 font-bold">适用年级：</span>
+                                <span id="detail-grades" class="text-slate-600"></span>
+                            </div>
+                            <div class="col-span-2">
+                                <span class="text-slate-400 font-bold">筛选条件：</span>
+                                <span id="detail-targets" class="text-slate-600"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时段可视化 -->
+                    <div id="detail-slots-section" class="clay-card p-4 bg-white mb-3">
+                        <div class="text-[10px] text-slate-400 font-bold mb-2">📅 时段可视化</div>
+                        <div id="detail-slots-grid" class="grid grid-cols-6 gap-1 text-[10px]">
+                            <!-- 动态生成 -->
+                        </div>
+                    </div>
+
+                    <!-- 完整 JSON -->
+                    <div class="clay-card p-3 bg-white">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-[10px] text-slate-400 font-bold">📋 完整 JSON 配置</span>
+                            <button class="text-[10px] text-blue-500 font-bold hover:underline"
+                                onclick="copyRuleJson()">
+                                <i class="bi bi-clipboard mr-1"></i>复制
+                            </button>
+                        </div>
+                        <pre id="detail-json"
+                            class="text-[10px] text-slate-600 font-mono bg-slate-50 p-3 rounded-lg max-h-48 overflow-auto"></pre>
                     </div>
                 </div>
             </div>
@@ -687,48 +909,26 @@
         let config = {
             num_classes: 6,
             courses: [
-                {
-                    name: "语文",
-                    count: 5,
-                    type: "main",
-                    teachers: "张伟, 李娜, 王强, 赵敏, 陈杰, 刘洋, 黄磊, 周婷, 吴刚, 郑霞"
-                },
-                {
-                    name: "数学",
-                    count: 5,
-                    type: "main",
-                    teachers: "数A, 数B, 数C, 数D, 数E, 数F, 数G, 数H, 数I, 数J"
-                },
-                {
-                    name: "英语",
-                    count: 5,
-                    type: "main",
-                    teachers: "Miss Li, Mr. Wang, Mrs. Chen, Mr. Zhang, Miss Liu, Mr. Wu, Miss Zhao, Mr. Sun, Miss Wu, Mr. Zheng"
-                },
-                {
-                    name: "科学",
-                    count: 5,
-                    type: "main",
-                    teachers: "科A, 科B, 科C, 科D, 科E, 科F, 科G, 科H, 科I, 科J"
-                },
-                {
-                    name: "社会",
-                    count: 5,
-                    type: "main",
-                    teachers: "社A, 社B, 社C, 社D, 社E, 社F, 社G, 社H, 社I, 社J"
-                },
-                { name: "体育", count: 3, type: "minor", teachers: "体育A, 体育B, 体育C, 体育D" },
-                { name: "美术", count: 1, type: "minor", teachers: "美术A, 美术B" },
-                { name: "音乐", count: 1, type: "minor", teachers: "音乐A, 音乐B" },
-                { name: "信息", count: 1, type: "minor", teachers: "信息A, 信息B" },
-                { name: "心理", count: 1, type: "minor", teachers: "心理A" }
+                { name: "语文", count: 5, type: "main", teachers: "初一语文1, 初一语文2, 初一语文3, 初一语文4, 初一语文5, 初一语文6, 初一语文7, 初一语文8, 初一语文9, 初一语文10" },
+                { name: "数学", count: 5, type: "main", teachers: "初一数学1, 初一数学2, 初一数学3, 初一数学4, 初一数学5, 初一数学6, 初一数学7, 初一数学8, 初一数学9, 初一数学10" },
+                { name: "英语", count: 5, type: "main", teachers: "初一英语1, 初一英语2, 初一英语3, 初一英语4, 初一英语5, 初一英语6, 初一英语7, 初一英语8, 初一英语9, 初一英语10" },
+                { name: "科学", count: 5, type: "main", teachers: "初一科学1, 初一科学2, 初一科学3, 初一科学4, 初一科学5, 初一科学6, 初一科学7, 初一科学8, 初一科学9, 初一科学10" },
+                { name: "社会", count: 5, type: "main", teachers: "初一社会1, 初一社会2, 初一社会3, 初一社会4, 初一社会5, 初一社会6, 初一社会7, 初一社会8, 初一社会9, 初一社会10" },
+                { name: "体育", count: 3, type: "minor", teachers: "体育1, 体育2, 体育3, 体育4, 体育5, 体育6, 体育7, 体育8, 体育9, 体育10" },
+                { name: "美术", count: 1, type: "minor", teachers: "美术1, 美术2, 美术3, 美术4, 美术5, 美术6, 美术7, 美术8, 美术9, 美术10" },
+                { name: "音乐", count: 1, type: "minor", teachers: "音乐1, 音乐2, 音乐3, 音乐4, 音乐5, 音乐6, 音乐7, 音乐8, 音乐9, 音乐10" },
+                { name: "信息", count: 1, type: "minor", teachers: "信息1, 信息2, 信息3, 信息4, 信息5, 信息6, 信息7, 信息8, 信息9, 信息10" },
+                { name: "心理", count: 1, type: "minor", teachers: "心理1, 心理2, 心理3, 心理4, 心理5, 心理6, 心理7, 心理8, 心理9, 心理10" },
+                { name: "课外活动", count: 2, type: "minor", teachers: "课外活动1, 课外活动2, 课外活动3, 课外活动4, 课外活动5, 课外活动6, 课外活动7, 课外活动8, 课外活动9, 课外活动10" },
+                { name: "拓展课", count: 1, type: "minor", teachers: "拓展课1, 拓展课2, 拓展课3, 拓展课4, 拓展课5, 拓展课6, 拓展课7, 拓展课8, 拓展课9, 拓展课10" },
+                { name: "政教活动", count: 1, type: "minor", teachers: "政教活动1, 政教活动2, 政教活动3, 政教活动4, 政教活动5, 政教活动6, 政教活动7, 政教活动8, 政教活动9, 政教活动10" }
             ],
             optimization: {
                 golden_time: true,
                 avoid_consecutive_subjects: false
             },
             resources: [
-                { name: "科学实验室", capacity: 2, subjects: "科学" },
+                { name: "科学实验室", capacity: 3, subjects: "科学" },
                 { name: "音乐教室", capacity: 1, subjects: "音乐" },
                 { name: "美术教室", capacity: 1, subjects: "美术" },
                 { name: "计算机房", capacity: 2, subjects: "信息" },
@@ -736,11 +936,55 @@
             ]
         };
 
-        //多年级配置数据结构
+        // 多年级配置数据结构 - 预设不同年级的主课老师
+        const commonMinorCourses = [
+            { name: "体育", count: 3, type: "minor", teachers: "体育1, 体育2, 体育3, 体育4, 体育5, 体育6, 体育7, 体育8, 体育9, 体育10" },
+            { name: "美术", count: 1, type: "minor", teachers: "美术1, 美术2, 美术3, 美术4, 美术5, 美术6, 美术7, 美术8, 美术9, 美术10" },
+            { name: "音乐", count: 1, type: "minor", teachers: "音乐1, 音乐2, 音乐3, 音乐4, 音乐5, 音乐6, 音乐7, 音乐8, 音乐9, 音乐10" },
+            { name: "信息", count: 1, type: "minor", teachers: "信息1, 信息2, 信息3, 信息4, 信息5, 信息6, 信息7, 信息8, 信息9, 信息10" },
+            { name: "心理", count: 1, type: "minor", teachers: "心理1, 心理2, 心理3, 心理4, 心理5, 心理6, 心理7, 心理8, 心理9, 心理10" },
+            { name: "课外活动", count: 2, type: "minor", teachers: "课外活动1, 课外活动2, 课外活动3, 课外活动4, 课外活动5, 课外活动6, 课外活动7, 课外活动8, 课外活动9, 课外活动10" },
+            { name: "拓展课", count: 1, type: "minor", teachers: "拓展课1, 拓展课2, 拓展课3, 拓展课4, 拓展课5, 拓展课6, 拓展课7, 拓展课8, 拓展课9, 拓展课10" },
+            { name: "政教活动", count: 1, type: "minor", teachers: "政教活动1, 政教活动2, 政教活动3, 政教活动4, 政教活动5, 政教活动6, 政教活动7, 政教活动8, 政教活动9, 政教活动10" }
+        ];
+
         let gradesData = {
-            "初一": { count: 6, start: 1, courses: JSON.parse(JSON.stringify(config.courses)) },
-            "初二": { count: 6, start: 7, courses: JSON.parse(JSON.stringify(config.courses)) },
-            "初三": { count: 6, start: 13, courses: JSON.parse(JSON.stringify(config.courses)) }
+            "初一": {
+                count: 6,
+                start: 1,
+                courses: [
+                    { name: "语文", count: 5, type: "main", teachers: "初一语文1, 初一语文2, 初一语文3, 初一语文4, 初一语文5, 初一语文6, 初一语文7, 初一语文8, 初一语文9, 初一语文10" },
+                    { name: "数学", count: 5, type: "main", teachers: "初一数学1, 初一数学2, 初一数学3, 初一数学4, 初一数学5, 初一数学6, 初一数学7, 初一数学8, 初一数学9, 初一数学10" },
+                    { name: "英语", count: 5, type: "main", teachers: "初一英语1, 初一英语2, 初一英语3, 初一英语4, 初一英语5, 初一英语6, 初一英语7, 初一英语8, 初一英语9, 初一英语10" },
+                    { name: "科学", count: 5, type: "main", teachers: "初一科学1, 初一科学2, 初一科学3, 初一科学4, 初一科学5, 初一科学6, 初一科学7, 初一科学8, 初一科学9, 初一科学10" },
+                    { name: "社会", count: 5, type: "main", teachers: "初一社会1, 初一社会2, 初一社会3, 初一社会4, 初一社会5, 初一社会6, 初一社会7, 初一社会8, 初一社会9, 初一社会10" },
+                    ...commonMinorCourses
+                ]
+            },
+            "初二": {
+                count: 6,
+                start: 7,
+                courses: [
+                    { name: "语文", count: 5, type: "main", teachers: "初二语文1, 初二语文2, 初二语文3, 初二语文4, 初二语文5, 初二语文6, 初二语文7, 初二语文8, 初二语文9, 初二语文10" },
+                    { name: "数学", count: 5, type: "main", teachers: "初二数学1, 初二数学2, 初二数学3, 初二数学4, 初二数学5, 初二数学6, 初二数学7, 初二数学8, 初二数学9, 初二数学10" },
+                    { name: "英语", count: 5, type: "main", teachers: "初二英语1, 初二英语2, 初二英语3, 初二英语4, 初二英语5, 初二英语6, 初二英语7, 初二英语8, 初二英语9, 初二英语10" },
+                    { name: "科学", count: 5, type: "main", teachers: "初二科学1, 初二科学2, 初二科学3, 初二科学4, 初二科学5, 初二科学6, 初二科学7, 初二科学8, 初二科学9, 初二科学10" },
+                    { name: "社会", count: 5, type: "main", teachers: "初二社会1, 初二社会2, 初二社会3, 初二社会4, 初二社会5, 初二社会6, 初二社会7, 初二社会8, 初二社会9, 初二社会10" },
+                    ...commonMinorCourses
+                ]
+            },
+            "初三": {
+                count: 6,
+                start: 13,
+                courses: [
+                    { name: "语文", count: 5, type: "main", teachers: "初三语文1, 初三语文2, 初三语文3, 初三语文4, 初三语文5, 初三语文6, 初三语文7, 初三语文8, 初三语文9, 初三语文10" },
+                    { name: "数学", count: 5, type: "main", teachers: "初三数学1, 初三数学2, 初三数学3, 初三数学4, 初三数学5, 初三数学6, 初三数学7, 初三数学8, 初三数学9, 初三数学10" },
+                    { name: "英语", count: 5, type: "main", teachers: "初三英语1, 初三英语2, 初三英语3, 初三英语4, 初三英语5, 初三英语6, 初三英语7, 初三英语8, 初三英语9, 初三英语10" },
+                    { name: "科学", count: 5, type: "main", teachers: "初三科学1, 初三科学2, 初三科学3, 初三科学4, 初三科学5, 初三科学6, 初三科学7, 初三科学8, 初三科学9, 初三科学10" },
+                    { name: "社会", count: 5, type: "main", teachers: "初三社会1, 初三社会2, 初三社会3, 初三社会4, 初三社会5, 初三社会6, 初三社会7, 初三社会8, 初三社会9, 初三社会10" },
+                    ...commonMinorCourses
+                ]
+            }
         };
         let currentActiveGrade = "初一";
 
@@ -808,6 +1052,7 @@
                 const n = r.querySelector('.course-name').value;
                 const c = parseInt(r.querySelector('.course-count').value);
                 const t = r.querySelector('.course-type').value;
+                const tags = r.querySelector('.course-tags').value;
                 const teachers = r.querySelector('.course-teachers').value;
                 const am = r.querySelector('.course-am').value;
                 const pm = r.querySelector('.course-pm').value;
@@ -817,6 +1062,7 @@
                         name: n,
                         count: c,
                         type: t,
+                        tags: tags,
                         teachers: teachers,
                         am_count: am !== "" ? parseInt(am) : null,
                         pm_count: pm !== "" ? parseInt(pm) : null
@@ -1116,7 +1362,16 @@
             </div>`).join('') : '<div class="text-xs text-slate-400 text-center py-2">暂无存档</div>';
         }
         async function loadSchedule(n) { const res = await fetch(`/api/load/${encodeURIComponent(n)}`); const data = await res.json(); if (data.status === 'success') { currentScheduleId = data.schedule_id; globalSchedule = data.schedule; config = data.config || config; renderSettings(); updateUI(data); } }
-        async function saveCurrentSchedule() { const n = document.getElementById('save-name').value; await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, name: n, config }) }); document.getElementById('save-name').value = ''; loadSavedList(); }
+        async function saveCurrentSchedule() {
+            // [关键修改] 保存前强制同步 UI 数据
+            syncUItoConfig();
+            const n = document.getElementById('save-name').value;
+            if (!n) return alert("请输入方案名称");
+            await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ schedule_id: currentScheduleId, name: n, config }) });
+            document.getElementById('save-name').value = '';
+            loadSavedList();
+            alert("方案及当前配置已保存！");
+        }
 
         function openSettings() {
             // 初始化三个年级的 Tabs
@@ -1299,7 +1554,7 @@
         }
 
         // [新增] 1. 添加教师限制行的函数
-        function addTeacherLimitRow(name = "", min = "", max = "") {
+        function addTeacherLimitRow(name = "", min = "", max = "", tags = "") {
             const deleteBtn = `
                 <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
                         onclick="this.closest('tr').remove()">
@@ -1311,6 +1566,7 @@
                 <td class="pr-0"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg limit-name" value="${name}" placeholder="姓名"></td>
                 <td class="pr-0"><input type="number" class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg limit-min text-center" value="${min}" placeholder="不限"></td>
                 <td class="pr-0"><input type="number" class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg limit-max text-center" value="${max}" placeholder="不限"></td>
+                <td class="pr-0"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg limit-tags" value="${tags}" placeholder="标签..."></td>
                 <td class="text-center">${deleteBtn}</td>
             </tr>`;
             document.getElementById('teacher-limits-body').insertAdjacentHTML('beforeend', html);
@@ -1333,7 +1589,7 @@
             </tr>`;
             document.getElementById('resource-settings-body').insertAdjacentHTML('beforeend', html);
         }
-        function addCourseRow(n = "", c = 2, t = "main", ts = "", am = "", pm = "") {
+        function addCourseRow(n = "", c = 2, t = "main", ts = "", am = "", pm = "", tags = "") {
             // 统一的删除按钮样式
             const deleteBtn = `
                 <button class="w-8 h-8 rounded-lg bg-white border border-red-100 text-red-400 hover:bg-red-50 hover:border-red-200 hover:text-red-500 flex items-center justify-center transition-all shadow-sm mx-auto" 
@@ -1345,13 +1601,13 @@
             <tr class="group">
                 <td style="width: 80px;"><input class="clay-input text-sm border-0 !rounded-lg course-name" style="width:100%; padding: 8px 4px !important;" value="${n}" placeholder="科目"></td>
                 <td style="width: 50px;"><input type="number" class="clay-input text-sm border-0 !rounded-lg course-count text-center" style="width:100%; padding: 8px 0 !important;" value="${c}" onchange="updateTotalHours()" oninput="updateTotalHours()"></td>
-                <td style="width: 80px;">
+                <td style="width: 70px;">
                     <select class="clay-input w-full py-2 px-1 text-sm border-0 !rounded-lg course-type">
                         <option value="main" ${t === 'main' ? 'selected' : ''}>主课</option>
                         <option value="minor" ${t === 'minor' ? 'selected' : ''}>副课</option>
                     </select>
                 </td>
-                <td style="width: 120px;" class="text-center">
+                <td style="width: 100px;" class="text-center">
                     <div class="flex items-center gap-1 justify-center bg-[#eef2f6] p-1 rounded-lg !shadow-[inset_2px_2px_4px_#dce1e8,inset_-2px_-2px_4px_#ffffff] mx-1">
                         <input type="number" class="bg-transparent w-7 py-0.5 px-0 text-center text-xs font-bold text-blue-500 course-am" 
                                value="${am}" placeholder="AM" min="0">
@@ -1360,12 +1616,498 @@
                                value="${pm}" placeholder="PM" min="0">
                     </div>
                 </td>
+                <td style="width: 100px;"><input class="clay-input w-full py-2 px-2 text-sm border-0 !rounded-lg course-tags text-xs" value="${tags}" placeholder="标签..."></td>
                 <td style="width: auto;"><input class="clay-input w-full py-2 px-3 text-sm border-0 !rounded-lg course-teachers text-xs" value="${ts}" placeholder="老师姓名..."></td>
                 <td style="width: 50px;" class="text-center">${deleteBtn}</td>
             </tr>`;
 
             document.getElementById('course-settings-body').insertAdjacentHTML('beforeend', html);
             updateTotalHours(); // 添加行后立即重新计算
+        }
+
+        // [优化版] 规则参数动态更新（适配卡片式布局）
+        function updateRuleParams(select) {
+            const card = select.closest('.rule-card');
+            const container = card.querySelector('.rule-params-container');
+            const type = select.value;
+            let html = '';
+
+            // 统一样式
+            const inputClass = "clay-input w-full py-1.5 px-2 text-xs border-0 !rounded-md bg-white text-slate-600 font-mono";
+            const pickBtn = `<button class="clay-btn px-3 py-1.5 text-[10px] text-white bg-purple-400 hover:bg-purple-500 font-bold flex items-center gap-1 shadow-sm whitespace-nowrap" onclick="openRuleSlotPicker(this)"><i class="bi bi-grid-3x3-gap-fill"></i> 选时段</button>`;
+
+            if (type === 'FORBIDDEN_SLOTS' || type === 'FIXED_SLOTS') {
+                html = `
+                <div class="flex items-center gap-2">
+                    <div class="flex-1">
+                        <input class="${inputClass} rule-param-slots" placeholder="时段数据: [[0,1],[1,2]]" readonly>
+                    </div>
+                    ${pickBtn}
+                </div>`;
+            } else if (type === 'CONSECUTIVE') {
+                html = `
+                <div class="flex items-center justify-start gap-2">
+                    <span class="text-xs font-bold text-slate-500">连续上课不超过</span>
+                    <input type="number" class="${inputClass} !w-16 text-center rule-param-max" value="1">
+                    <span class="text-xs font-bold text-slate-500">节</span>
+                </div>`;
+            } else if (type === 'ZONE_COUNT') {
+                html = `
+                <div class="space-y-2">
+                    <div class="flex items-center gap-2">
+                         <div class="flex-1">
+                            <input class="${inputClass} rule-param-slots" placeholder="选定时段..." readonly>
+                         </div>
+                         ${pickBtn}
+                    </div>
+                    <div class="flex items-center gap-2 bg-white/50 p-1.5 rounded-md">
+                        <span class="text-[10px] font-bold text-slate-500">该区域须排</span>
+                        <input type="number" class="${inputClass} !w-12 text-center py-1 rule-param-count" value="4">
+                        <span class="text-[10px] font-bold text-slate-500">节课</span>
+                    </div>
+                </div>`;
+            } else if (type === 'GLOBAL_CAPACITY') {
+                html = `
+                <div class="flex items-center justify-start gap-2">
+                    <span class="text-xs font-bold text-slate-500">同时段最大并发数</span>
+                    <input type="number" class="${inputClass} !w-16 text-center rule-param-capacity" value="1">
+                    <span class="text-xs font-bold text-slate-500">个</span>
+                </div>`;
+            } else if (type === 'SPECIAL_DAYS') {
+                html = `
+                <div>
+                    <input class="${inputClass} rule-param-days" placeholder="星期几禁排 (0=周一), 例: [0, 2]">
+                    <div class="text-[9px] text-slate-400 mt-1 pl-1">输入 0-4 的数字，用逗号分隔</div>
+                </div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // [新增] 规则中心可视化时段选择逻辑
+        let currentEditingRuleSlots = [];
+        let targetRuleInput = null;
+
+        // [优化版] 适配卡片式结构
+        function openRuleSlotPicker(btn) {
+            const container = btn.closest('.rule-params-container');
+            targetRuleInput = container.querySelector('.rule-param-slots');
+            try {
+                currentEditingRuleSlots = JSON.parse(targetRuleInput.value || "[]");
+            } catch (e) {
+                currentEditingRuleSlots = [];
+            }
+            renderRuleSlotGrid();
+            new bootstrap.Modal(document.getElementById('ruleSlotModal')).show();
+        }
+
+        function renderRuleSlotGrid() {
+            const tbody = document.getElementById('rule-slot-tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+            for (let p = 0; p < 8; p++) {
+                const tr = document.createElement('tr');
+                tr.style.height = '48px';
+                tr.innerHTML = `<th class="text-slate-300 text-[10px] pr-2 align-middle font-black">${p + 1}</th>`;
+                for (let d = 0; d < 5; d++) {
+                    const td = document.createElement('td');
+                    td.className = "p-1";
+                    const isActive = Array.isArray(currentEditingRuleSlots) && currentEditingRuleSlots.some(s => s[0] === d && s[1] === p);
+
+                    // 修正：td 保持 table-cell，内部使用居中的 flex 容器
+                    td.className = "p-1";
+                    const bgColor = isActive ? '#f3e8ff' : '#ffffff';
+                    const dotColor = isActive ? '#a855f7' : '#e2e8f0';
+
+                    const dotSize = isActive ? '12px' : '6px';
+                    td.innerHTML = `<div style="width:40px;height:40px;background:${bgColor};cursor:pointer;display:flex;align-items:center;justify-center:center;border:1px solid #eee;border-radius:10px;margin:auto;"><div style="width:${dotSize};height:${dotSize};background:${dotColor};border-radius:50%"></div></div>`;
+
+                    const _d = d, _p = p;
+                    td.onclick = () => {
+                        if (!Array.isArray(currentEditingRuleSlots)) currentEditingRuleSlots = [];
+                        const idx = currentEditingRuleSlots.findIndex(s => s[0] === _d && s[1] === _p);
+                        if (idx >= 0) currentEditingRuleSlots.splice(idx, 1);
+                        else currentEditingRuleSlots.push([_d, _p]);
+                        renderRuleSlotGrid();
+                    };
+                    tr.appendChild(td);
+                }
+                tbody.appendChild(tr);
+            }
+        }
+
+        function confirmRuleSlots() {
+            if (targetRuleInput) {
+                // 排序以保持整洁
+                currentEditingRuleSlots.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
+                targetRuleInput.value = JSON.stringify(currentEditingRuleSlots);
+            }
+            bootstrap.Modal.getInstance(document.getElementById('ruleSlotModal')).hide();
+        }
+
+        // ============ AI 规则生成功能 (优化版) ============
+        async function callAiGeneration() {
+            const inputEl = document.getElementById('ai-input-text');
+            const text = inputEl.value.trim();
+            if (!text) return alert("请输入描述！");
+
+            // UI 状态切换
+            const btn = document.getElementById('btn-ai-gen');
+            const loading = document.getElementById('ai-loading');
+            const preview = document.getElementById('ai-result-preview');
+            const loadingText = loading.querySelector('p');
+
+            btn.disabled = true;
+            loading.classList.remove('hidden');
+            preview.classList.add('hidden');
+
+            // 加载动画文案轮播
+            const steps = ["正在理解您的需求...", "正在检索相关老师和科目...", "正在构建约束模型...", "即将完成..."];
+            let stepIndex = 0;
+            const intervalId = setInterval(() => {
+                stepIndex = (stepIndex + 1) % steps.length;
+                if (loadingText) loadingText.innerText = steps[stepIndex];
+            }, 800);
+
+            try {
+                // 1. 收集当前上下文 (科目、年级、老师)
+                const allSubjects = new Set();
+                const allTeachers = new Set();
+                Object.values(gradesData).forEach(g => {
+                    g.courses.forEach(c => {
+                        allSubjects.add(c.name);
+                        if (c.teachers) {
+                            c.teachers.split(/[,，\s]+/).forEach(t => {
+                                if (t.trim()) allTeachers.add(t.trim());
+                            });
+                        }
+                    });
+                });
+                const allGrades = Object.keys(gradesData).length > 0 ? Object.keys(gradesData) : ["初一", "初二", "初三"];
+
+                // 2. 发送请求
+                const res = await fetch('/api/ai_rule_gen', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: text,
+                        context: {
+                            subjects: Array.from(allSubjects),
+                            grades: allGrades,
+                            teachers: Array.from(allTeachers)  // 新增老师上下文
+                        }
+                    })
+                });
+
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    const rules = data.rules;  // 现在是数组
+
+                    // 3. 遍历添加每条规则
+                    let count = 0;
+                    rules.forEach(rule => {
+                        addRuleRow(
+                            rule.targets || {},
+                            rule.type,
+                            rule.params || {},
+                            rule.weight || 100
+                        );
+                        count++;
+                    });
+
+                    // 关闭 AI 模态框
+                    bootstrap.Modal.getInstance(document.getElementById('aiRuleModal')).hide();
+
+                    // 提示成功
+                    alert(`成功识别并生成了 ${count} 条规则！\n请检查列表并点击"保存并重排"生效。`);
+                    inputEl.value = "";
+                } else {
+                    alert("生成失败: " + data.message);
+                }
+
+            } catch (e) {
+                console.error(e);
+                alert("网络请求错误");
+            } finally {
+                clearInterval(intervalId);  // 清除动画定时器
+                btn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        }
+
+        // ============ 规则详情功能 ============
+        let currentRuleJson = {};  // 缓存当前查看的规则 JSON
+
+        function showRuleDetail(ruleCard) {
+            // 从规则卡片中提取数据
+            const type = ruleCard.querySelector('.rule-type').value;
+            const weight = ruleCard.querySelector('.rule-weight').value;
+            const targetsStr = ruleCard.querySelector('.rule-targets').value;
+
+            // 提取选中的年级
+            const selectedGrades = [];
+            ruleCard.querySelectorAll('.grade-checkbox:checked').forEach(cb => {
+                selectedGrades.push(cb.value);
+            });
+
+            // 解析 targets 字符串
+            const targets = parseTargetsStr(targetsStr);
+            if (selectedGrades.length > 0) {
+                targets.grades = selectedGrades;
+            }
+
+            // 提取参数（根据规则类型）
+            const params = extractRuleParams(ruleCard, type);
+
+            // 构造完整 JSON
+            currentRuleJson = {
+                type: type,
+                targets: targets,
+                params: params,
+                weight: parseInt(weight)
+            };
+
+            // 规则类型映射
+            const typeNames = {
+                'FORBIDDEN_SLOTS': '🚫 时段禁排',
+                'ZONE_COUNT': '🔢 区域课时限制',
+                'CONSECUTIVE': '⛓️ 连堂限制',
+                'GLOBAL_CAPACITY': '🏟️ 全校容量限制',
+                'SPECIAL_DAYS': '📅 整日禁排'
+            };
+
+            // 填充详情
+            document.getElementById('detail-type').textContent = typeNames[type] || type;
+            document.getElementById('detail-weight').textContent = weight + (parseInt(weight) >= 100 ? ' (硬约束)' : ' (软约束)');
+            document.getElementById('detail-grades').textContent = selectedGrades.length > 0 ? selectedGrades.join(', ') : '全校';
+            document.getElementById('detail-targets').textContent = targetsStr || '无额外筛选';
+            document.getElementById('detail-json').textContent = JSON.stringify(currentRuleJson, null, 2);
+
+            // 时段可视化
+            renderSlotsGrid(params.slots || []);
+
+            // 显示弹窗
+            new bootstrap.Modal(document.getElementById('ruleDetailModal')).show();
+        }
+
+        function parseTargetsStr(str) {
+            const targets = {};
+            if (!str) return targets;
+
+            str.split(';').forEach(part => {
+                const [key, val] = part.split(':').map(s => s.trim());
+                if (key && val) {
+                    if (key === '科目' || key === 'subjects') {
+                        targets.subjects = val.split(',').map(s => s.trim());
+                    } else if (key === '标签' || key === 'tags') {
+                        targets.tags = val.split(',').map(s => s.trim());
+                    } else if (key === '姓名' || key === 'names') {
+                        targets.names = val.split(',').map(s => s.trim());
+                    }
+                }
+            });
+            return targets;
+        }
+
+        function extractRuleParams(ruleCard, type) {
+            const paramsContainer = ruleCard.querySelector('.rule-params-container');
+            const params = {};
+
+            if (type === 'FORBIDDEN_SLOTS' || type === 'ZONE_COUNT' || type === 'SPECIAL_DAYS') {
+                // 提取 slots
+                const slotsInput = paramsContainer.querySelector('.rule-slots');
+                if (slotsInput) {
+                    try {
+                        params.slots = JSON.parse(slotsInput.value || '[]');
+                    } catch { params.slots = []; }
+                }
+
+                // ZONE_COUNT 额外参数
+                if (type === 'ZONE_COUNT') {
+                    const countInput = paramsContainer.querySelector('.rule-count');
+                    if (countInput) params.count = parseInt(countInput.value) || 0;
+                    params.relation = '==';
+                }
+            } else if (type === 'GLOBAL_CAPACITY') {
+                const capInput = paramsContainer.querySelector('.rule-capacity');
+                if (capInput) params.capacity = parseInt(capInput.value) || 8;
+            } else if (type === 'CONSECUTIVE') {
+                const maxInput = paramsContainer.querySelector('.rule-max');
+                if (maxInput) params.max = parseInt(maxInput.value) || 2;
+                params.mode = 'avoid';
+            }
+
+            return params;
+        }
+
+        function renderSlotsGrid(slots) {
+            const grid = document.getElementById('detail-slots-grid');
+            const section = document.getElementById('detail-slots-section');
+
+            if (!slots || slots.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+
+            const days = ['', '周一', '周二', '周三', '周四', '周五'];
+            const slotsSet = new Set(slots.map(s => `${s[0]}-${s[1]}`));
+
+            let html = days.map(d => `<div class="font-bold text-slate-400 text-center">${d}</div>`).join('');
+
+            for (let p = 0; p < 8; p++) {
+                html += `<div class="font-bold text-slate-400 text-center">${p + 1}节</div>`;
+                for (let d = 0; d < 5; d++) {
+                    const isSelected = slotsSet.has(`${d}-${p}`);
+                    html += `<div class="w-6 h-6 rounded ${isSelected ? 'bg-red-400' : 'bg-slate-100'} flex items-center justify-center mx-auto">
+                        ${isSelected ? '<i class="bi bi-x text-white text-xs"></i>' : ''}
+                    </div>`;
+                }
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function copyRuleJson() {
+            navigator.clipboard.writeText(JSON.stringify(currentRuleJson, null, 2)).then(() => {
+                alert('已复制到剪贴板！');
+            });
+        }
+
+        // ============ 规则模板导入功能 ============
+        async function loadRuleTemplate(type) {
+            const container = document.getElementById('rules-container');
+
+            if (type === 'empty') {
+                if (confirm("确定清空所有当前规则吗？")) {
+                    container.innerHTML = '';
+                    alert("规则已清空！");
+                }
+                return;
+            }
+
+            if (confirm("导入模板将覆盖当前所有规则，确定吗？")) {
+                try {
+                    // 从 static 目录加载 JSON 文件
+                    const res = await fetch(`/static/rules/${type}_rules.json`);
+                    if (!res.ok) throw new Error("文件加载失败");
+                    const rules = await res.json();
+
+                    // 清空旧规则
+                    container.innerHTML = '';
+
+                    // 遍历添加每条规则
+                    rules.forEach(r => {
+                        addRuleRow(r.targets, r.type, r.params, r.weight);
+                    });
+
+                    alert(`成功导入 ${rules.length} 条规则！\n请记得点击"保存并重排"生效。`);
+                } catch (e) {
+                    console.error(e);
+                    alert("加载模板失败，请检查文件路径: " + e.message);
+                }
+            }
+        }
+
+        // [优化版] 卡片式规则渲染 - 支持年级勾选
+        function addRuleRow(targets = {}, type = "FORBIDDEN_SLOTS", params = {}, weight = 100) {
+            let targetsStr = "";
+            if (targets.tags) targetsStr += `标签:${Array.isArray(targets.tags) ? targets.tags.join(',') : targets.tags}; `;
+            if (targets.subjects) targetsStr += `科目:${Array.isArray(targets.subjects) ? targets.subjects.join(',') : targets.subjects}; `;
+            if (targets.names) targetsStr += `姓名:${Array.isArray(targets.names) ? targets.names.join(',') : targets.names}; `;
+            // 年级不再通过文本框回显，而是通过下方 Checkbox 回显
+
+            // 获取当前系统定义的所有年级 (来自 gradesData 全局变量)
+            const availableGrades = Object.keys(gradesData).length > 0 ? Object.keys(gradesData) : ["初一", "初二", "初三"];
+
+            // 生成年级勾选 HTML
+            let gradesHtml = `<div class="flex flex-wrap gap-2 mt-1 mb-2">`;
+            availableGrades.forEach(g => {
+                const isChecked = targets.grades && targets.grades.includes(g) ? 'checked' : '';
+                gradesHtml += `
+                <label class="cursor-pointer inline-flex items-center gap-1 bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm text-[10px] text-slate-500 font-bold hover:text-blue-500 transition-colors">
+                    <input type="checkbox" class="rule-grade-checkbox form-checkbox h-3 w-3 text-blue-500 rounded border-slate-300 focus:ring-0" value="${g}" ${isChecked}>
+                    ${g}
+                </label>`;
+            });
+            gradesHtml += `</div>`;
+
+            // 生成唯一ID
+            const ruleId = 'rule-' + Date.now() + Math.random().toString(36).substr(2, 9);
+
+            const html = `
+            <div class="clay-card p-3 bg-white relative group rule-card" id="${ruleId}">
+                <div class="flex justify-between items-start mb-2 gap-2">
+                    <div class="flex-1">
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">规则类型</label>
+                        <select class="clay-input w-full py-1.5 px-2 text-xs font-bold text-slate-600 border-0 !rounded-lg rule-type bg-slate-50" onchange="updateRuleParams(this)">
+                            <option value="FORBIDDEN_SLOTS" ${type === 'FORBIDDEN_SLOTS' ? 'selected' : ''}>🚫 时段禁排</option>
+                            <option value="FIXED_SLOTS" ${type === 'FIXED_SLOTS' ? 'selected' : ''}>📌 固定时段</option>
+                            <option value="ZONE_COUNT" ${type === 'ZONE_COUNT' ? 'selected' : ''}>🔢 区域课时</option>
+                            <option value="CONSECUTIVE" ${type === 'CONSECUTIVE' ? 'selected' : ''}>⛓️ 连堂限制</option>
+                            <option value="GLOBAL_CAPACITY" ${type === 'GLOBAL_CAPACITY' ? 'selected' : ''}>🏟️ 全校容量</option>
+                            <option value="SPECIAL_DAYS" ${type === 'SPECIAL_DAYS' ? 'selected' : ''}>📅 整日禁排</option>
+                        </select>
+                    </div>
+                    <div class="w-20">
+                        <label class="text-[10px] text-slate-400 font-bold mb-1 block text-center">权重</label>
+                        <input type="number" class="clay-input w-full py-1.5 px-1 text-xs text-center font-bold text-blue-500 border-0 !rounded-lg rule-weight bg-slate-50" value="${weight}" title="100为硬约束">
+                    </div>
+                    <button class="w-7 h-7 mt-5 rounded-lg text-slate-300 hover:bg-blue-50 hover:text-blue-500 flex items-center justify-center transition-all" 
+                            onclick="showRuleDetail(this.closest('.rule-card'))" title="查看详情">
+                        <i class="bi bi-info-circle-fill"></i>
+                    </button>
+                    <button class="w-7 h-7 mt-5 rounded-lg text-slate-300 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition-all" 
+                            onclick="this.closest('.rule-card').remove()">
+                        <i class="bi bi-trash3-fill"></i>
+                    </button>
+                </div>
+
+                <div class="mb-2 border-b border-dashed border-slate-100 pb-2">
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block flex items-center gap-1">
+                        <i class="bi bi-mortarboard-fill text-blue-300"></i> 适用年级 <span class="text-slate-200 font-normal">(不选默认全校)</span>
+                    </label>
+                    ${gradesHtml}
+                </div>
+
+                <div class="mb-2">
+                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">其他筛选 <span class="text-slate-300 font-normal">(标签:xx; 科目:xx; 姓名:xx)</span></label>
+                    <input class="clay-input w-full py-2 px-3 text-xs border-0 !rounded-lg rule-targets bg-slate-50 text-slate-600" 
+                           value="${targetsStr}" 
+                           placeholder="例如：标签:行政; 科目:语文">
+                </div>
+
+                <div class="bg-indigo-50/50 rounded-lg p-2 rule-params-container">
+                    </div>
+            </div>`;
+
+            document.getElementById('rules-container').insertAdjacentHTML('beforeend', html);
+
+            // 触发参数渲染
+            const selectEl = document.getElementById(ruleId).querySelector('.rule-type');
+            updateRuleParams(selectEl);
+
+            // 回填复杂参数
+            if (Object.keys(params).length > 0) {
+                const card = document.getElementById(ruleId);
+                if (type === 'FORBIDDEN_SLOTS' || type === 'ZONE_COUNT' || type === 'FIXED_SLOTS') {
+                    const el = card.querySelector('.rule-param-slots');
+                    if (el) el.value = JSON.stringify(params.slots || []);
+                    if (type === 'ZONE_COUNT') {
+                        const countEl = card.querySelector('.rule-param-count');
+                        if (countEl) countEl.value = params.count || 0;
+                    }
+                } else if (type === 'CONSECUTIVE') {
+                    const el = card.querySelector('.rule-param-max');
+                    if (el) el.value = params.max || 1;
+                } else if (type === 'GLOBAL_CAPACITY') {
+                    const el = card.querySelector('.rule-param-capacity');
+                    if (el) el.value = params.capacity || 1;
+                } else if (type === 'SPECIAL_DAYS') {
+                    const el = card.querySelector('.rule-param-days');
+                    if (el) el.value = JSON.stringify(params.days || []);
+                }
+            }
         }
 
         function updateTotalHours() {
@@ -1405,6 +2147,7 @@
                             name: cName,
                             count: info.count,
                             type: info.type,
+                            tags: info.tags || '',
                             teachers: teachers,
                             am_count: info.am_count,
                             pm_count: info.pm_count
@@ -1432,7 +2175,7 @@
             document.getElementById('teacher-limits-body').innerHTML = '';
             const limits = config.teacher_limits || {};
             Object.keys(limits).forEach(name => {
-                addTeacherLimitRow(name, limits[name].min, limits[name].max);
+                addTeacherLimitRow(name, limits[name].min, limits[name].max, limits[name].tags || '');
             });
 
             // 初始渲染当前年级
@@ -1445,36 +2188,45 @@
                 document.getElementById('grade-start-input').value = data.start;
                 const tbody = document.getElementById('course-settings-body');
                 tbody.innerHTML = '';
-                data.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers));
+                data.courses.forEach(c => addCourseRow(c.name, c.count, c.type, c.teachers, c.am_count, c.pm_count, c.tags));
                 updateTotalHours();
             }
+
+            // 更新：规则中心
+            document.getElementById('rules-center-body').innerHTML = '';
+            (config.rules || []).forEach(r => {
+                addRuleRow(r.targets, r.type, r.params, r.weight);
+            });
         }
-        function saveSettingsAndInit() {
-            // 1. 先保存当前正在 UI 上编辑的年级数据
+        // ========================================================
+        // [核心函数] syncUItoConfig - 全域配置同步
+        // 负责将界面上所有输入框（无论在哪个弹窗）同步到全局 config 对象
+        // ========================================================
+        function syncUItoConfig() {
+            // 1. 同步当前正在编辑的年级数据
             saveCurrentGradeToMemory();
 
-            // 2. 构造后端需要的分层年级配置
+            // 2. 构造年级配置
             const finalGradesConfig = {};
-            const globalTeacherNames = {}; // 用于收集所有年级的老师
+            const globalTeacherNames = {};
+            let totalClassesCount = 0;
 
             Object.keys(gradesData).forEach(gradeName => {
                 const gData = gradesData[gradeName];
+                totalClassesCount += (parseInt(gData.count) || 0);
                 const coursesDict = {};
 
                 gData.courses.forEach(c => {
                     coursesDict[c.name] = {
                         count: c.count,
                         type: c.type,
+                        tags: c.tags,
                         am_count: c.am_count,
                         pm_count: c.pm_count
                     };
-
-                    // 收集老师名单 (合并各年级的同名科目老师)
                     if (c.teachers) {
                         const tList = c.teachers.split(/[,，\s]+/).filter(x => x);
-                        if (!globalTeacherNames[c.name]) {
-                            globalTeacherNames[c.name] = new Set();
-                        }
+                        if (!globalTeacherNames[c.name]) globalTeacherNames[c.name] = new Set();
                         tList.forEach(t => globalTeacherNames[c.name].add(t));
                     }
                 });
@@ -1486,11 +2238,22 @@
                 };
             });
 
-            // 转换 Set 为 Array
+            // 转换老师名单 Set -> Array (全校汇总版，保留兼容性)
             const finalTeacherNames = {};
             for (let k in globalTeacherNames) {
                 finalTeacherNames[k] = Array.from(globalTeacherNames[k]);
             }
+
+            // 新增：按年级隔离的老师名单
+            const gradeTeacherNames = {};
+            Object.keys(gradesData).forEach(gradeName => {
+                gradeTeacherNames[gradeName] = {};
+                gradesData[gradeName].courses.forEach(c => {
+                    if (c.teachers) {
+                        gradeTeacherNames[gradeName][c.name] = c.teachers.split(/[,，\s]+/).filter(x => x);
+                    }
+                });
+            });
 
             // 3. 收集资源设置
             let nr = [];
@@ -1498,59 +2261,145 @@
                 const n = r.querySelector('.course-name').value;
                 const cap = parseInt(r.querySelector('.course-capacity').value);
                 const subj = r.querySelector('.course-subjects').value;
-                if (n) {
-                    nr.push({ name: n, capacity: cap || 1, subjects: subj });
-                }
+                if (n) nr.push({ name: n, capacity: cap || 1, subjects: subj });
             });
 
-            // 4. 收集教师限制
+            // 4. 收集教师限制 (已移至高级约束 Tab)
             let limitConfig = {};
             document.querySelectorAll('#teacher-limits-body tr').forEach(r => {
                 const name = r.querySelector('.limit-name').value.trim();
                 const min = r.querySelector('.limit-min').value;
                 const max = r.querySelector('.limit-max').value;
+                const tags = r.querySelector('.limit-tags').value;
                 if (name) {
                     limitConfig[name] = {};
                     if (min !== "") limitConfig[name].min = parseInt(min);
                     if (max !== "") limitConfig[name].max = parseInt(max);
+                    if (tags !== "") limitConfig[name].tags = tags;
                 }
             });
 
-            // 5. 更新全局 config
+            // 5. 收集规则中心 (卡片式 UI - 支持年级勾选)
+            let rules = [];
+            document.querySelectorAll('.rule-card').forEach(card => {
+                // ... (之前已有的提取逻辑)
+                const targetsStr = card.querySelector('.rule-targets').value;
+                const type = card.querySelector('.rule-type').value;
+                const weight = parseInt(card.querySelector('.rule-weight').value) || 100;
+                let targets = {};
+                let selectedGrades = [];
+                card.querySelectorAll('.rule-grade-checkbox:checked').forEach(chk => {
+                    selectedGrades.push(chk.value);
+                });
+                if (selectedGrades.length > 0) targets.grades = selectedGrades;
+
+                if (targetsStr) {
+                    targetsStr.split(/[;；]/).forEach(p => {
+                        const kv = p.split(/[:：]/);
+                        if (kv.length === 2) {
+                            const key = kv[0].trim();
+                            const cleanVals = kv[1].trim().split(/[,，]/).map(s => s.trim()).filter(s => s);
+                            if (key.includes("标签")) targets.tags = cleanVals;
+                            if (key.includes("科目")) targets.subjects = cleanVals;
+                            if (key.includes("姓名")) targets.names = cleanVals;
+                        }
+                    });
+                }
+
+                let params = {};
+                try {
+                    const getVal = (cls) => { const el = card.querySelector(cls); return el ? el.value : null; };
+                    const slotsInput = getVal('.rule-param-slots');
+                    const daysInput = getVal('.rule-param-days');
+
+                    if (type === 'FORBIDDEN_SLOTS' || type === 'ZONE_COUNT' || type === 'FIXED_SLOTS') {
+                        params.slots = JSON.parse(slotsInput || '[]');
+                        if (type === 'ZONE_COUNT') params.count = parseInt(getVal('.rule-param-count')) || 0;
+                    } else if (type === 'CONSECUTIVE') {
+                        params.max = parseInt(getVal('.rule-param-max')) || 1;
+                        params.mode = 'avoid';
+                    } else if (type === 'GLOBAL_CAPACITY') {
+                        params.capacity = parseInt(getVal('.rule-param-capacity')) || 1;
+                    } else if (type === 'SPECIAL_DAYS') {
+                        params.days = JSON.parse(daysInput || '[]');
+                    }
+                } catch (e) { console.error("Rule parsing error", e); }
+                rules.push({ targets, type, params, weight });
+            });
+
+            // [新增/容错] 如果规则中心为空（例如页面刷新后），且存在特殊科目，则注入默认核心规则
+            if (rules.length === 0) {
+                console.log("No rules detected, injecting default core rules...");
+                rules.push({
+                    name: "自动注入-政教活动",
+                    type: "FIXED_SLOTS",
+                    targets: { subjects: ["政教活动"] },
+                    params: { slots: [[4, 7]] },
+                    weight: 100
+                });
+                rules.push({
+                    name: "自动注入-拓展课",
+                    type: "FIXED_SLOTS",
+                    targets: { subjects: ["拓展课"] },
+                    params: { slots: [[4, 6]] },
+                    weight: 100
+                });
+            }
+
+            // 6. 收集开关
+            const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
+
+            // === 更新全局 config ===
+            config.grades = finalGradesConfig;
+            config.teacher_names = finalTeacherNames;
+            config.grade_teacher_names = gradeTeacherNames;
+            config.num_classes = totalClassesCount;
             config.resources = nr;
             config.teacher_limits = limitConfig;
-
-            // 构造最终 Payload
-            const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
-            const payload = {
-                grades: finalGradesConfig,      // <--- 核心变化：使用 grades 字段
-                teacher_names: finalTeacherNames,
-                resources: nr,
-                teacher_limits: limitConfig,
-                optimization: {
-                    golden_time: true,
-                    avoid_consecutive_subjects: avoidConsecutive
-                },
-                constraints: globalConstraints
+            config.rules = rules;
+            config.use_legacy_rules = false;
+            config.optimization = {
+                golden_time: true,
+                avoid_consecutive_subjects: avoidConsecutive
             };
+            config.constraints = globalConstraints;
 
-            // UI 状态反馈
+            console.log("Config Synced!", config);
+            return config;
+        }
+
+        // ========================================================
+        // saveSettingsAndInit - 重构后更清爽
+        // ========================================================
+        function saveSettingsAndInit() {
+            // 1. 同步数据
+            try {
+                syncUItoConfig();
+            } catch (e) {
+                alert("配置数据读取失败，请检查规则格式");
+                return;
+            }
+
+            // 2. UI 状态反馈
             const btn = document.getElementById('btn-init');
             const spinner = document.getElementById('init-spinner');
             if (btn) btn.disabled = true;
             if (spinner) spinner.classList.remove('d-none');
 
-            // 发起请求
+            // 3. 发送请求 (直接使用全局 config)
             fetch('/api/init', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(config)
             })
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
                         currentScheduleId = data.schedule_id;
                         updateUI(data);
+                        // 成功后关闭可能打开的 Modal
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('settingsModal')).hide();
+                        bootstrap.Modal.getOrCreateInstance(document.getElementById('constraintModal')).hide();
                     } else {
                         if (data.suggestions && data.suggestions.length > 0) {
                             const ul = document.getElementById('failure-suggestions');

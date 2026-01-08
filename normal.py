@@ -5,8 +5,187 @@ import collections
 import statistics
 import logging
 import math
+import json
+import os
 
 logger = logging.getLogger(__name__)
+
+# 绍兴一中默认规则配置 (用于迁移硬编码)
+SHAOXING_PRESET_RULES = [
+    {
+        "name": "语数英上午4下午1",
+        "type": "ZONE_COUNT",
+        "targets": { "subjects": ["语文", "数学", "英语"] },
+        "params": {
+            "slots": [[d,p] for d in range(5) for p in range(4)],
+            "count": 4, "relation": "=="
+        },
+        "weight": 100
+    },
+    {
+        "name": "社会上午2下午3",
+        "type": "ZONE_COUNT",
+        "targets": { "subjects": ["社会"] },
+        "params": {
+            "slots": [[d,p] for d in range(5) for p in range(4)],
+            "count": 2, "relation": "=="
+        },
+        "weight": 100
+    },
+    {
+        "name": "初一初二科学下午2",
+        "type": "ZONE_COUNT",
+        "targets": { "subjects": ["科学"], "grades": ["初一", "初二"] },
+        "params": {
+            "slots": [[d,p] for d in range(5) for p in range(4, 8)],
+            "count": 2, "relation": "=="
+        },
+        "weight": 100
+    },
+    {
+        "name": "初三科学下午1",
+        "type": "ZONE_COUNT",
+        "targets": { "subjects": ["科学"], "grades": ["初三"] },
+        "params": {
+            "slots": [[d,p] for d in range(5) for p in range(4, 8)],
+            "count": 1, "relation": "=="
+        },
+        "weight": 100
+    },
+    {
+        "name": "老师四五节不连堂",
+        "type": "DAILY_LIMIT",
+        "targets": { "tags": ["所有老师"] },
+        "params": { "slots_per_day": [3, 4], "limit": 1 },
+        "weight": 100
+    },
+    {
+        "name": "语数英科只排1-6节",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["语文", "数学", "英语", "科学"] },
+        "params": { "slots": [[d,p] for d in range(5) for p in range(6, 8)] },
+        "weight": 100
+    },
+    {
+        "name": "初三社会只排1-6节",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["社会"], "grades": ["初三"] },
+        "params": { "slots": [[d,p] for d in range(5) for p in range(6, 8)] },
+        "weight": 100
+    },
+    {
+        "name": "体育不排第一节",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["体育"] },
+        "params": { "slots": [[d, 0] for d in range(5)] },
+        "weight": 100
+    },
+    {
+        "name": "语社英周三教研禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["语文", "社会", "英语"] },
+        "params": { "slots": [[2, p] for p in range(4, 8)] },
+        "weight": 100
+    },
+    {
+        "name": "数科周四教研禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["数学", "科学"] },
+        "params": { "slots": [[3, p] for p in range(4, 8)] },
+        "weight": 100
+    },
+    {
+        "name": "体育场地容量限制",
+        "type": "GLOBAL_CAPACITY",
+        "targets": { "subjects": ["体育"] },
+        "params": { "capacity": 15 },  # 60班规模，原来8
+        "weight": 100
+    },
+    {
+        "name": "全校周五下午第四节禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "grades": ["初一", "初二", "初三"] },
+        "params": { "slots": [[4, 7]] },
+        "weight": 100
+    },
+    {
+        "name": "初一特定禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "grades": ["初一"] },
+        "params": { "slots": [[3, 7], [4, 6]] },
+        "weight": 100
+    },
+    {
+        "name": "初二特定禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "grades": ["初二"] },
+        "params": { "slots": [[0, 7], [2, 7], [1, 6]] },
+        "weight": 100
+    },
+    {
+        "name": "初三特定禁排",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "grades": ["初三"] },
+        "params": { "slots": [[1, 7], [3, 6], [4, 6], [0, 6]] },
+        "weight": 100
+    },
+    {
+        "name": "初一体育避开周四",
+        "type": "SPECIAL_DAYS",
+        "targets": { "subjects": ["体育"], "grades": ["初一"] },
+        "params": { "days": [3] },
+        "weight": 100
+    },
+    {
+        "name": "初二体育避开一三",
+        "type": "SPECIAL_DAYS",
+        "targets": { "subjects": ["体育"], "grades": ["初二"] },
+        "params": { "days": [0, 2] },
+        "weight": 100
+    },
+    {
+        "name": "初三体育避开周二",
+        "type": "SPECIAL_DAYS",
+        "targets": { "subjects": ["体育"], "grades": ["初三"] },
+        "params": { "days": [1] },
+        "weight": 100
+    },
+    {
+        "name": "行政领导周五下午不排课",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "names": ["陈安", "谢飞", "叶青峰", "王伟锋", "许敏", "曹峻燕", "寿海峰", "余慧菁", "刘建灿", "王清", "傅佳情", "陈彦羽", "沈黎松", "鲍伟佳"] },
+        "params": { "slots": [[4, 4], [4, 5], [4, 6], [4, 7]] },
+        "weight": 100
+    },
+    {
+        "name": "黄金时间 (主科上午优先)",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["语文", "数学", "英语", "科学"] },
+        "params": { "slots": [[d, p] for d in range(5) for p in range(4, 8)] },
+        "weight": 15
+    },
+    {
+        "name": "副课尽量排下午",
+        "type": "FORBIDDEN_SLOTS",
+        "targets": { "subjects": ["音乐", "美术", "信息", "心理", "课外活动", "拓展课", "政教活动"] },
+        "params": { "slots": [[d, p] for d in range(5) for p in range(4)] },
+        "weight": 30
+    },
+    {
+        "name": "老师连堂疲劳限制",
+        "type": "CONSECUTIVE",
+        "targets": { "tags": ["所有老师"] },
+        "params": { "mode": "avoid", "max": 2 },
+        "weight": 100
+    },
+    {
+        "name": "体育老师连堂奖励",
+        "type": "CONSECUTIVE",
+        "targets": { "subjects": ["体育"] },
+        "params": { "mode": "avoid", "max": 0 },
+        "weight": -20
+    }
+]
 
 # 默认配置
 DEFAULT_CONFIG = {
@@ -24,107 +203,99 @@ DEFAULT_CONFIG = {
     "teacher_names": {} # 新增：存储 {科目: [名字1, 名字2]}
 }
 
-def generate_teachers_and_map(num_classes, courses, custom_names=None, class_metadata=None):
+def generate_teachers_and_map(num_classes, courses, custom_names=None, class_metadata=None, teacher_limits=None, grade_teacher_names=None, high_concurrency_subjects=None):
     """
     根据配置生成老师数据和班级映射
-    courses: 字典 { '语文': {'count': 5, 'type': 'main'}, ... } 或旧格式 { '语文': 5, ... }
-    custom_names: 字典 { '语文': ['张伟', '李娜'], '数学': ['王老师'] }
-    class_metadata: 字典 { class_id: { "requirements": {...} } } 用于处理班级差异化需求
+    grade_teacher_names: 字典 { '初一': { '语文': [...] } } 用于年级隔离
+    high_concurrency_subjects: 集合，标记需要一对一分配的高并发科目
     """
     teachers_db = []
     class_teacher_map = {}
+
+    def parse_tags(tag_str):
+        if not tag_str: return []
+        return [t.strip() for t in str(tag_str).replace('，', ',').split(',') if t.strip()]
     
     if custom_names is None: custom_names = {}
+    if grade_teacher_names is None: grade_teacher_names = {}
+    if high_concurrency_subjects is None: high_concurrency_subjects = set()
 
-    # 为了不破坏传入的原始列表，做个深拷贝
     # 1. 建立全局老师注册表 (Name -> ID)
-    # 只要名字一样，ID就一样，这样求解器就知道是同一个人
+    # 对于主课，ID 必须包含年级信息以隔离。副课则全局共享。
     name_to_id_map = {}
     
-    def get_or_create_teacher_id(name, subject, type_):
-        if name not in name_to_id_map:
-            # 如果是第一次出现，生成新ID并存入DB
-            tid = f"t_{name}" # 使用名字作为ID的一部分
-            name_to_id_map[name] = tid
+    def get_or_create_teacher_id(name, subject, type_, grade_name="Default", subject_tags=None):
+        # 核心逻辑：主课老师 ID 包含年级，副课老师 ID 仅包含姓名
+        id_key = f"{name}_{grade_name}" if type_ == "main" else name
+        
+        if id_key not in name_to_id_map:
+            tid = f"t_{id_key}"
+            name_to_id_map[id_key] = tid
+            
+            t_tags = []
+            if teacher_limits and name in teacher_limits:
+                t_tags = parse_tags(teacher_limits[name].get('tags', ''))
+
             teachers_db.append({
                 "id": tid, 
                 "name": name, 
                 "subject": subject, 
-                "type": type_
+                "type": type_,
+                "grade": grade_name if type_ == "main" else "All",
+                "tags": t_tags,
+                "subject_tags": subject_tags or []
             })
-        return name_to_id_map[name]
+        return name_to_id_map[id_key]  # [关键修复] 必须返回 tid！
+    # 2. 按年级处理每个班级的老师分配
+    # 建立年级-科目队列，确保持续滚动分配
+    grade_subject_queues = {} # {(grade, subject): {"names": [names], "ptr": 0}}
 
-    # 标准化课程配置格式(兼容旧格式)
-    normalized_all_courses = {}
+    # 获取班级 ID 列表并按年级排序
+    class_ids = sorted(class_metadata.keys()) if class_metadata else range(1, num_classes + 1)
     
-    # 如果有 class_metadata，取所有班级需求的并集
-    if class_metadata:
-        for c_id, info in class_metadata.items():
-            for subj, cfg in info.get("requirements", {}).items():
-                if subj not in normalized_all_courses:
-                    if isinstance(cfg, dict):
-                        normalized_all_courses[subj] = cfg
-                    else:
-                        course_type = "main" if cfg >= 5 else "minor"
-                        normalized_all_courses[subj] = {"count": cfg, "type": course_type}
-    else:
-        # 回退到全局 courses
-        for subj, config in courses.items():
-            if isinstance(config, dict):
-                normalized_all_courses[subj] = config
+    for c_id in class_ids:
+        c_info = class_metadata.get(c_id, {"grade": "Default", "requirements": {}})
+        grade = c_info.get("grade", "Default")
+        requirements = c_info.get("requirements", {})
+        
+        for subj, cfg in requirements.items():
+            count = cfg.get("count", 0) if isinstance(cfg, dict) else cfg
+            if count == 0: continue
+            
+            type_ = cfg.get("type", "minor") if isinstance(cfg, dict) else ("main" if count >= 5 else "minor")
+            
+            # 获取候选老师名单
+            # [核心修复] 高并发科目使用全局队列（不分年级），确保所有班级分配不同老师
+            if subj in high_concurrency_subjects:
+                queue_key = ("__GLOBAL__", subj)  # 全局队列
             else:
-                course_type = "main" if config >= 5 else "minor"
-                normalized_all_courses[subj] = {"count": config, "type": course_type}
+                queue_key = (grade, subj)  # 按年级隔离的队列
+                
+            if queue_key not in grade_subject_queues:
+                # 优先级 1: grade_teacher_names (年级私有) - 仅对非高并发科目有效
+                # 优先级 2: custom_names (全校汇总)
+                if subj not in high_concurrency_subjects:
+                    names = grade_teacher_names.get(grade, {}).get(subj, [])
+                else:
+                    names = []  # 高并发科目直接使用全局名单
+                if not names:
+                    names = custom_names.get(subj, [])
+                if not names:
+                    # 默认老师名格式: 年级+科目+序号
+                    names = [f"{grade}{subj}{i+1}" for i in range(30)]
+                grade_subject_queues[queue_key] = {"names": list(names), "ptr": 0}
+            
+            q_info = grade_subject_queues[queue_key]
+            names = q_info["names"]
+            ptr = q_info["ptr"]
+            
+            # 轮询获取老师（高并发科目因为使用全局队列，自然实现了一对一分配）
+            t_name = names[ptr]
+            q_info["ptr"] = (ptr + 1) % len(names)
+            
+            tid = get_or_create_teacher_id(t_name, subj, type_, grade)
+            class_teacher_map[(c_id, subj)] = tid
 
-    # 2. 准备每科的候选老师队列
-    subject_teacher_queues = {}
-    
-    for subj, config in normalized_all_courses.items():
-        course_type = config.get("type", "minor")
-        
-        # 获取该科目配置的老师名单
-        # 先做个拷贝避免影响原数据
-        names_list = custom_names.get(subj, [])[:]
-        
-        # 如果没配置名单，我们自动生成虚拟老师
-        # 逻辑：根据班级数估算需要几个虚拟老师
-        if not names_list:
-            # 简单估算：假设每人带3个班
-            needed = max(1, (num_classes + 2) // 3)
-            names_list = [f"{subj}老师{i+1}" for i in range(needed)]
-            
-        subject_teacher_queues[subj] = {
-            "names": names_list,
-            "type": course_type,
-            "ptr": 0 # 轮询指针
-        }
-
-    # 3. 分配老师给班级 (轮询分配)
-    classes_to_assign = class_metadata.keys() if class_metadata else range(1, num_classes + 1)
-    
-    for class_id in classes_to_assign:
-        # 获取该班级需要的科目
-        needed_subjects = class_metadata[class_id]["requirements"].keys() if class_metadata else normalized_all_courses.keys()
-        
-        for subj in needed_subjects:
-            if subj not in subject_teacher_queues: continue
-            
-            queue_data = subject_teacher_queues[subj]
-            names = queue_data["names"]
-            ptr = queue_data["ptr"]
-            
-            # 取出名字
-            teacher_name = names[ptr]
-            
-            # 获取唯一ID (关键步骤)
-            tid = get_or_create_teacher_id(teacher_name, subj, queue_data["type"])
-            
-            # 绑定映射
-            class_teacher_map[(class_id, subj)] = tid
-            
-            # 移动指针 (轮询)
-            queue_data["ptr"] = (ptr + 1) % len(names)
-            
     return teachers_db, class_teacher_map
 
 def evaluate_quality(schedule_vars, solver, classes, days, periods, course_requirements, class_teacher_map, teachers_db):
@@ -215,6 +386,228 @@ def evaluate_quality(schedule_vars, solver, classes, days, periods, course_requi
     }
 
 
+def get_filtered_targets(teachers_db, class_metadata, targets):
+    """
+    根据组合条件筛选目标
+    targets: { tags: [], subjects: [], grades: [] }
+    返回: { teacher_ids: [], class_subjects: [(c_id, subj), ...] }
+    """
+    selected_tids = []
+    selected_class_subjects = []
+    
+    # 1. 筛选老师
+    target_tags = set(targets.get('tags', []))
+    target_subjs = set(targets.get('subjects', []))
+    target_grades = set(targets.get('grades', []))
+    
+    # 如果没有任何筛选条件，返回空
+    if not target_tags and not target_subjs and not target_grades:
+        return {"teacher_ids": [], "class_subjects": []}
+
+    # 教师筛选逻辑 (老师必须满足标签或科目标签)
+    for t in teachers_db:
+        match = False
+        if target_tags:
+            # 老师自身的标签
+            if any(tag in t.get('tags', []) for tag in target_tags):
+                match = True
+        
+        if not match and target_subjs:
+            # 老师所教的科目 (兼容 _AUTO_SUB 后缀)
+            t_subj = t.get('subject', '')
+            clean_subj = t_subj.replace('_AUTO_SUB', '')
+            if t_subj in target_subjs or clean_subj in target_subjs:
+                match = True
+
+        # [新增] 名字直接匹配 (用于特指某些老师，如领导)
+        target_names = targets.get('names', [])
+        if not match and target_names:
+            if t.get('name') in target_names:
+                match = True
+        
+        if match:
+            selected_tids.append(t['id'])
+
+    # 班级-科目 筛选逻辑
+    for c_id, meta in class_metadata.items():
+        grade_match = not target_grades or meta.get('grade') in target_grades
+        if not grade_match: continue
+        
+        for subj in meta.get('requirements', {}).keys():
+            clean_subj = subj.replace('_AUTO_SUB', '')
+            subj_match = not target_subjs or (subj in target_subjs or clean_subj in target_subjs)
+            if subj_match:
+                selected_class_subjects.append((c_id, subj))
+                
+    return {
+        "teacher_ids": list(set(selected_tids)),
+        "class_subjects": selected_class_subjects
+    }
+
+def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, TID_TO_ASSIGNMENTS, ALL_SUBJECTS_IN_VARS, SLOTS, penalties):
+    """
+    规则工厂：分发解析并应用通用规则
+    """
+    if not rules: return
+    
+    for rule in rules:
+        r_type = rule.get('type')
+        targets = rule.get('targets', {})
+        params = rule.get('params', {})
+        weight = rule.get('weight', 100) 
+        
+        filtered = get_filtered_targets(teachers_db, class_metadata, targets)
+        tids = filtered['teacher_ids']
+        class_subjects = filtered['class_subjects']
+        
+        if r_type == 'FORBIDDEN_SLOTS':
+            # 性能优化：按时段收集所有受限变量
+            slots = params.get('slots', [])
+            for d, p in slots:
+                vars_to_block = []
+                # 老师禁排
+                for tid in tids:
+                    if tid in TID_TO_ASSIGNMENTS:
+                        vars_to_block.extend([schedule[(c, d, p, s)] for (c, s) in TID_TO_ASSIGNMENTS[tid] if (c, d, p, s) in schedule])
+                # 班级-科目禁排
+                for c_id, subj in class_subjects:
+                    if (c_id, d, p, subj) in schedule:
+                        vars_to_block.append(schedule[(c_id, d, p, subj)])
+                
+                if vars_to_block:
+                    if weight >= 100:
+                        model.Add(sum(vars_to_block) == 0)
+                    else:
+                        # 软约束：如果是负数，则为奖励(尽量排)，正数为惩罚(尽量不排)
+                        for v in vars_to_block:
+                            penalties.append(v * weight)
+
+        elif r_type == 'ZONE_COUNT':
+            zone_slots = params.get('slots', [])
+            count = params.get('count', 0)
+            rel = params.get('relation', '==')
+            
+            for c_id, subj in class_subjects:
+                relevant_vars = [schedule[(c_id, d, p, subj)] for d, p in zone_slots if (c_id, d, p, subj) in schedule]
+                if relevant_vars:
+                    if weight >= 100:
+                        if rel == '==': model.Add(sum(relevant_vars) == count)
+                        elif rel == '<=': model.Add(sum(relevant_vars) <= count)
+                        elif rel == '>=': model.Add(sum(relevant_vars) >= count)
+                    else:
+                        # 软约束：惩罚偏离度
+                        diff = model.NewIntVar(-10, 10, f'zone_diff_{c_id}_{subj}_{rule.get("name","")}')
+                        model.Add(diff == sum(relevant_vars) - count)
+                        abs_diff = model.NewIntVar(0, 10, f'zone_abs_diff_{c_id}_{subj}')
+                        model.AddAbsEquality(abs_diff, diff)
+                        penalties.append(abs_diff * abs(weight))
+
+        elif r_type == 'DAILY_LIMIT':
+            slots_in_day = params.get('slots_per_day', [])
+            limit = params.get('limit', 1)
+            is_all_teachers = (targets.get('tags') == ['所有老师'])
+            
+            # 对老师生效
+            target_tids = tids or (TID_TO_ASSIGNMENTS.keys() if is_all_teachers else [])
+            for tid in target_tids:
+                if tid in TID_TO_ASSIGNMENTS:
+                    assignments = TID_TO_ASSIGNMENTS[tid]
+                    for d in range(5):
+                        daily_vars = [schedule[(c, d, p, s)] for (c, s) in assignments for p in slots_in_day if (c, d, p, s) in schedule]
+                        if daily_vars:
+                            model.Add(sum(daily_vars) <= limit)
+                            
+            # 对班级生效 (如有需要)
+            for c_id, subj in class_subjects:
+                for d in range(5):
+                    daily_vars = [schedule[(c_id, d, p, subj)] for p in slots_in_day if (c_id, d, p, subj) in schedule]
+                    if daily_vars:
+                        model.Add(sum(daily_vars) <= limit)
+
+        elif r_type == 'SPECIAL_DAYS':
+            days = params.get('days', [])
+            for d in days:
+                for p in range(8):
+                    vars_to_block = []
+                    for tid in tids:
+                        if tid in TID_TO_ASSIGNMENTS:
+                            vars_to_block.extend([schedule[(c, d, p, s)] for (c, s) in TID_TO_ASSIGNMENTS[tid] if (c, d, p, s) in schedule])
+                    for c_id, subj in class_subjects:
+                        if (c_id, d, p, subj) in schedule:
+                            vars_to_block.append(schedule[(c_id, d, p, subj)])
+                    
+                    if vars_to_block:
+                        model.Add(sum(vars_to_block) == 0)
+
+        elif r_type == 'CONSECUTIVE':
+            mode = params.get('mode', 'avoid') 
+            limit = params.get('max', 1)
+            
+            if mode == 'avoid':
+                # 对班级-科目生效
+                for c_id, subj in class_subjects:
+                    for d in range(5):
+                        for p in range(8 - limit):
+                            window_vars = [schedule[(c_id, d, p+i, subj)] for i in range(limit + 1) if (c_id, d, p+i, subj) in schedule]
+                            if len(window_vars) > limit:
+                                if weight >= 100:
+                                    model.Add(sum(window_vars) <= limit)
+                                else:
+                                    is_cons = model.NewBoolVar(f'cons_{c_id}_{d}_{p}_{subj}')
+                                    model.Add(sum(window_vars) >= limit + 1).OnlyEnforceIf(is_cons)
+                                    model.Add(sum(window_vars) <= limit).OnlyEnforceIf(is_cons.Not())
+                                    penalties.append(is_cons * weight)
+                
+                # 对老师生效
+                target_tids = tids or (TID_TO_ASSIGNMENTS.keys() if targets.get('tags') == ['所有老师'] else [])
+                for tid in target_tids:
+                    if tid in TID_TO_ASSIGNMENTS:
+                        assignments = TID_TO_ASSIGNMENTS[tid]
+                        for d in range(5):
+                            for p in range(8 - limit):
+                                window_vars = []
+                                for i in range(limit + 1):
+                                    window_vars.extend([schedule[(c, d, p+i, s)] for (c, s) in assignments if (c, d, p+i, s) in schedule])
+                                if window_vars:
+                                    if weight >= 100:
+                                        model.Add(sum(window_vars) <= limit)
+                                    else:
+                                        is_cons = model.NewBoolVar(f'cons_tid_{tid}_{d}_{p}')
+                                        model.Add(sum(window_vars) >= limit + 1).OnlyEnforceIf(is_cons)
+                                        model.Add(sum(window_vars) <= limit).OnlyEnforceIf(is_cons.Not())
+                                        penalties.append(is_cons * weight)
+            elif mode == 'force' and weight >= 100:
+                pass
+
+        elif r_type == 'FIXED_SLOTS':
+            slots = params.get('slots', [])
+            for c_id, subj in class_subjects:
+                # [修复] 收集该班级该科目在固定时段的所有变量
+                fixed_slot_vars = []
+                non_fixed_slot_vars = []
+                for d, p in SLOTS:
+                    if (c_id, d, p, subj) in schedule:
+                        if [d, p] in slots or (d, p) in slots:
+                            fixed_slot_vars.append(schedule[(c_id, d, p, subj)])
+                        else:
+                            non_fixed_slot_vars.append(schedule[(c_id, d, p, subj)])
+                
+                if fixed_slot_vars:
+                    if weight >= 100:
+                        # [诊断修改] 将非固定时段排课改为软约束惩罚（高权重），而不是硬禁止
+                        # 这样可以诊断是否是这个约束导致 INFEASIBLE
+                        if non_fixed_slot_vars:
+                            # model.Add(sum(non_fixed_slot_vars) == 0)  # 临时禁用
+                            for v in non_fixed_slot_vars:
+                                penalties.append(v * 1000)  # 高惩罚鼓励不在非固定时段排课
+                        # 固定时段内至少排一节
+                        model.Add(sum(fixed_slot_vars) >= 1)
+                    else:
+                        # 软约束：奖励排在固定时段
+                        for v in fixed_slot_vars:
+                            penalties.append(v * -weight)
+
+
 def run_scheduler(config=None):
     if config is None: config = DEFAULT_CONFIG
     
@@ -303,6 +696,7 @@ def run_scheduler(config=None):
     # 此处逻辑需要适配 class_metadata 中的 requirements
     final_teacher_names = {}
     sharding_report = []
+    high_concurrency_subjects = set()  # [新增] 记录需要一对一分配的高并发科目
     
     # 收集全局科目信息 (取 class_metadata 中 requirements 的并集)
     global_course_requirements = {}
@@ -311,7 +705,11 @@ def run_scheduler(config=None):
             if s_name not in global_course_requirements:
                 global_course_requirements[s_name] = s_cfg
 
-    for subj, assigned_teachers in teacher_names_config.items():
+    # [核心重构] 实现全量学科自动补齐：遍历所有出现在课位中的科目
+    all_subjects_in_system = set(global_course_requirements.keys()) | set(teacher_names_config.keys())
+    
+    for subj in all_subjects_in_system:
+        assigned_teachers = teacher_names_config.get(subj, [])
         # 获取该科目在所有班级中的总班级数和总课时
         total_assigned_classes = 0
         max_single_class_count = 0
@@ -348,41 +746,97 @@ def run_scheduler(config=None):
                     needs_sharding = True
                     break
         
-        # 2. 检查总班级数压力 (均摊后是否超过老师负荷)
-        if avg_classes > class_limit_per_teacher:
+        # [并发感知] 检查规则引发的全校聚合峰值需求
+        slot_concurrency_demands = collections.defaultdict(int)
+        all_rules = config.get('rules', [])
+        if subj == "政教活动":
+             logger.info(f"Checking Sharding for {subj}: Total Rules in Config: {len(all_rules)}")
+        
+        for rule in all_rules:
+            if rule.get('type') == 'FIXED_SLOTS':
+                r_targets = rule.get('targets', {})
+                if subj in r_targets.get('subjects', []):
+                    f_slots = rule.get('params', {}).get('slots', [])
+                    if f_slots:
+                        # 统计受此规则影响的班级总数
+                        r_grades = r_targets.get('grades', [])
+                        affected_classes = [c_id for c_id, meta in class_metadata.items() if (not r_grades or meta.get('grade') in r_grades) and subj in meta.get('requirements')]
+                        
+                        if subj == "政教活动":
+                             logger.info(f"  -> Found FIXED_SLOTS rule for {subj}. Slots: {f_slots}, Affected Classes: {len(affected_classes)}")
+                        
+                        # 这些班级在这些时段都有 1 节课的需求
+                        for s in f_slots:
+                            slot_concurrency_demands[tuple(s)] += math.ceil(len(affected_classes) / len(f_slots))
+        
+        # [新增] 扫描「手动预排」(Constraints) 产生的并发需求
+        fixed_constraints = config.get('constraints', {}).get('fixed_courses', {})
+        for cid_str, slots_data in fixed_constraints.items():
+            # slots_data 格式: {"0_4": "语文", "4_7": "政教活动"}
+            for slot_key, fixed_subj in slots_data.items():
+                if fixed_subj == subj:
+                    try:
+                        d, p = map(int, slot_key.split('_'))
+                        slot_concurrency_demands[(d, p)] += 1
+                        if subj == "政教活动" and d == 4 and p == 7:
+                             logger.debug(f"  -> Manual placement for {subj} detected in Class {cid_str} at slot {slot_key}")
+                    except:
+                        continue
+
+        concurrency_demand = max(slot_concurrency_demands.values()) if slot_concurrency_demands else 1
+        if concurrency_demand > 1:
+            logger.info(f"Subject {subj} Peak Concurrency Demand: {concurrency_demand}")
+
+        # 3. 综合判断分片系数
+        base_count = len(assigned_teachers) if assigned_teachers else 1
+        # 分片系数取 (总负荷需求) 和 (峰值并发需求) 的最大值
+        split_factor_by_load = math.ceil(avg_classes / class_limit_per_teacher)
+        split_factor_by_concurrency = math.ceil(concurrency_demand / base_count)
+        num_splits = max(split_factor_by_load, split_factor_by_concurrency)
+
+        if num_splits > 1:
             needs_sharding = True
+        
+        # [核心修复] 如果并发需求超过了可用老师数，标记为需要一对一分配
+        # 条件：concurrency > base_count（而不是 >= total_assigned_classes，那太严格了）
+        is_high_concurrency = concurrency_demand > base_count and concurrency_demand > 1
             
         if needs_sharding:
-            logger.info(f"Subject {subj} triggers Smart Sharding Pro. (Total Classes: {total_assigned_classes}, Limit: {class_limit_per_teacher})")
+            logger.info(f"Subject {subj} triggers Smart Sharding Pro. (Total: {total_assigned_classes}, Load Factor: {split_factor_by_load}, Concurrency Factor: {split_factor_by_concurrency})")
             
             # [升级逻辑] 动态扩充老师名单
             expanded_names = []
             if not assigned_teachers:
-                assigned_teachers = [f"{subj}老师"]
+                # 默认老师名格式: 科目+序号 (全校共用)
+                assigned_teachers = [f"{subj}{i+1}" for i in range(10)]
+            
+            # [核心修复] 对于高并发科目，确保分片数 >= 班级总数
+            if is_high_concurrency:
+                # 确保生成的老师身份数 >= max(峰值并发, 班级总数)
+                # 这样每个班级都能分配到独立老师
+                required_identities = max(concurrency_demand, total_assigned_classes)
+                # 计算需要多少轮分片才能产生足够的身份
+                num_splits = math.ceil(required_identities / len(assigned_teachers))
+                high_concurrency_subjects.add(subj)
+                logger.info(f"  -> [High Concurrency] {subj} marked for 1:1 allocation. Required identities: {required_identities}")
             
             for t_base in assigned_teachers:
-                # 每个人的历史负荷我们假定是均衡的，这里我们直接根据比例拆分
-                # 一个 base 拆成多少个？
-                num_splits = math.ceil(avg_classes / class_limit_per_teacher)
-                if num_splits <= 1:
-                    expanded_names.append(t_base)
-                else:
-                    for i in range(num_splits):
-                        suffix = chr(ord('A') + i)
-                        expanded_names.append(f"{t_base}{suffix}")
+                for i in range(num_splits):
+                    suffix = chr(ord('A') + i)
+                    expanded_names.append(f"{t_base}{suffix}")
             
             final_teacher_names[subj] = expanded_names
             
-            # 如果是因为单班超限 (limit < count)，还需要处理 AUTO_SUB (保持原有逻辑)
-            # 这里简化处理：如果是超大班额老师，直接在 mapping 阶段轮询。
+            # [诊断]
+            logger.info(f"  -> Generated {len(expanded_names)} sharded identities for {subj}")
         else:
             if assigned_teachers:
                 final_teacher_names[subj] = assigned_teachers
             else:
-                # 即使没配老师，也至少保证有一个
                 final_teacher_names[subj] = [f"{subj}老师"]
+            logger.info(f"  -> {subj} uses original pool: {len(final_teacher_names[subj])} teachers")
 
-
+    logger.info("Subject Sharding Report Complete.")
     TEACHER_NAMES = final_teacher_names
     DAYS = 5
     PERIODS = 8  # 每天8节 (上午4节 + 下午4节)
@@ -404,8 +858,20 @@ def run_scheduler(config=None):
             logger.warning(f"[警告] 课时需求 ({total_hours}) 超过可用时段 ({total_slots})，求解必然失败！")
     logger.info(f"=========================")
 
+    grade_teacher_names = config.get('grade_teacher_names', {})
     # 1. 生成数据
-    TEACHERS_DB, CLASS_TEACHER_MAP = generate_teachers_and_map(num_classes_actual, None, TEACHER_NAMES, class_metadata)
+    TEACHERS_DB, CLASS_TEACHER_MAP = generate_teachers_and_map(num_classes_actual, None, TEACHER_NAMES, class_metadata, teacher_limits, grade_teacher_names, high_concurrency_subjects)
+    
+    # [诊断] 检查高并发科目的分配是否实现了一对一
+    if high_concurrency_subjects:
+        for subj in high_concurrency_subjects:
+            assigned_tids = set()
+            for (c_id, s), tid in CLASS_TEACHER_MAP.items():
+                if s == subj:
+                    if tid in assigned_tids:
+                        logger.warning(f"[一对一分配失败] {subj}: 老师 {tid} 被重复分配！")
+                    assigned_tids.add(tid)
+            logger.info(f"[高并发诊断] {subj}: {len(assigned_tids)} 个独立老师被分配")
     
     # 获取并集后的所有科目 (包含自动拆分的)
     ALL_SUBJECTS_IN_VARS = list(TEACHER_NAMES.keys())
@@ -452,9 +918,10 @@ def run_scheduler(config=None):
         # 遍历所有班级和科目的映射关系
         # CLASS_TEACHER_MAP: {(class_id, subject): tid}
         for (class_id, subject), tid in CLASS_TEACHER_MAP.items():
-            # 获取该科目的周课时数
-            course_cfg = normalized_courses.get(subject, {})
-            count = course_cfg.get("count", 0)
+            # 获取该科目的周课时数 (从 class_metadata 中获取)
+            c_reqs = class_metadata.get(class_id, {}).get("requirements", {})
+            course_cfg = c_reqs.get(subject, {})
+            count = course_cfg.get("count", 0) if isinstance(course_cfg, dict) else int(course_cfg)
             actual_workload[tid] += count
             
         # 2. 对比限制条件
@@ -609,197 +1076,38 @@ def run_scheduler(config=None):
                       sum(schedule[(c, d, 4, s)] for (c, s) in assignments) <= 1)
 
     # ====================================================================
-    # 4. 绍兴一中专用规则 (Shaoxing No.1 Middle School Rules)
+    # 4. 规则引擎集成 (New Rule Engine)
     # ====================================================================
+    rules = config.get('rules', [])
     
-    for c in CLASSES:
-        grade = class_metadata[c]['grade']
-        c_reqs = class_metadata[c]["requirements"]
-        
-        # 定义时段
-        am_slots = [(d, p) for d in range(DAYS) for p in range(4)]      # 上午 0-3节
-        pm_slots = [(d, p) for d in range(DAYS) for p in range(4, PERIODS)]  # 下午 4-7节
-        first_6_periods = [(d, p) for d in range(DAYS) for p in range(6)]    # 1-6节 (p=0-5)
-        last_2_periods = [(d, p) for d in range(DAYS) for p in range(6, PERIODS)]  # 7-8节 (p=6-7)
-        
-        # --- 4.1 AM/PM 课时分布约束 (绍兴一中规则) ---
-        
-        # 语数英: 上午4节，下午1节
-        for subj in ["语文", "数学", "英语"]:
-            if subj in c_reqs:
-                subj_vars_am = [schedule[(c, d, p, subj)] for d, p in am_slots]
-                subj_vars_pm = [schedule[(c, d, p, subj)] for d, p in pm_slots]
-                model.Add(sum(subj_vars_am) == 4)
-                model.Add(sum(subj_vars_pm) == 1)
-        
-        # 科学: 初一初二 上午3+下午2，初三 上午4+下午1
-        if "科学" in c_reqs:
-            subj_vars_am = [schedule[(c, d, p, "科学")] for d, p in am_slots]
-            subj_vars_pm = [schedule[(c, d, p, "科学")] for d, p in pm_slots]
-            if grade == "初三":
-                model.Add(sum(subj_vars_am) == 4)
-                model.Add(sum(subj_vars_pm) == 1)
-            else:  # 初一、初二
-                model.Add(sum(subj_vars_am) == 3)
-                model.Add(sum(subj_vars_pm) == 2)
-        
-        # 社会: 上午2节，下午3节
-        if "社会" in c_reqs:
-            subj_vars_am = [schedule[(c, d, p, "社会")] for d, p in am_slots]
-            subj_vars_pm = [schedule[(c, d, p, "社会")] for d, p in pm_slots]
-            model.Add(sum(subj_vars_am) == 2)
-            model.Add(sum(subj_vars_pm) == 3)
-        
-        # --- 4.2 主课节次限制 (语数英科只排1-6节，不排7-8节) ---
-        for subj in ["语文", "数学", "英语", "科学"]:
-            if subj in c_reqs:
-                for d, p in last_2_periods:
-                    model.Add(schedule[(c, d, p, subj)] == 0)
-        
-        # 初三社会只排1-6节
-        if grade == "初三" and "社会" in c_reqs:
-            for d, p in last_2_periods:
-                model.Add(schedule[(c, d, p, "社会")] == 0)
-        
-        # --- 4.3 体育不排上午第一节 (p=0) ---
-        if "体育" in c_reqs:
-            for d in range(DAYS):
-                model.Add(schedule[(c, d, 0, "体育")] == 0)
-        
-        # --- 4.4 年级特殊禁排 ---
-        # 初三周一下午第三节不排课 (d=0, p=6)
-        if grade == "初三":
-            for subj in c_reqs:
-                model.Add(schedule[(c, 0, 6, subj)] == 0)
-
-        # --- [绍兴一中补全] 4.4.1 固定活动课禁排 (硬约束) ---
-        # 规则来源：优化.md 1.6-1.7
-        forbidden_slots = []
-        # 全校周五下午第四节 (d=4, p=7)
-        forbidden_slots.append((4, 7))
-        
-        if grade == "初一":
-            forbidden_slots += [(3, 7), (4, 6)] # 周四p8, 周五p7
-        elif grade == "初二":
-            forbidden_slots += [(0, 7), (2, 7), (1, 6)] # 周一p8, 周三p8, 周二p7
-        elif grade == "初三":
-            forbidden_slots += [(1, 7), (3, 6), (4, 6)] # 周二p8, 周四p7, 周五p7
-            
-        for d, p in forbidden_slots:
-            for subj in c_reqs:
-                model.Add(schedule[(c, d, p, subj)] == 0)
-
-        # --- [绍兴一中补全] 4.4.2 活动课当天禁排体育 (硬约束) ---
-        # 规则：有课外活动课的年段当天不排体育课
-        pe_forbidden_days = []
-        if grade == "初一":
-            pe_forbidden_days = [3] # 周四
-        elif grade == "初二":
-            pe_forbidden_days = [0, 2] # 周一, 周三
-        elif grade == "初三":
-            pe_forbidden_days = [1] # 周二 (注: 周四下午第三节是课外活动, 但周二下午第四节也是)
-            
-        for d in pe_forbidden_days:
-            if "体育" in c_reqs:
-                for p in range(PERIODS):
-                    model.Add(schedule[(c, d, p, "体育")] == 0)
-
-    # --- 4.5 教研活动禁排 (硬约束) ---
-    # 语社英：周三(d=2)下午(p=4~7)不排
-    wed_pm_slots = [(2, p) for p in range(4, PERIODS)]
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in ["语文", "社会", "英语"]:
-            if subj in c_reqs:
-                for d, p in wed_pm_slots:
-                    model.Add(schedule[(c, d, p, subj)] == 0)
+    # [诊断] 打印收到的所有规则
+    logger.info(f"[规则诊断] 收到 {len(rules)} 条规则:")
+    for i, r in enumerate(rules):
+        r_name = r.get('name', '无名规则')
+        r_type = r.get('type', 'UNKNOWN')
+        r_targets = r.get('targets', {})
+        r_subjects = r_targets.get('subjects', [])
+        logger.info(f"  [{i+1}] {r_type}: {r_subjects or r_targets.get('names', []) or r_targets.get('grades', ['全校'])}")
     
-    # 数学科学：周四(d=3)下午(p=4~7)不排
-    thu_pm_slots = [(3, p) for p in range(4, PERIODS)]
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in ["数学", "科学"]:
-            if subj in c_reqs:
-                for d, p in thu_pm_slots:
-                    model.Add(schedule[(c, d, p, subj)] == 0)
+    # 兼容性逻辑：如果开启了 legacy 模式且没有显式规则，则注入绍兴预设规则
+    use_legacy_rules = config.get('use_legacy_rules', True)
+    if use_legacy_rules and not rules:
+        rules = SHAOXING_PRESET_RULES
+        logger.info("Using SHAOXING_PRESET_RULES because rules list is empty and legacy mode is enabled.")
 
-    # --- 4.6 体育场地约束 (同一节次最多8个班上体育) ---
-    if "体育" in global_course_requirements:
-        for d in range(DAYS):
-            for p in range(PERIODS):
-                model.Add(sum(schedule[(c, d, p, "体育")] for c in CLASSES) <= 8)
+    # 注入通用规则
+    apply_universal_rules(model, schedule, rules, TEACHERS_DB, class_metadata, teacher_assignments, ALL_SUBJECTS_IN_VARS, SLOTS, penalties)
 
-    # TODO: 确认问题后可恢复此约束，但可能需要调整 limit 值
-    '''
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in c_reqs:
-            limit = 2 
-            # 如果某科一天要上很多节（罕见），需调高
-            for d in range(DAYS):
-                # 本体 + 可能的分身
-                daily_vars = [schedule[(c, d, p, subj)] for p in range(PERIODS)]
-                sub_name = f"{subj}_AUTO_SUB"
-                if sub_name in ALL_SUBJECTS_IN_VARS:
-                    daily_vars += [schedule[(c, d, p, sub_name)] for p in range(PERIODS)]
-                model.Add(sum(daily_vars) <= limit)
-    '''
-    
-    # 6. 副课每日数量限制 (暂时禁用以测试)
-    '''
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        minor_subjects = [s for s, cfg in c_reqs.items() if cfg.get("type") == "minor"]
-        if minor_subjects:
-            for d in range(DAYS):
-                daily_minor_vars = []
-                for s in minor_subjects:
-                    daily_minor_vars.append(sum(schedule[(c, d, p, s)] for p in range(PERIODS)))
-                    sub_name = f"{s}_AUTO_SUB"
-                    if sub_name in ALL_SUBJECTS_IN_VARS:
-                        daily_minor_vars.append(sum(schedule[(c, d, p, sub_name)] for p in range(PERIODS)))
-                model.Add(sum(daily_minor_vars) <= 4)
-    '''
+    # --- 6. 教室资源约束 (Classroom Constraints) ---
+        
 
-    # 5. 高级约束 (New)
+    # --- 5. 高级约束 (Legacy Constraints) ---
     CONSTRAINTS = config.get('constraints', {})
     
     # 构建名字到ID的映射 (name -> List[tid])
     name_to_tids = collections.defaultdict(list)
     for t in TEACHERS_DB:
         name_to_tids[t['name']].append(t['id'])
-    
-    # --- 5.1 行政领导周五下午不排课 ---
-    # 领导名单：陈安、谢飞、叶青峰、王伟锋、许敏、曹峻燕、寿海峰、余慧菁、刘建灿、王清、傅佳情、陈彦羽、沈黎松、鲍伟佳
-    admin_leaders = ["陈安", "谢飞", "叶青峰", "王伟锋", "许敏", "曹峻燕", "寿海峰", 
-                     "余慧菁", "刘建灿", "王清", "傅佳情", "陈彦羽", "沈黎松", "鲍伟佳"]
-    fri_pm_slots = [(4, p) for p in range(4, PERIODS)]  # 周五(d=4)下午
-    
-    for leader_name in admin_leaders:
-        tids = name_to_tids.get(leader_name, [])
-        for tid in tids:
-            assignments = teacher_assignments.get(tid, [])
-            if assignments:
-                for d, p in fri_pm_slots:
-                    model.Add(sum(schedule[(c, d, p, s)] for (c, s) in assignments) == 0)
-    
-    # --- 5.2 拓展课软约束 ---
-    # 初一周五下午第三节 (d=4, p=6) 尽量不排音体美信息
-    for c in CLASSES:
-        grade = class_metadata[c]['grade']
-        c_reqs = class_metadata[c]["requirements"]
-        
-        if grade == "初一":
-            for subj in ["音乐", "体育", "美术", "信息"]:
-                if subj in c_reqs:
-                    penalties.append(schedule[(c, 4, 6, subj)] * 100)
-        
-        # 初二周二下午第三节 (d=1, p=6) 尽量不排音体美信息
-        if grade == "初二":
-            for subj in ["音乐", "体育", "美术", "信息"]:
-                if subj in c_reqs:
-                    penalties.append(schedule[(c, 1, 6, subj)] * 100)
-        
 
     # 处理老师禁排
     unavailable_settings = CONSTRAINTS.get('teacher_unavailable', {})
@@ -858,312 +1166,29 @@ def run_scheduler(config=None):
                                 for s in res_subjects) <= capacity)
     '''
 
-    # === 7. 软约束优化 (Core Enhancement) ===
-    # 采用最小化惩罚值的方式来寻找最优解 (penalties 列表已在建模初期定义)
-    
-    optimization_config = config.get('optimization', {})
-    enable_golden_time = optimization_config.get('golden_time', True) 
-    # [新增] 读取禁止连排配置
-    avoid_consecutive_subjects = optimization_config.get('avoid_consecutive_subjects', False)
+    # 处理老师禁排与固定课程
+    unavailable_settings = CONSTRAINTS.get('teacher_unavailable', {})
+    fixed_courses = CONSTRAINTS.get('fixed_courses', {})
 
-    max_consecutive = int(optimization_config.get('max_consecutive', 2))
-    
-    # [新增] 插入这段逻辑：禁止科目连排
-    if avoid_consecutive_subjects:
-        logger.info("启用约束: 禁止科目连排 (Avoid Consecutive Subjects)")
-        for c in CLASSES:
-            for d in range(DAYS):
-                for subj in global_course_requirements:
-                    # 遍历每天的节次，检查相邻两节 (p, p+1)
-                    for p in range(PERIODS - 1):
-                        # 逻辑：如果 第p节是subj AND 第p+1节也是subj => 惩罚
-                        
-                        # 定义一个布尔变量表示 "是否连堂"
-                        is_consecutive = model.NewBoolVar(f'cons_subj_{c}_{d}_{p}_{subj}')
-                        
-                        # 只有当两节课都排了该科目，is_consecutive 才为 True
-                        model.AddBoolAnd([
-                            schedule[(c, d, p, subj)], 
-                            schedule[(c, d, p+1, subj)]
-                        ]).OnlyEnforceIf(is_consecutive)
-                        
-                        # 只要有一节没排，is_consecutive 就为 False (这一步其实在Minimize中非必须，但为了严谨加上)
-                        model.AddBoolOr([
-                            schedule[(c, d, p, subj)].Not(), 
-                            schedule[(c, d, p+1, subj)].Not()
-                        ]).OnlyEnforceIf(is_consecutive.Not())
-                        
-                        # 增加惩罚权重 (权重设大一点，比如 500分，保证尽量不发生)
-                        penalties.append(is_consecutive * 500)
+    if fixed_courses:
+        for c_str, fixes in fixed_courses.items():
+            try:
+                c = int(c_str)
+                if c not in CLASSES: continue
+                for slot_key, subj_name in fixes.items():
+                    if subj_name not in global_course_requirements: continue
+                    d_str, p_str = slot_key.split('_')
+                    model.Add(schedule[(c, int(d_str), int(p_str), subj_name)] == 1)
+            except: pass
 
-    # [优化目标 1] 黄金时间安排 (语数英优先排在上午前4节)
-    # 权重: 每一节下午的主科课惩罚 15 分 (提高权重)
-    if enable_golden_time:
-        for c in CLASSES:
-            grade = class_metadata[c]['grade']
-            weight_factor = 1
-            if grade == "初三":
-                weight_factor = 100
-            elif grade == "初二":
-                weight_factor = 10
-            
-            c_reqs = class_metadata[c]["requirements"]
-            main_subjects_list = [s for s, cfg in c_reqs.items() if cfg.get("type") == "main"]
-            
-            for d in range(DAYS):
-                for p in range(4, PERIODS):
-                    for subj in main_subjects_list:
-                        # 本体
-                        penalties.append(schedule[(c, d, p, subj)] * 15 * weight_factor)
-                        # 如果有分身且也是主课类型
-                        sub_name = f"{subj}_AUTO_SUB"
-                        if sub_name in ALL_SUBJECTS_IN_VARS:
-                            penalties.append(schedule[(c, d, p, sub_name)] * 15 * weight_factor)
-
-    # ====================================================================
-    # [绍兴一中软约束] - Shaoxing No.1 Middle School Soft Constraints
-    # ====================================================================
-    
-    # [软约束 A] 鼓励语数英科连堂（上午或下午连续排课给予奖励）
-    # 规则：语数英一般都连堂，要么上午要么下午，初三科学也是如此
-    for c in CLASSES:
-        grade = class_metadata[c]['grade']
-        c_reqs = class_metadata[c]["requirements"]
-        
-        # 确定需要连堂的科目
-        conn_subjects = ["语文", "数学", "英语"]
-        if grade == "初三":
-            conn_subjects.append("科学")
-        
-        for subj in conn_subjects:
-            if subj not in c_reqs:
-                continue
-            for d in range(DAYS):
-                # 上午连堂：1-2节 或 3-4节
-                for start_p in [0, 2]:  # p=0,1 或 p=2,3
-                    is_conn = model.NewBoolVar(f'conn_{c}_{d}_{start_p}_{subj}')
-                    model.AddBoolAnd([
-                        schedule[(c, d, start_p, subj)],
-                        schedule[(c, d, start_p + 1, subj)]
-                    ]).OnlyEnforceIf(is_conn)
-                    model.AddBoolOr([
-                        schedule[(c, d, start_p, subj)].Not(),
-                        schedule[(c, d, start_p + 1, subj)].Not()
-                    ]).OnlyEnforceIf(is_conn.Not())
-                    # 奖励连堂（负惩罚 = 奖励）
-                    penalties.append(is_conn * -50)
-    
-    # [软约束 B] 副课尽量排下午（含第7节）
-    # 规则：音体美信息心理尽可能排下午
-    minor_for_pm = ["音乐", "美术", "信息", "心理"]
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in minor_for_pm:
-            if subj not in c_reqs:
-                continue
-            for d in range(DAYS):
-                for p in range(4):  # 上午 p=0~3
-                    # 排在上午给予惩罚
-                    penalties.append(schedule[(c, d, p, subj)] * 30)
-    
-    # [软约束 C] 教研软禁排 (规则 8 尽量部分)
-    # 音乐周三下午尽量不排 (d=2, p=4~7)
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        if "音乐" in c_reqs:
-            for p in range(4, PERIODS):
-                penalties.append(schedule[(c, 2, p, "音乐")] * 30)
-    
-    # 美术周四下午尽量不排 (d=3, p=4~7)
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        if "美术" in c_reqs:
-            for p in range(4, PERIODS):
-                penalties.append(schedule[(c, 3, p, "美术")] * 30)
-    
-    # 体育周四上午尽量不排 (d=3, p=0~3)
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        if "体育" in c_reqs:
-            for p in range(4):
-                penalties.append(schedule[(c, 3, p, "体育")] * 30)
-    
-    # 信息周四上午尽量不排 (d=3, p=0~3)
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        if "信息" in c_reqs:
-            for p in range(4):
-                penalties.append(schedule[(c, 3, p, "信息")] * 30)
-
-    # [软约束 D] 语数英科上午时段分布均衡 (规则 7)
-    # 规则：上午的课尽量两次一二节 (p=0,1)，两次三四节 (p=2,3)
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in ["语文", "数学", "英语", "科学"]:
-            if subj in c_reqs:
-                # 统计一周内该科目在 1-2 节和 3-4 节出现的次数
-                count_p12 = sum(schedule[(c, d, p, subj)] for d in range(DAYS) for p in [0, 1])
-                count_p34 = sum(schedule[(c, d, p, subj)] for d in range(DAYS) for p in [2, 3])
-                
-                # 理想情况是各 2 次。我们惩罚偏离 2 的情况
-                # 使用辅助变量表示绝对值偏离
-                diff12 = model.NewIntVar(-5, 5, f'diff12_{c}_{subj}')
-                model.Add(diff12 == count_p12 - 2)
-                abs_diff12 = model.NewIntVar(0, 5, f'abs_diff12_{c}_{subj}')
-                model.AddAbsEquality(abs_diff12, diff12)
-                penalties.append(abs_diff12 * 40)
-                
-                diff34 = model.NewIntVar(-5, 5, f'diff34_{c}_{subj}')
-                model.Add(diff34 == count_p34 - 2)
-                abs_diff34 = model.NewIntVar(0, 5, f'abs_diff34_{c}_{subj}')
-                model.AddAbsEquality(abs_diff34, diff34)
-                penalties.append(abs_diff34 * 40)
-
-    # [软约束 E] 体育老师连堂优化 (规则 4)
-    # 规则：同一个体育老师尽可能连堂，最多不超过三节连堂
-    pe_teachers = [t for t in TEACHERS_DB if "体育" in t.get('subjects', [])]
-    for pt in pe_teachers:
-        tid = pt['id']
-        assignments = teacher_assignments.get(tid, [])
-        if not assignments: continue
-        
-        for d in range(DAYS):
-            # 1. 鼓励连堂 (p, p+1)
-            for p in range(PERIODS - 1):
-                is_conn = model.NewBoolVar(f'pe_conn_{tid}_{d}_{p}')
-                # 该老师在 p 和 p+1 都有课
-                t_vars_p = [schedule[(c, d, p, s)] for (c, s) in assignments]
-                t_vars_p1 = [schedule[(c, d, p+1, s)] for (c, s) in assignments]
-                
-                v_p = sum(t_vars_p)
-                v_p1 = sum(t_vars_p1)
-                
-                model.Add(v_p + v_p1 >= 2).OnlyEnforceIf(is_conn)
-                model.Add(v_p + v_p1 < 2).OnlyEnforceIf(is_conn.Not())
-                # 奖励体育老师连堂
-                penalties.append(is_conn * -20)
-            
-            # 2. 强制限制连堂不超过3节 (硬约束)
-            for p in range(PERIODS - 3):
-                # 连续4节变量之和 <= 3
-                window_vars = []
-                for wp in range(p, p + 4):
-                    window_vars.extend([schedule[(c, d, wp, s)] for (c, s) in assignments])
-                model.Add(sum(window_vars) <= 3)
-
-    # [优化目标 2] 主课老师固定班级 (最小化跨班)
-    # 权重: 每个主课老师每多带一个班级惩罚 50 分
-    # 注意: 由于老师分配策略已经固定了班级映射,这里主要是作为软约束引导
-    # 实际上在generate_teachers_and_map中已经实现了固定分配,这里作为备用优化
-    
-    # [优化目标 3] 副课老师课时均衡
-    # 权重: 最小化副课老师之间的课时差异,每节差异惩罚 5 分
-    minor_teachers = [t for t in TEACHERS_DB if t.get('type') == 'minor']
-    if len(minor_teachers) > 1:
-        # 为每个副课老师创建课时计数变量
-        teacher_workload = {}
-        for t in minor_teachers:
-            tid = t['id']
+    for t_name, slots in unavailable_settings.items():
+        tids = name_to_tids.get(t_name, [])
+        for tid in tids:
             assignments = teacher_assignments.get(tid, [])
-            if assignments:
-                # 计算该老师的总课时
-                workload_expr = sum(schedule[(c, d, p, s)] 
-                                   for (c, s) in assignments 
-                                   for d, p in SLOTS)
-                # 创建一个整数变量来存储工作量
-                workload_var = model.NewIntVar(0, len(CLASSES) * PERIODS * DAYS, f'workload_{tid}')
-                model.Add(workload_var == workload_expr)
-                teacher_workload[tid] = workload_var
-        
-        # 最小化最大工作量和最小工作量的差异
-        if teacher_workload:
-            max_workload = model.NewIntVar(0, len(CLASSES) * PERIODS * DAYS, 'max_workload')
-            min_workload = model.NewIntVar(0, len(CLASSES) * PERIODS * DAYS, 'min_workload')
-            
-            model.AddMaxEquality(max_workload, list(teacher_workload.values()))
-            model.AddMinEquality(min_workload, list(teacher_workload.values()))
-            
-            # 惩罚工作量差异
-            workload_diff = model.NewIntVar(0, len(CLASSES) * PERIODS * DAYS, 'workload_diff')
-            model.Add(workload_diff == max_workload - min_workload)
-            penalties.append(workload_diff * 5)
+            for day, period in slots:
+                if assignments:
+                    model.Add(sum(schedule[(c, day, period, s)] for (c, s) in assignments) == 0)
 
-    # [优化目标 2] 避免连堂疲劳
-    # 规则: 任何老师不应连续上超过 max_consecutive 节课
-    # 权重: 违反限制惩罚 100 分 (尽量避免)
-    
-    # 先整理每个老师的课程变量列表: teacher_id -> [(day, period, var), ...]
-    # 注意：这里需要反向查找，知道每个变量对应哪个老师
-    
-    # 预处理：按天分组，整理每个老师每天的课程变量
-    teacher_vars_by_day = {tid: {d: [] for d in range(DAYS)} for tid in teacher_assignments}
-    
-    for c in CLASSES:
-        for d in range(DAYS):
-            for p in range(PERIODS):
-                for subj in global_course_requirements:
-                    tid = CLASS_TEACHER_MAP.get((c, subj))
-                    if tid:
-                        teacher_vars_by_day[tid][d].append((p, schedule[(c, d, p, subj)]))
-                        
-    # 添加连堂约束
-    for tid, days_data in teacher_vars_by_day.items():
-        for d, day_vars in days_data.items():
-            # 按节次排序
-            day_vars.sort(key=lambda x: x[0])
-            
-            # 使用滑动窗口检测
-            # 窗口大小 = max_consecutive + 1
-            # 如果窗口内排课数量 == 窗口大小，说明连续上了 max_consecutive + 1 节，违规
-            window_size = max_consecutive + 1
-            period_vars = [v[1] for v in day_vars] # 只有变量，没有节次索引了，假设每天都可能排满
-            
-            # 由于 periods 是离散的，我们实际上是在检测 0..8 节
-            # 为了简单，直接遍历 0 到 PERIODS - window_size
-            for i in range(PERIODS - window_size + 1):
-                # 获取当前窗口内的课程变量 (第 i, i+1, ..., i+win-1 节)
-                # 注意：这里需要准确获取对应节次的变量。上面 teacher_vars_by_day 可能并没有覆盖所有 p (如果某节没课)
-                # 所以最稳妥是重新遍历
-                pass
-
-    # 重新实现连堂检测 - 更直接的方法
-    for tid, assignments in teacher_assignments.items():
-        # assignments: list of (class_id, subject)
-        for d in range(DAYS):
-            # 获取该老师该天每一节课是否在上课的 BoolVar 表达式
-            # teacher_active[p] = sum(schedule[c,d,p,s] for c,s in assignments)
-            # 因为约束3保证了老师同一时刻只能上一节，所以 sum 结果只能是 0 或 1
-            teacher_active = []
-            for p in range(PERIODS):
-                teacher_active.append(sum(schedule[(c, d, p, s)] for (c, s) in assignments))
-            
-            # 滑动窗口
-            window_size = max_consecutive + 1
-            if window_size <= PERIODS:
-                for i in range(PERIODS - window_size + 1):
-                    # 这是一个线性表达式：sum(窗口内的 active)
-                    # 如果 sum >= window_size，说明连续 window_size 节都有课
-                    # 创建一个临时 BoolVar 来表示是否违规
-                    
-                    # 优化：不创建额外变量，直接作为软约束惩罚项
-                    # 比如: model.Minimize(sum(schedule))
-                    # 但这里我们需要 "如果连续3节都有课，就惩罚"
-                    # 也就是 Minimize( (x1 AND x2 AND x3) * penalty )
-                    # 在 OR-Tools 中，可以用 model.AddMultiplicationEquality(target, [vars])
-                    
-                    is_consecutive = model.NewBoolVar(f'fatigue_{tid}_d{d}_w{i}')
-                    current_window_vars = teacher_active[i : i+window_size]
-                    
-                    # 只有当窗口内所有时段都有课时，is_consecutive 才为 1
-                    # 但 teacher_active 里的元素是 SumArray (LinearExpr)，不能直接传给 AddMultiplicationEquality
-                    # 所以先要把 LinearExpr 转成 BoolVar (其实本身约束3早已限制它 <= 1)
-                    # 不过为了严谨，我们可以用 model.Add(sum(current_window_vars) >= window_size).OnlyEnforceIf(is_consecutive)
-                    # model.Add(sum(current_window_vars) < window_size).OnlyEnforceIf(is_consecutive.Not())
-                    
-                    model.Add(sum(current_window_vars) >= window_size).OnlyEnforceIf(is_consecutive)
-                    model.Add(sum(current_window_vars) < window_size).OnlyEnforceIf(is_consecutive.Not())
-                    
-                    penalties.append(is_consecutive * 100)
 
     # 设置总目标：最小化惩罚
     if penalties:
@@ -1171,10 +1196,19 @@ def run_scheduler(config=None):
 
     # 求解
     solver = cp_model.CpSolver()
-    # 增加求解时间以应对 60 班级的复杂优化目标和大规模变量
-    solver.parameters.max_time_in_seconds = 60.0 
-    solver.parameters.num_search_workers = 12 # 启用更多多线程求解
+    # 根据班级数动态调整求解时间
+    if NUM_CLASSES >= 100:
+        solver.parameters.max_time_in_seconds = 600.0  # 10分钟
+        solver.parameters.num_search_workers = 24  # 最大线程
+        logger.info(f"Large scale mode: 100+ classes, solver timeout 10min, 24 threads")
+    elif NUM_CLASSES >= 60:
+        solver.parameters.max_time_in_seconds = 300.0  # 5分钟
+        solver.parameters.num_search_workers = 16
+    else:
+        solver.parameters.max_time_in_seconds = 180.0  # 3分钟
+        solver.parameters.num_search_workers = 12
     solver.parameters.randomize_search = True 
+    solver.parameters.log_search_progress = True
     status = solver.Solve(model)
     logger.info(f"Solver status: {solver.StatusName(status)}")
 
@@ -1187,17 +1221,23 @@ def run_scheduler(config=None):
         for t_name in t_id_to_name.values():
             stats[t_name] = {"total": 0, "daily": [0] * 5}
             
-        # 遍历排课结果进行统计
+        # 遍历排课结果进行统计并构建结果字典
+        formatted_schedule = {}
         for c in CLASSES:
             for d in range(DAYS):
                 for p in range(PERIODS):
                     for subj in global_course_requirements:
                         if solver.Value(schedule[(c, d, p, subj)]) == 1:
+                            # 1. 统计老师课时
                             tid = CLASS_TEACHER_MAP.get((c, subj))
                             if tid is not None and tid in t_id_to_name:
                                 t_name = t_id_to_name[tid]
                                 stats[t_name]["total"] += 1
                                 stats[t_name]["daily"][d] += 1
+                            
+                            # 2. 存入结果字典
+                            formatted_schedule[(c, d, p)] = {"subject": subj}
+                            break
 
         # [新增] 调用评估函数
         evaluation = evaluate_quality(
@@ -1211,6 +1251,7 @@ def run_scheduler(config=None):
             "stats": stats,
             "evaluation": evaluation,
             "solver": solver,
+            "schedule": formatted_schedule,
             "vars": schedule,
             "teachers_db": TEACHERS_DB,
             "class_teacher_map": CLASS_TEACHER_MAP,

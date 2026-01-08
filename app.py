@@ -1,11 +1,23 @@
 from flask import Flask, jsonify, request, render_template, send_file, session, redirect, url_for
 from flask_cors import CORS
 import logging
+import json
+import os
 import normal
 import substitution
 from database import ScheduleDatabase
 from export_excel import ExcelExporter
 from error_handler import analyze_failure
+from openai import OpenAI
+
+# 从环境变量获取 API Key (安全性优化)
+_dashscope_api_key = os.getenv("DASHSCOPE_API_KEY", "sk-6946f8148ef84f95afeb03ae7a4aa0b1")
+
+# 配置 Qwen 客户端 (阿里云 DashScope)
+qwen_client = OpenAI(
+    api_key=_dashscope_api_key, 
+    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1"
+)
 
 # 配置日志系统
 logging.basicConfig(
@@ -598,6 +610,96 @@ def apply_substitute():
         logger.error(f"代课处理异常: {str(e)}", exc_info=True)
         return jsonify({"status": "error", "message": f"服务器错误: {str(e)}"}), 500
 
+# ============ AI 规则生成接口 ============
+@app.route('/api/ai_rule_gen', methods=['POST'])
+def ai_generate_rule():
+    """使用 Qwen AI 将自然语言转换为排课规则 JSON (支持多条规则)"""
+    try:
+        data = request.json
+        user_input = data.get('prompt')
+        
+        if not user_input:
+            return jsonify({"status": "error", "message": "请输入描述"}), 400
+        
+        # 获取上下文信息（防止AI幻觉）
+        current_context = data.get('context', {})
+        subjects = current_context.get('subjects', [])
+        grades = current_context.get('grades', [])
+        teachers = current_context.get('teachers', [])  # 新增老师名单
+        
+        # --- 核心 Prompt 设计 (优化版：支持多规则) ---
+        system_prompt = f"""
+你是一个排课规则解析专家。请分析用户的自然语言需求，提取出一条或多条排课规则。
+
+### 上下文信息
+- 现有科目: {", ".join(subjects) if subjects else "语文, 数学, 英语, 物理, 化学等"}
+- 现有年级: {", ".join(grades) if grades else "初一, 初二, 初三"}
+- 现有老师: {", ".join(teachers[:20]) if teachers else "无"}
+- 时间定义: 
+  - 周一到周五对应 day: 0, 1, 2, 3, 4
+  - 第1节到第8节对应 period: 0 到 7 (其中0-3为上午, 4-7为下午)
+
+### 支持的规则类型 (type)
+1. FORBIDDEN_SLOTS - 时段禁排 (某人/某课在特定时间不能排)
+2. ZONE_COUNT - 区域课时 (某课在某时段区域内必须排多少节)
+3. SPECIAL_DAYS - 特定日禁排 (某人/某课某几天完全不排)
+4. CONSECUTIVE - 连堂限制 (不要连堂)
+
+### 你的任务
+请返回一个 JSON 数组 (Array)，数组中包含一个或多个规则对象。
+不要包含 Markdown 格式 (如 ```json)。
+如果用户提到"上午"，slots需包含该日 period 0,1,2,3。
+如果用户提到"下午"，slots需包含该日 period 4,5,6,7。
+权重 (weight) 默认设为 100。
+
+### 输出示例
+用户输入: "语文上午排，体育不要排第一节"
+你的输出:
+[
+  {{"type": "ZONE_COUNT", "targets": {{"subjects": ["语文"]}}, "params": {{"slots": [[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[3,0],[3,1],[3,2],[3,3],[4,0],[4,1],[4,2],[4,3]], "count": 5, "relation": ">="}}, "weight": 80}},
+  {{"type": "FORBIDDEN_SLOTS", "targets": {{"subjects": ["体育"]}}, "params": {{"slots": [[0,0], [1,0], [2,0], [3,0], [4,0]]}}, "weight": 100}}
+]
+"""
+
+        # 调用 Qwen-Plus
+        completion = qwen_client.chat.completions.create(
+            model="qwen-plus", 
+            messages=[
+                {'role': 'system', 'content': system_prompt},
+                {'role': 'user', 'content': user_input}
+            ],
+            temperature=0.1
+        )
+        
+        # 解析返回内容
+        ai_content = completion.choices[0].message.content
+        # 清理可能存在的 Markdown 格式
+        ai_content = ai_content.replace('```json', '').replace('```', '').strip()
+        
+        result_data = json.loads(ai_content)
+        
+        # 兼容性处理：如果 AI 返回单个对象，包装成数组
+        if isinstance(result_data, dict):
+            rules_list = [result_data]
+        elif isinstance(result_data, list):
+            rules_list = result_data
+        else:
+            raise ValueError("AI 返回格式既不是字典也不是列表")
+        
+        logger.info(f"AI 生成规则成功，共 {len(rules_list)} 条: {rules_list}")
+        
+        return jsonify({
+            "status": "success",
+            "rules": rules_list  # 返回数组
+        })
+
+    except json.JSONDecodeError as e:
+        logger.error(f"AI 返回的 JSON 解析失败: {str(e)}")
+        return jsonify({"status": "error", "message": f"AI 返回格式错误，请重试"}), 500
+    except Exception as e:
+        logger.error(f"AI 生成规则失败: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": f"解析失败: {str(e)}"}), 500
+
 @app.route('/api/import_config', methods=['POST'])
 def import_config():
     """导入Excel配置"""
@@ -607,7 +709,7 @@ def import_config():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"status": "error", "message": "文件名为空"}), 400
-        
+    
     try:
         import pandas as pd
         df = pd.read_excel(file)
