@@ -139,6 +139,158 @@
         ::-webkit-scrollbar-track {
             background: transparent;
         }
+
+        /* 规则中心 UI 优化 */
+
+        /* 隐藏原始复选框 */
+        .grade-checkbox-hidden {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* ========== 粘土风规则中心组件 ========== */
+
+        /* 规则卡片 - 凸起效果 */
+        .clay-rule-card {
+            background: #eef2f6;
+            border-radius: 20px;
+            box-shadow: 8px 8px 16px #dce1e8, -8px -8px 16px #ffffff;
+            transition: all 0.3s ease;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .clay-rule-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 12px 12px 24px #dce1e8, -12px -12px 24px #ffffff;
+        }
+
+        /* 粘土风胶囊按钮 - 凸起/凹陷切换 */
+        .clay-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            background: #eef2f6;
+            box-shadow: 4px 4px 8px #dce1e8, -4px -4px 8px #ffffff;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .clay-pill:hover {
+            color: #3b82f6;
+        }
+
+        /* 选中状态 - 凹陷效果 */
+        .grade-checkbox-hidden:checked+.clay-pill {
+            box-shadow: inset 4px 4px 8px #dce1e8, inset -4px -4px 8px #ffffff;
+            color: #3b82f6;
+            background: #e0e7ef;
+        }
+
+        /* 参数区域 - 柔和凹陷 */
+        .clay-params-zone {
+            background: #e8edf2;
+            border-radius: 16px;
+            box-shadow: inset 4px 4px 8px #dce1e8, inset -4px -4px 8px #ffffff;
+            padding: 1rem;
+            min-height: 100px;
+        }
+
+        /* 规则卡片内的输入组 */
+        .clay-input-group {
+            background: #eef2f6;
+            border-radius: 12px;
+            box-shadow: inset 3px 3px 6px #dce1e8, inset -3px -3px 6px #ffffff;
+            padding: 0.75rem 1rem;
+        }
+
+        .clay-input-group label {
+            display: block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .clay-input-group input,
+        .clay-input-group select {
+            width: 100%;
+            background: transparent;
+            border: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #475569;
+            outline: none;
+        }
+
+        .clay-input-group select {
+            cursor: pointer;
+        }
+
+        /* 规则卡片网格布局 - 宽松版 */
+        .clay-rule-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .clay-rule-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 分隔线 - 粘土风 */
+        .clay-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #dce1e8 20%, #dce1e8 80%, transparent);
+            margin: 1.5rem 0;
+        }
+
+        /* 规则中心 Modal 专用背景 */
+        .clay-modal-bg {
+            background: #eef2f6 !important;
+        }
+
+        /* 表格粘土风容器 */
+        .clay-table-wrap {
+            background: #e8edf2;
+            border-radius: 16px;
+            box-shadow: inset 3px 3px 6px #dce1e8, inset -3px -3px 6px #ffffff;
+            overflow: hidden;
+        }
+
+        .clay-table-wrap table {
+            width: 100%;
+        }
+
+        .clay-table-wrap thead {
+            background: #eef2f6;
+        }
+
+        .clay-table-wrap th {
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            padding: 0.75rem 1rem;
+        }
+
+        .clay-table-wrap td {
+            padding: 0.75rem 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
     </style>
 </head>
 
@@ -188,15 +340,20 @@
 
             <!-- Buttons Grid -->
             <div class="grid grid-cols-2 gap-4">
-                <button data-bs-toggle="modal" data-bs-target="#constraintModal"
+                <button onclick="openConstraints()"
                     class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-blue-500">
-                    <i class="bi bi-sliders text-xl text-blue-400"></i> 高级
+                    <i class="bi bi-shield-lock-fill text-xl text-blue-400"></i> 规则中心
                 </button>
                 <button onclick="openSettings()"
                     class="clay-btn py-3 flex flex-col items-center justify-center text-sm gap-1 hover:text-indigo-500">
                     <i class="bi bi-gear-fill text-xl text-indigo-400"></i> 参数
                 </button>
             </div>
+
+            <button onclick="showRuleReport()" id="btn-rule-report" disabled
+                class="w-full mt-3 clay-btn py-3 flex items-center justify-center text-sm gap-2 text-green-600 hover:text-green-700 font-bold">
+                <i class="bi bi-clipboard-check-fill text-xl"></i> 查看规则执行报告
+            </button>
 
             <!-- Management Card -->
             <div
@@ -280,11 +437,7 @@
 
         <!-- Footer -->
         <div class="px-4 pb-4 space-y-2">
-            <!-- AI 智能助手按钮 -->
-            <button onclick="new bootstrap.Modal(document.getElementById('aiRuleModal')).show()"
-                class="w-full clay-btn py-3 bg-gradient-to-r from-indigo-500 to-purple-600 !text-black text-sm font-bold flex items-center justify-center gap-2 hover:shadow-lg transition-all">
-                <i class="bi bi-robot"></i> AI 智能助手
-            </button>
+
 
             <a href="/logout"
                 class="block w-full text-center clay-btn py-3 text-red-400 hover:text-red-500 text-sm font-bold">
@@ -511,168 +664,201 @@
         </div>
     </div>
 
-    <!-- Constraint Modal (重构版：带 Tabs 布局) -->
+    <!-- Constraint Modal (粘土风版本) -->
     <div class="modal fade" id="constraintModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] p-4">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title font-black text-slate-700">高级约束与规则</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <div class="modal-content clay-modal-bg border-0 !rounded-[2rem] overflow-hidden">
+                <!-- 粘土风标题栏 -->
+                <div class="modal-header border-0 px-6 py-5">
+                    <h5 class="modal-title font-black text-slate-700 text-lg flex items-center gap-3">
+                        <div class="clay-btn w-10 h-10 flex items-center justify-center !rounded-xl">
+                            <i class="bi bi-sliders text-blue-500"></i>
+                        </div>
+                        规则配置中心
+                    </h5>
+                    <button type="button"
+                        class="clay-btn w-8 h-8 flex items-center justify-center !rounded-lg text-slate-400 hover:text-red-500"
+                        data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
                 </div>
 
-                <div class="modal-body pt-2">
-                    <ul class="nav nav-pills mb-4 p-1 bg-white/50 rounded-xl gap-2" role="tablist">
-                        <li class="nav-item flex-1" role="presentation">
-                            <button class="nav-link w-full active rounded-lg font-bold text-xs py-2.5" id="tab-time-btn"
-                                data-bs-toggle="pill" data-bs-target="#tab-time" type="button" role="tab">
-                                <i class="bi bi-calendar-x mr-1"></i> 时间禁排
-                            </button>
-                        </li>
-                        <li class="nav-item flex-1" role="presentation">
-                            <button class="nav-link w-full rounded-lg font-bold text-xs py-2.5" id="tab-limits-btn"
-                                data-bs-toggle="pill" data-bs-target="#tab-limits" type="button" role="tab">
-                                <i class="bi bi-person-fill-gear mr-1"></i> 教师工作量
-                            </button>
-                        </li>
-                        <li class="nav-item flex-1" role="presentation">
-                            <button class="nav-link w-full rounded-lg font-bold text-xs py-2.5" id="tab-rules-btn"
-                                data-bs-toggle="pill" data-bs-target="#tab-rules" type="button" role="tab">
-                                <i class="bi bi-shield-lock-fill mr-1"></i> 规则中心 Pro
-                            </button>
-                        </li>
-                    </ul>
-
-                    <div class="tab-content">
-
-                        <div class="tab-pane fade show active" id="tab-time" role="tabpanel">
-                            <div
-                                class="bg-indigo-50 text-indigo-500 p-3 rounded-xl mb-3 text-xs font-bold flex items-start gap-2">
-                                <i class="bi bi-exclamation-circle-fill mt-0.5"></i>
-                                <div>点击格子标记为 <span class="text-red-400">红色</span> 表示【不排课】。</div>
-                            </div>
-
-                            <div class="clay-card p-3 mb-4 flex items-center justify-between !bg-white">
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-black text-slate-700">禁止科目连排</span>
-                                    <span class="text-[10px] text-slate-400 font-bold">同一门课尽量不连续上2节</span>
-                                </div>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input cursor-pointer" type="checkbox"
-                                        id="check-avoid-consecutive" style="width: 3em; height: 1.5em;">
-                                </div>
-                            </div>
-
-                            <div class="flex gap-4 mb-3">
-                                <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
-                                    <input type="radio" name="constraint-mode" value="teacher" class="hidden" checked
-                                        onchange="switchConstraintMode()">
-                                    <i class="bi bi-person-x-fill mr-1"></i> 教师不排课
-                                </label>
-                                <label class="clay-btn px-4 py-2 text-xs cursor-pointer flex-1 text-center">
-                                    <input type="radio" name="constraint-mode" value="fixed" class="hidden"
-                                        onchange="switchConstraintMode()">
-                                    <i class="bi bi-pin-angle-fill mr-1"></i> 班级预排课
-                                </label>
-                            </div>
-
-                            <select id="constraint-teacher-select" class="clay-input w-full mb-4"
-                                onchange="renderConstraintGrid()"></select>
-                            <select id="constraint-class-select" class="clay-input w-full mb-4 hidden"
-                                onchange="renderConstraintGrid()"></select>
-
-                            <div class="clay-card p-4 !shadow-clay-inner flex justify-center">
-                                <table class="table-auto border-separate border-spacing-2" id="constraint-grid">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>一</th>
-                                            <th>二</th>
-                                            <th>三</th>
-                                            <th>四</th>
-                                            <th>五</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="constraint-tbody"></tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="tab-pane fade" id="tab-limits" role="tabpanel">
-                            <div class="flex justify-between items-center mb-3">
-                                <h6 class="font-bold text-slate-600 text-sm">特殊课时限制</h6>
-                                <span class="text-[10px] text-slate-400">控制兼课或行政老师的周课时上下限</span>
-                            </div>
-                            <div class="clay-card p-4 !shadow-clay-inner h-[300px] overflow-y-auto custom-scrollbar">
-                                <table
-                                    class="w-full text-sm text-left border-separate border-spacing-y-2 border-spacing-x-0 table-fixed">
-                                    <thead>
-                                        <tr class="text-slate-400 text-[10px] font-bold sticky top-0 bg-[#eef2f6] z-10">
-                                            <th class="pl-2 pb-2 w-[25%]">姓名</th>
-                                            <th class="pb-2 w-[18%] text-center">最小</th>
-                                            <th class="pb-2 w-[18%] text-center">最大</th>
-                                            <th class="pb-2 w-[30%]">标签</th>
-                                            <th class="text-center pb-2 w-[9%]"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="teacher-limits-body"></tbody>
-                                </table>
-                            </div>
-                            <button
-                                class="clay-btn w-full mt-3 py-3 text-xs text-orange-400 font-bold hover:text-orange-500"
+                <div class="modal-body px-6 pb-6 pt-0">
+                    <!-- 教师课时限制区域 -->
+                    <div class="clay-card p-5 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h6 class="font-bold text-slate-600 flex items-center gap-2">
+                                <i class="bi bi-person-badge-fill text-orange-400"></i>
+                                教师课时限制
+                            </h6>
+                            <button class="clay-btn px-4 py-2 text-xs text-orange-500 font-bold"
                                 onclick="addTeacherLimitRow()">
-                                <i class="bi bi-plus-lg mr-1"></i> 添加限制人员
+                                <i class="bi bi-plus-lg mr-1"></i> 添加人员
                             </button>
                         </div>
+                        <div class="clay-table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>教师姓名</th>
+                                        <th class="text-center">最小课时</th>
+                                        <th class="text-center">最大课时</th>
+                                        <th>标签匹配</th>
+                                        <th class="text-center w-16">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="teacher-limits-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
 
-                        <div class="tab-pane fade" id="tab-rules" role="tabpanel">
-                            <div class="flex justify-between items-center mb-3">
-                                <h6 class="font-bold text-slate-600 text-sm">自定义规则库</h6>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-[10px] text-slate-400">权重越高越严格</span>
-                                    <div class="dropdown">
-                                        <button
-                                            class="clay-btn px-3 py-1.5 text-[10px] text-blue-500 font-bold dropdown-toggle"
-                                            type="button" data-bs-toggle="dropdown">
-                                            <i class="bi bi-collection-fill mr-1"></i> 导入模板
-                                        </button>
-                                        <ul class="dropdown-menu shadow-lg border-0 rounded-xl">
-                                            <li><a class="dropdown-item text-xs font-bold py-2" href="#"
-                                                    onclick="loadRuleTemplate('shaoxing')">🏫 绍兴一中标准规则</a></li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-                                            <li><a class="dropdown-item text-xs font-bold py-2 text-red-400" href="#"
-                                                    onclick="loadRuleTemplate('empty')">🗑️ 清空所有规则</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
+                    <!-- 粘土风分隔线 -->
+                    <div class="clay-divider"></div>
+
+                    <!-- 智能规则库区域 -->
+                    <div class="clay-card p-5">
+                        <div class="flex justify-between items-center mb-5">
+                            <h6 class="font-bold text-slate-600">
+                                智能规则库
+                            </h6>
+
+                            <div class="dropdown">
+                                <button class="clay-btn px-4 py-2 text-xs text-slate-500 font-bold dropdown-toggle"
+                                    type="button" data-bs-toggle="dropdown">
+                                    <i class="bi bi-collection-fill mr-1"></i> 模板
+                                </button>
+                                <ul class="dropdown-menu shadow-lg border-0 rounded-xl">
+                                    <li><a class="dropdown-item text-xs font-bold py-2" href="#"
+                                            onclick="loadRuleTemplate('shaoxing')">
+                                            <i class="bi bi-building mr-2"></i>导入标准模板
+                                        </a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-xs font-bold py-2 text-red-400" href="#"
+                                            onclick="loadRuleTemplate('empty')">
+                                            <i class="bi bi-trash3 mr-2"></i>清空所有
+                                        </a></li>
+                                </ul>
                             </div>
-
-                            <div id="rules-container"
-                                class="space-y-3 h-[400px] overflow-y-auto pr-2 custom-scrollbar p-1">
-                            </div>
-
-                            <button
-                                class="clay-btn w-full mt-3 py-3 text-xs text-purple-500 font-bold hover:text-purple-600"
-                                onclick="addRuleRow()">
-                                <i class="bi bi-plus-lg mr-1"></i> 新增规则
-                            </button>
                         </div>
 
+                        <!-- 规则列表容器 -->
+                        <div id="rules-container" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        </div>
                     </div>
                 </div>
 
-                <div class="modal-footer border-0 flex justify-between items-center pt-2">
-                    <div class="text-[10px] text-slate-400 font-bold ml-2">
-                        <i class="bi bi-info-circle-fill mr-1"></i> 需重新生成生效
-                    </div>
-                    <div class="flex gap-2">
-                        <button class="clay-btn px-4 py-2" data-bs-dismiss="modal">暂存</button>
-                        <button onclick="saveConstraintsAndRun()"
-                            class="clay-btn px-6 py-2 !text-green-400 !bg-blue-600 hover:!bg-blue-700 text-sm font-black tracking-wider shadow-lg">
-                            保存并重排
+                <!-- 粘土风底部操作栏 -->
+                <div class="modal-footer border-0 px-6 py-4 flex justify-between items-center">
+                    <div class="flex gap-3">
+                        <button class="clay-btn py-3 px-5 text-sm text-purple-600 font-bold"
+                            onclick="openAddRuleModal()">
+                            <i class="bi bi-plus-circle-fill mr-2"></i> 新增规则
+                        </button>
+                        <button class="clay-btn py-3 px-5 text-sm text-white font-bold"
+                            style="background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 4px 4px 12px rgba(139, 92, 246, 0.3);"
+                            onclick="new bootstrap.Modal(document.getElementById('aiRuleModal')).show()">
+                            <i class="bi bi-stars mr-2"></i> AI 生成
                         </button>
                     </div>
+                    <div class="flex gap-3">
+                        <button class="clay-btn px-5 py-3 text-sm text-slate-400 font-bold"
+                            data-bs-dismiss="modal">关闭</button>
+                        <button onclick="saveConstraintsAndRun()"
+                            class="clay-btn px-6 py-3 text-sm text-white font-bold"
+                            style="background: linear-gradient(135deg, #3b82f6, #2563eb); box-shadow: 4px 4px 12px rgba(59, 130, 246, 0.3);">
+                            <i class="bi bi-check-lg mr-2"></i> 保存并重排
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新增规则弹窗 -->
+    <div class="modal fade" id="addRuleModal" tabindex="-1" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content clay-modal-bg border-0 !rounded-[2rem] overflow-hidden">
+                <div class="modal-header border-0 px-6 py-5">
+                    <h5 class="modal-title font-black text-slate-700 text-lg">新增规则</h5>
+                    <button type="button"
+                        class="clay-btn w-8 h-8 flex items-center justify-center !rounded-lg text-slate-400 hover:text-red-500"
+                        data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body px-6 pb-6 pt-0">
+                    <div class="flex flex-col items-center space-y-5">
+
+                        <!-- 规则名称 -->
+                        <div class="w-full">
+                            <label class="text-xs text-slate-500 font-bold block text-center mb-2">规则名称</label>
+                            <input type="text" id="newRuleName"
+                                class="clay-input w-full py-3 text-sm text-center font-bold text-slate-700"
+                                placeholder="例如：语文不排周五下午">
+                        </div>
+
+                        <!-- 规则类型 + 权重 -->
+                        <div class="grid grid-cols-2 gap-4 w-full">
+                            <div class="clay-input-group text-center">
+                                <label class="text-center">规则类型</label>
+                                <select id="newRuleType" class="cursor-pointer text-center">
+                                    <option value="FORBIDDEN_SLOTS">时段禁排</option>
+                                    <option value="FIXED_SLOTS">固定时段</option>
+                                    <option value="ZONE_COUNT">区域课时</option>
+                                    <option value="CONSECUTIVE">连堂限制</option>
+                                    <option value="GLOBAL_CAPACITY">全校容量</option>
+                                    <option value="SPECIAL_DAYS">整日禁排</option>
+                                </select>
+                            </div>
+                            <div class="clay-input-group text-center">
+                                <label class="text-center">权重</label>
+                                <input type="number" id="newRuleWeight" class="text-center font-bold text-blue-500"
+                                    value="100">
+                            </div>
+                        </div>
+
+                        <!-- 适用年级 -->
+                        <div class="text-center w-full">
+                            <label class="text-xs text-slate-500 font-bold block mb-3">适用年级</label>
+                            <div id="newRuleGrades" class="flex flex-wrap gap-3 justify-center">
+                                <!-- 动态填充 -->
+                            </div>
+                        </div>
+
+                        <!-- 筛选条件 -->
+                        <div class="w-full">
+                            <label class="text-xs text-slate-500 font-bold block text-center mb-2">筛选条件</label>
+                            <input type="text" id="newRuleTargets" class="clay-input w-full py-3 text-sm text-center"
+                                placeholder="科目:语文; 姓名:张三">
+                        </div>
+
+                        <!-- 时段选择 -->
+                        <div class="w-full text-center">
+                            <label class="text-xs text-slate-500 font-bold block mb-2">时段设置</label>
+                            <input type="text" id="newRuleSlots"
+                                class="clay-input w-full py-3 text-sm text-center font-mono text-indigo-600 mb-3"
+                                placeholder="点击下方按钮选择时段" readonly>
+                            <button type="button" class="clay-btn w-full py-3 text-sm font-bold text-white"
+                                style="background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 4px 4px 12px rgba(139, 92, 246, 0.4);"
+                                onclick="openNewRuleSlotPicker()">
+                                选择时段
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 px-6 py-4 flex justify-center gap-4">
+                    <button class="clay-btn px-6 py-3 text-sm text-slate-400 font-bold"
+                        data-bs-dismiss="modal">取消</button>
+                    <button class="clay-btn px-8 py-3 text-sm text-white font-bold"
+                        style="background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 4px 4px 12px rgba(139, 92, 246, 0.3);"
+                        onclick="confirmAddRule()">
+                        确认添加
+                    </button>
                 </div>
             </div>
         </div>
@@ -690,7 +876,7 @@
                     <div
                         class="bg-purple-50 text-purple-500 p-3 rounded-xl mb-3 text-[10px] font-bold flex items-start gap-2 text-left">
                         <i class="bi bi-info-circle-fill mt-0.5"></i>
-                        <div>点击下方格子标记规则生效的时段。紫色表示“选中”。</div>
+                        <div>点击下方格子标记规则生效的时段。紫色表示"选中"。</div>
                     </div>
                     <div class="clay-card p-4 !shadow-clay-inner flex justify-center mb-4">
                         <table class="table-fixed border-separate border-spacing-1" id="rule-slot-grid"
@@ -751,7 +937,7 @@
                 </div>
                 <div class="modal-footer border-0 pt-0">
                     <button id="btn-ai-gen"
-                        class="clay-btn px-6 py-2 !bg-purple-500 !text-white w-full shadow-lg hover:scale-[1.02] transition-transform"
+                        class="clay-btn px-6 py-2 !bg-purple-500 !text-black w-full shadow-lg hover:scale-[1.02] transition-transform"
                         onclick="callAiGeneration()">
                         <i class="bi bi-magic mr-1"></i> 生成并应用
                     </button>
@@ -773,6 +959,10 @@
                 <div class="modal-body">
                     <!-- 规则摘要 -->
                     <div class="clay-card p-4 bg-white mb-3">
+                        <div class="mb-3 border-b border-dashed border-slate-100 pb-2">
+                            <span class="text-slate-400 font-bold block mb-1">规则描述：</span>
+                            <span id="detail-name" class="text-blue-600 font-black text-sm"></span>
+                        </div>
                         <div class="grid grid-cols-2 gap-3 text-xs">
                             <div>
                                 <span class="text-slate-400 font-bold">规则类型：</span>
@@ -858,7 +1048,8 @@
                         </div>
                         <div>
                             <h5 class="modal-title font-black text-slate-700">智能调配报告</h5>
-                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Smart Sharding Pro Report</p>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-wider">Smart Sharding Pro Report
+                            </p>
                         </div>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -1252,6 +1443,29 @@
                 document.getElementById('btn-stats').disabled = false;
             }
 
+            // [修改] 增强报告按钮的点亮逻辑
+            if (data.rule_report || (data.schedule && data.schedule.rule_report)) {
+                globalRuleReport = data.rule_report || data.schedule.rule_report || [];
+
+                const btn = document.getElementById('btn-rule-report');
+                btn.disabled = false;
+
+                const failCount = globalRuleReport.filter(r => r.status === 'failed').length;
+                if (failCount > 0) {
+                    btn.classList.add('animate-pulse', 'text-red-500');
+                    btn.innerHTML = `<i class="bi bi-exclamation-triangle-fill text-xl"></i> 规则冲突 (${failCount})`;
+                } else {
+                    btn.classList.remove('animate-pulse', 'text-red-500');
+                    if (globalRuleReport.length > 0) {
+                        btn.innerHTML = `<i class="bi bi-clipboard-check-fill text-xl"></i> 规则执行完美`;
+                        btn.classList.add('text-green-600');
+                    } else {
+                        btn.innerHTML = `<i class="bi bi-clipboard text-xl"></i> 暂无规则`;
+                        btn.classList.remove('text-green-600');
+                    }
+                }
+            }
+
             // [新增] 弹出智能调配报告 (Sharding Report)
             if (data.sharding_info && data.sharding_info.length > 0) {
                 const container = document.getElementById('sharding-content');
@@ -1361,7 +1575,21 @@
                 </button>
             </div>`).join('') : '<div class="text-xs text-slate-400 text-center py-2">暂无存档</div>';
         }
-        async function loadSchedule(n) { const res = await fetch(`/api/load/${encodeURIComponent(n)}`); const data = await res.json(); if (data.status === 'success') { currentScheduleId = data.schedule_id; globalSchedule = data.schedule; config = data.config || config; renderSettings(); updateUI(data); } }
+        async function loadSchedule(n) {
+            const res = await fetch(`/api/load/${encodeURIComponent(n)}`);
+            const data = await res.json();
+            if (data.status === 'success') {
+                currentScheduleId = data.schedule_id;
+                if (!data.schedule.schedule) {
+                    globalSchedule = data.schedule;
+                } else {
+                    globalSchedule = data.schedule.schedule;
+                }
+                config = data.config || config;
+                renderSettings();
+                updateUI(data);
+            }
+        }
         async function saveCurrentSchedule() {
             // [关键修改] 保存前强制同步 UI 数据
             syncUItoConfig();
@@ -1378,144 +1606,17 @@
             initGradeTabs();
             // 默认加载当前已存的数据 (切到初一)
             switchGrade("初一");
+            new bootstrap.Modal(document.getElementById('settingsModal')).show();
+        }
 
-            const m = new bootstrap.Modal(document.getElementById('settingsModal'));
-            // ... (其余原有的老师和班级下拉填充逻辑，需调整或保留兼容性) ...
-
-            const t = document.getElementById('constraint-teacher-select');
-            t.innerHTML = '<option value="">选择教师...</option>';
-            globalTeachers.sort((a, b) => a.name.localeCompare(b.name)).forEach(x => {
-                t.add(new Option(x.name, x.name));
-            });
-
-            const c = document.getElementById('constraint-class-select');
-            c.innerHTML = '<option value="">选择班级...</option>';
-            Object.keys(globalSchedule).forEach(k => c.add(new Option(`${k} 班`, k)));
-
-            document.querySelector('input[name="constraint-mode"][value="teacher"]').checked = true;
-            switchConstraintMode();
+        function openConstraints() {
+            // 同步全局状态到 UI
             const isAvoid = config.optimization && config.optimization.avoid_consecutive_subjects === true;
-            document.getElementById('check-avoid-consecutive').checked = isAvoid;
-            renderConstraintGrid();
-            m.show();
-        }
-        function switchConstraintMode() {
-            const mode = document.querySelector('input[name="constraint-mode"]:checked').value;
-            const tSel = document.getElementById('constraint-teacher-select');
-            const cSel = document.getElementById('constraint-class-select');
+            const chk = document.getElementById('check-avoid-consecutive');
+            if (chk) chk.checked = isAvoid;
 
-            // 样式更新
-            document.querySelectorAll('input[name="constraint-mode"]').forEach(el => {
-                const label = el.parentElement;
-                if (el.checked) {
-                    label.classList.add('bg-blue-100', 'text-blue-600', 'font-bold');
-                } else {
-                    label.classList.remove('bg-blue-100', 'text-blue-600', 'font-bold');
-                }
-            });
-
-            if (mode === 'teacher') {
-                tSel.classList.remove('hidden');
-                cSel.classList.add('hidden');
-            } else {
-                tSel.classList.add('hidden');
-                cSel.classList.remove('hidden');
-            }
-            renderConstraintGrid();
-        }
-
-        function renderConstraintGrid() {
-            const mode = document.querySelector('input[name="constraint-mode"]:checked').value;
-            const tb = document.getElementById('constraint-tbody');
-            tb.innerHTML = '';
-
-            let currentData = null;
-            let currentTarget = null;
-
-            if (mode === 'teacher') {
-                currentTarget = document.getElementById('constraint-teacher-select').value;
-                currentData = (currentTarget && globalConstraints.teacher_unavailable[currentTarget]) ? globalConstraints.teacher_unavailable[currentTarget] : [];
-            } else {
-                currentTarget = document.getElementById('constraint-class-select').value;
-                if (!globalConstraints.fixed_courses) globalConstraints.fixed_courses = {};
-                currentData = (currentTarget && globalConstraints.fixed_courses[currentTarget]) ? globalConstraints.fixed_courses[currentTarget] : {};
-            }
-
-            for (let p = 0; p < 8; p++) {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<th class="text-slate-300 text-[10px] pr-2 align-middle">${p + 1}</th>`;
-
-                for (let d = 0; d < 5; d++) {
-                    const td = document.createElement('td');
-                    td.className = "rounded-lg hover:bg-slate-100 cursor-pointer p-2 relative transition-colors";
-
-                    if (mode === 'teacher') {
-                        // 教师不排课模式
-                        const isRestricted = Array.isArray(currentData) && currentData.some(c => c[0] === d && c[1] === p);
-                        const dotClass = isRestricted ? "bg-red-400 w-4 h-4 shadow-md" : "bg-slate-200 w-2 h-2";
-                        td.innerHTML = `<div class="${dotClass} rounded-full mx-auto transition-all duration-200"></div>`;
-                        td.onclick = () => toggleTeacherConstraint(d, p, td);
-                    } else {
-                        // 班级预排模式
-                        const fixedSubj = currentData[`${d}_${p}`];
-                        if (fixedSubj) {
-                            td.innerHTML = `<div class="bg-blue-100 text-blue-600 text-[10px] font-bold px-1 py-1 rounded text-center truncate shadow-sm">${fixedSubj}</div>`;
-                        } else {
-                            td.innerHTML = `<div class="w-2 h-2 rounded-full bg-slate-200 mx-auto"></div>`;
-                        }
-                        td.onclick = () => toggleFixedConstraint(d, p, td);
-                    }
-                    tr.appendChild(td);
-                }
-                tb.appendChild(tr);
-            }
-        }
-
-        function toggleTeacherConstraint(d, p, td) {
-            const t = document.getElementById('constraint-teacher-select').value;
-            if (!t) return alert("请先选择一位老师");
-
-            if (!globalConstraints.teacher_unavailable[t]) globalConstraints.teacher_unavailable[t] = [];
-            const idx = globalConstraints.teacher_unavailable[t].findIndex(u => u[0] == d && u[1] == p);
-
-            if (idx >= 0) {
-                globalConstraints.teacher_unavailable[t].splice(idx, 1);
-            } else {
-                globalConstraints.teacher_unavailable[t].push([d, p]);
-            }
-            renderConstraintGrid();
-        }
-
-        function toggleFixedConstraint(d, p, td) {
-            const c = document.getElementById('constraint-class-select').value;
-            if (!c) return alert("请先选择一个班级");
-
-            if (!globalConstraints.fixed_courses[c]) globalConstraints.fixed_courses[c] = {};
-
-            const currentSubj = globalConstraints.fixed_courses[c][`${d}_${p}`];
-
-            if (currentSubj) {
-                // 已有 -> 清除
-                delete globalConstraints.fixed_courses[c][`${d}_${p}`];
-                renderConstraintGrid();
-            } else {
-                // 没有 -> 选择
-                // 收集所有可选课程
-                const subjects = config.courses.map(x => x.name);
-                // 简单起见，使用 prompt
-                // 更高级的做法是弹出一个小的 popover，但这需要写更多 DOM
-                const input = prompt(`请输入 [ ${c} 班 - ${DAYS[d]} 第${p + 1}节 ] 固定要上的科目名称：\n(可选: ${subjects.join(', ')})`);
-                if (input) {
-                    const trimmed = input.trim();
-                    // 验证一下
-                    if (subjects.includes(trimmed)) {
-                        globalConstraints.fixed_courses[c][`${d}_${p}`] = trimmed;
-                        renderConstraintGrid();
-                    } else {
-                        alert("科目不存在，请检查输入 (必须完全匹配参数设置中的科目名)");
-                    }
-                }
-            }
+            // 显示 Modal
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('constraintModal')).show();
         }
 
         function saveConstraintsAndRun() {
@@ -1625,60 +1726,67 @@
             updateTotalHours(); // 添加行后立即重新计算
         }
 
-        // [优化版] 规则参数动态更新（适配卡片式布局）
+        // [优化版] 规则参数动态更新
         function updateRuleParams(select) {
             const card = select.closest('.rule-card');
             const container = card.querySelector('.rule-params-container');
             const type = select.value;
             let html = '';
 
-            // 统一样式
-            const inputClass = "clay-input w-full py-1.5 px-2 text-xs border-0 !rounded-md bg-white text-slate-600 font-mono";
-            const pickBtn = `<button class="clay-btn px-3 py-1.5 text-[10px] text-white bg-purple-400 hover:bg-purple-500 font-bold flex items-center gap-1 shadow-sm whitespace-nowrap" onclick="openRuleSlotPicker(this)"><i class="bi bi-grid-3x3-gap-fill"></i> 选时段</button>`;
+            // 统一样式：粘土风凹陷输入框，更大更长
+            const inputClass = "w-full clay-input py-3 px-4 text-sm font-mono text-indigo-600";
+
+            // 按钮样式 - 宽的长方形粘土风按钮
+            const pickBtn = `<button class="clay-btn w-full py-3 text-sm font-bold text-white" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); box-shadow: 4px 4px 12px rgba(139, 92, 246, 0.4);" onclick="openRuleSlotPicker(this)">选择时段</button>`;
 
             if (type === 'FORBIDDEN_SLOTS' || type === 'FIXED_SLOTS') {
                 html = `
-                <div class="flex items-center gap-2">
-                    <div class="flex-1">
-                        <input class="${inputClass} rule-param-slots" placeholder="时段数据: [[0,1],[1,2]]" readonly>
-                    </div>
-                    ${pickBtn}
-                </div>`;
-            } else if (type === 'CONSECUTIVE') {
-                html = `
-                <div class="flex items-center justify-start gap-2">
-                    <span class="text-xs font-bold text-slate-500">连续上课不超过</span>
-                    <input type="number" class="${inputClass} !w-16 text-center rule-param-max" value="1">
-                    <span class="text-xs font-bold text-slate-500">节</span>
-                </div>`;
+                    <div class="flex flex-col items-center gap-4 py-2">
+                        <div class="w-full">
+                            <label class="text-xs text-slate-500 font-bold block text-center mb-2">时段坐标</label>
+                            <input class="${inputClass} rule-param-slots text-center" placeholder="点击下方按钮选择" readonly>
+                        </div>
+                        ${pickBtn}
+                    </div>`;
             } else if (type === 'ZONE_COUNT') {
                 html = `
-                <div class="space-y-2">
-                    <div class="flex items-center gap-2">
-                         <div class="flex-1">
-                            <input class="${inputClass} rule-param-slots" placeholder="选定时段..." readonly>
-                         </div>
-                         ${pickBtn}
-                    </div>
-                    <div class="flex items-center gap-2 bg-white/50 p-1.5 rounded-md">
-                        <span class="text-[10px] font-bold text-slate-500">该区域须排</span>
-                        <input type="number" class="${inputClass} !w-12 text-center py-1 rule-param-count" value="4">
-                        <span class="text-[10px] font-bold text-slate-500">节课</span>
-                    </div>
-                </div>`;
+                    <div class="flex flex-col items-center gap-4 py-2">
+                        <div class="w-full">
+                            <label class="text-xs text-slate-500 font-bold block text-center mb-2">限制区域</label>
+                            <input class="${inputClass} rule-param-slots text-center" placeholder="点击下方按钮选择" readonly>
+                        </div>
+                        ${pickBtn}
+                        <div class="flex items-center justify-center gap-3 w-full">
+                            <span class="text-sm font-bold text-slate-600">该区域必须排</span>
+                            <input type="number" class="clay-input w-20 py-2 text-center text-lg font-bold text-blue-600 rule-param-count" value="4">
+                            <span class="text-sm font-bold text-slate-600">节课</span>
+                        </div>
+                    </div>`;
+            } else if (type === 'CONSECUTIVE') {
+                html = `
+                    <div class="flex flex-col items-center gap-3 py-2">
+                        <label class="text-xs text-slate-500 font-bold">最大连堂数</label>
+                        <div class="flex items-center gap-3">
+                            <input type="number" class="clay-input w-24 py-3 text-center text-xl font-bold text-blue-600 rule-param-max" value="1">
+                            <span class="text-sm text-slate-500 font-bold">节</span>
+                        </div>
+                        <div class="text-xs text-slate-400">例如：设为 1 表示禁止 2 节连排</div>
+                    </div>`;
             } else if (type === 'GLOBAL_CAPACITY') {
                 html = `
-                <div class="flex items-center justify-start gap-2">
-                    <span class="text-xs font-bold text-slate-500">同时段最大并发数</span>
-                    <input type="number" class="${inputClass} !w-16 text-center rule-param-capacity" value="1">
-                    <span class="text-xs font-bold text-slate-500">个</span>
-                </div>`;
+                    <div class="flex flex-col items-center gap-3 py-2">
+                        <label class="text-xs text-slate-500 font-bold">全校并发上限</label>
+                        <div class="flex items-center gap-3">
+                            <input type="number" class="clay-input w-24 py-3 text-center text-xl font-bold text-blue-600 rule-param-capacity" value="1">
+                            <span class="text-sm text-slate-500 font-bold">个班</span>
+                        </div>
+                    </div>`;
             } else if (type === 'SPECIAL_DAYS') {
                 html = `
-                <div>
-                    <input class="${inputClass} rule-param-days" placeholder="星期几禁排 (0=周一), 例: [0, 2]">
-                    <div class="text-[9px] text-slate-400 mt-1 pl-1">输入 0-4 的数字，用逗号分隔</div>
-                </div>`;
+                    <div class="flex flex-col items-center gap-3 py-2">
+                        <label class="text-xs text-slate-500 font-bold">禁排星期 (0=周一)</label>
+                        <input class="${inputClass} rule-param-days text-center" placeholder="例如: [0, 4] 表示周一和周五">
+                    </div>`;
             }
             container.innerHTML = html;
         }
@@ -1810,7 +1918,8 @@
                             rule.targets || {},
                             rule.type,
                             rule.params || {},
-                            rule.weight || 100
+                            rule.weight || 100,
+                            text // 使用用户输入的原始自然语言作为描述
                         );
                         count++;
                     });
@@ -1839,7 +1948,8 @@
         let currentRuleJson = {};  // 缓存当前查看的规则 JSON
 
         function showRuleDetail(ruleCard) {
-            // 从规则卡片中提取数据
+            // 提取基础数据
+            const name = ruleCard.querySelector('.rule-name').value;
             const type = ruleCard.querySelector('.rule-type').value;
             const weight = ruleCard.querySelector('.rule-weight').value;
             const targetsStr = ruleCard.querySelector('.rule-targets').value;
@@ -1861,6 +1971,7 @@
 
             // 构造完整 JSON
             currentRuleJson = {
+                name: name,
                 type: type,
                 targets: targets,
                 params: params,
@@ -1870,6 +1981,7 @@
             // 规则类型映射
             const typeNames = {
                 'FORBIDDEN_SLOTS': '🚫 时段禁排',
+                'FIXED_SLOTS': '📌 固定时段',
                 'ZONE_COUNT': '🔢 区域课时限制',
                 'CONSECUTIVE': '⛓️ 连堂限制',
                 'GLOBAL_CAPACITY': '🏟️ 全校容量限制',
@@ -1877,6 +1989,7 @@
             };
 
             // 填充详情
+            document.getElementById('detail-name').textContent = name || '(无描述)';
             document.getElementById('detail-type').textContent = typeNames[type] || type;
             document.getElementById('detail-weight').textContent = weight + (parseInt(weight) >= 100 ? ' (硬约束)' : ' (软约束)');
             document.getElementById('detail-grades').textContent = selectedGrades.length > 0 ? selectedGrades.join(', ') : '全校';
@@ -1998,7 +2111,7 @@
 
                     // 遍历添加每条规则
                     rules.forEach(r => {
-                        addRuleRow(r.targets, r.type, r.params, r.weight);
+                        addRuleRow(r.targets, r.type, r.params, r.weight, r.name || '');
                     });
 
                     alert(`成功导入 ${rules.length} 条规则！\n请记得点击"保存并重排"生效。`);
@@ -2009,76 +2122,166 @@
             }
         }
 
-        // [优化版] 卡片式规则渲染 - 支持年级勾选
-        function addRuleRow(targets = {}, type = "FORBIDDEN_SLOTS", params = {}, weight = 100) {
+        // ============ 新增规则弹窗逻辑 ============
+        let newRuleSelectedSlots = []; // 存储新增规则弹窗中选择的时段
+
+        function openNewRuleSlotPicker() {
+            // 使用弹窗中已选的时段初始化
+            currentEditingRuleSlots = [...newRuleSelectedSlots];
+            targetRuleInput = document.getElementById('newRuleSlots');
+            renderRuleSlotGrid();
+            new bootstrap.Modal(document.getElementById('ruleSlotModal')).show();
+        }
+
+        function openAddRuleModal() {
+            // 填充年级选项
+            const gradesContainer = document.getElementById('newRuleGrades');
+            const availableGrades = Object.keys(gradesData).length > 0 ? Object.keys(gradesData) : ["初一", "初二", "初三"];
+
+            gradesContainer.innerHTML = availableGrades.map(g => `
+                <label class="relative">
+                    <input type="checkbox" class="grade-checkbox-hidden new-rule-grade" value="${g}">
+                    <span class="clay-pill">${g}</span>
+                </label>
+            `).join('');
+
+            // 重置表单
+            document.getElementById('newRuleName').value = '';
+            document.getElementById('newRuleType').value = 'FORBIDDEN_SLOTS';
+            document.getElementById('newRuleWeight').value = 100;
+            document.getElementById('newRuleTargets').value = '';
+            document.getElementById('newRuleSlots').value = '';
+            newRuleSelectedSlots = [];
+
+            // 显示弹窗
+            new bootstrap.Modal(document.getElementById('addRuleModal')).show();
+        }
+
+        function confirmAddRule() {
+            // 收集表单数据
+            const name = document.getElementById('newRuleName').value.trim();
+            const type = document.getElementById('newRuleType').value;
+            const weight = parseInt(document.getElementById('newRuleWeight').value) || 100;
+            const targetsStr = document.getElementById('newRuleTargets').value.trim();
+
+            // 收集选中的年级
+            const selectedGrades = [];
+            document.querySelectorAll('.new-rule-grade:checked').forEach(cb => {
+                selectedGrades.push(cb.value);
+            });
+
+            // 解析 targets
+            const targets = {};
+            if (selectedGrades.length > 0) {
+                targets.grades = selectedGrades;
+            }
+            if (targetsStr) {
+                targetsStr.split(';').forEach(part => {
+                    const [key, val] = part.split(':').map(s => s.trim());
+                    if (key && val) {
+                        if (key === '科目' || key === 'subjects') {
+                            targets.subjects = val.split(',').map(s => s.trim());
+                        } else if (key === '标签' || key === 'tags') {
+                            targets.tags = val.split(',').map(s => s.trim());
+                        } else if (key === '姓名' || key === 'names') {
+                            targets.names = val.split(',').map(s => s.trim());
+                        }
+                    }
+                });
+            }
+
+            // 收集时段参数
+            const params = {};
+            try {
+                const slotsStr = document.getElementById('newRuleSlots').value;
+                if (slotsStr) {
+                    params.slots = JSON.parse(slotsStr);
+                }
+            } catch (e) { /* 忽略解析错误 */ }
+
+            // 调用 addRuleRow 添加规则
+            addRuleRow(targets, type, params, weight, name);
+
+            // 关闭弹窗
+            bootstrap.Modal.getInstance(document.getElementById('addRuleModal')).hide();
+        }
+
+        // [粘土风版] 规则卡片生成函数
+        function addRuleRow(targets = {}, type = "FORBIDDEN_SLOTS", params = {}, weight = 100, name = "") {
+            // 1. 预处理数据
             let targetsStr = "";
             if (targets.tags) targetsStr += `标签:${Array.isArray(targets.tags) ? targets.tags.join(',') : targets.tags}; `;
             if (targets.subjects) targetsStr += `科目:${Array.isArray(targets.subjects) ? targets.subjects.join(',') : targets.subjects}; `;
             if (targets.names) targetsStr += `姓名:${Array.isArray(targets.names) ? targets.names.join(',') : targets.names}; `;
-            // 年级不再通过文本框回显，而是通过下方 Checkbox 回显
 
-            // 获取当前系统定义的所有年级 (来自 gradesData 全局变量)
+            // 获取年级数据
             const availableGrades = Object.keys(gradesData).length > 0 ? Object.keys(gradesData) : ["初一", "初二", "初三"];
-
-            // 生成年级勾选 HTML
-            let gradesHtml = `<div class="flex flex-wrap gap-2 mt-1 mb-2">`;
-            availableGrades.forEach(g => {
-                const isChecked = targets.grades && targets.grades.includes(g) ? 'checked' : '';
-                gradesHtml += `
-                <label class="cursor-pointer inline-flex items-center gap-1 bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm text-[10px] text-slate-500 font-bold hover:text-blue-500 transition-colors">
-                    <input type="checkbox" class="rule-grade-checkbox form-checkbox h-3 w-3 text-blue-500 rounded border-slate-300 focus:ring-0" value="${g}" ${isChecked}>
-                    ${g}
-                </label>`;
-            });
-            gradesHtml += `</div>`;
 
             // 生成唯一ID
             const ruleId = 'rule-' + Date.now() + Math.random().toString(36).substr(2, 9);
 
+            // 3. 构建粘土风 UI 结构 - 居中对齐版
             const html = `
-            <div class="clay-card p-3 bg-white relative group rule-card" id="${ruleId}">
-                <div class="flex justify-between items-start mb-2 gap-2">
-                    <div class="flex-1">
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block">规则类型</label>
-                        <select class="clay-input w-full py-1.5 px-2 text-xs font-bold text-slate-600 border-0 !rounded-lg rule-type bg-slate-50" onchange="updateRuleParams(this)">
-                            <option value="FORBIDDEN_SLOTS" ${type === 'FORBIDDEN_SLOTS' ? 'selected' : ''}>🚫 时段禁排</option>
-                            <option value="FIXED_SLOTS" ${type === 'FIXED_SLOTS' ? 'selected' : ''}>📌 固定时段</option>
-                            <option value="ZONE_COUNT" ${type === 'ZONE_COUNT' ? 'selected' : ''}>🔢 区域课时</option>
-                            <option value="CONSECUTIVE" ${type === 'CONSECUTIVE' ? 'selected' : ''}>⛓️ 连堂限制</option>
-                            <option value="GLOBAL_CAPACITY" ${type === 'GLOBAL_CAPACITY' ? 'selected' : ''}>🏟️ 全校容量</option>
-                            <option value="SPECIAL_DAYS" ${type === 'SPECIAL_DAYS' ? 'selected' : ''}>📅 整日禁排</option>
-                        </select>
-                    </div>
-                    <div class="w-20">
-                        <label class="text-[10px] text-slate-400 font-bold mb-1 block text-center">权重</label>
-                        <input type="number" class="clay-input w-full py-1.5 px-1 text-xs text-center font-bold text-blue-500 border-0 !rounded-lg rule-weight bg-slate-50" value="${weight}" title="100为硬约束">
-                    </div>
-                    <button class="w-7 h-7 mt-5 rounded-lg text-slate-300 hover:bg-blue-50 hover:text-blue-500 flex items-center justify-center transition-all" 
-                            onclick="showRuleDetail(this.closest('.rule-card'))" title="查看详情">
-                        <i class="bi bi-info-circle-fill"></i>
-                    </button>
-                    <button class="w-7 h-7 mt-5 rounded-lg text-slate-300 hover:bg-red-50 hover:text-red-500 flex items-center justify-center transition-all" 
-                            onclick="this.closest('.rule-card').remove()">
-                        <i class="bi bi-trash3-fill"></i>
+            <div class="clay-rule-card rule-card" id="${ruleId}">
+                
+                <!-- 顶部：规则名称 + 删除按钮 -->
+                <div class="flex justify-center items-center gap-4 mb-5">
+                    <input type="text" 
+                           class="clay-input flex-1 text-sm font-bold text-slate-700 text-center rule-name" 
+                           value="${name}" 
+                           placeholder="输入规则名称...">
+                    <button class="clay-btn w-10 h-10 flex items-center justify-center text-slate-400 hover:text-red-500 !rounded-xl shrink-0" 
+                            onclick="this.closest('.rule-card').remove()" title="删除规则">
+                        <i class="bi bi-trash3"></i>
                     </button>
                 </div>
 
-                <div class="mb-2 border-b border-dashed border-slate-100 pb-2">
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block flex items-center gap-1">
-                        <i class="bi bi-mortarboard-fill text-blue-300"></i> 适用年级 <span class="text-slate-200 font-normal">(不选默认全校)</span>
-                    </label>
-                    ${gradesHtml}
-                </div>
-
-                <div class="mb-2">
-                    <label class="text-[10px] text-slate-400 font-bold mb-1 block">其他筛选 <span class="text-slate-300 font-normal">(标签:xx; 科目:xx; 姓名:xx)</span></label>
-                    <input class="clay-input w-full py-2 px-3 text-xs border-0 !rounded-lg rule-targets bg-slate-50 text-slate-600" 
-                           value="${targetsStr}" 
-                           placeholder="例如：标签:行政; 科目:语文">
-                </div>
-
-                <div class="bg-indigo-50/50 rounded-lg p-2 rule-params-container">
+                <!-- 主体：居中单列布局 -->
+                <div class="flex flex-col items-center space-y-5">
+                    
+                    <!-- 规则类型 + 权重 -->
+                    <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                        <div class="clay-input-group text-center">
+                            <label class="text-center">规则类型</label>
+                            <select class="rule-type cursor-pointer text-center" onchange="updateRuleParams(this)">
+                                <option value="FORBIDDEN_SLOTS" ${type === 'FORBIDDEN_SLOTS' ? 'selected' : ''}>时段禁排</option>
+                                <option value="FIXED_SLOTS" ${type === 'FIXED_SLOTS' ? 'selected' : ''}>固定时段</option>
+                                <option value="ZONE_COUNT" ${type === 'ZONE_COUNT' ? 'selected' : ''}>区域课时</option>
+                                <option value="CONSECUTIVE" ${type === 'CONSECUTIVE' ? 'selected' : ''}>连堂限制</option>
+                                <option value="GLOBAL_CAPACITY" ${type === 'GLOBAL_CAPACITY' ? 'selected' : ''}>全校容量</option>
+                                <option value="SPECIAL_DAYS" ${type === 'SPECIAL_DAYS' ? 'selected' : ''}>整日禁排</option>
+                            </select>
+                        </div>
+                        
+                        <div class="clay-input-group text-center">
+                            <label class="text-center">权重 (0-100)</label>
+                            <input type="number" class="rule-weight text-blue-500 font-bold text-center" value="${weight}">
+                        </div>
                     </div>
+
+                    <!-- 适用年级 -->
+                    <div class="text-center">
+                        <div class="text-xs text-slate-500 font-bold mb-3">适用年级</div>
+                        <div class="flex flex-wrap gap-3 justify-center">
+                            ${availableGrades.map(g => {
+                const isChecked = targets.grades && targets.grades.includes(g) ? 'checked' : '';
+                return `<label class="relative">
+                                    <input type="checkbox" class="grade-checkbox-hidden rule-grade-checkbox" value="${g}" ${isChecked}>
+                                    <span class="clay-pill">${g}</span>
+                                </label>`;
+            }).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 筛选条件 -->
+                    <div class="clay-input-group w-full max-w-md text-center">
+                        <label class="text-center">筛选条件</label>
+                        <input class="rule-targets text-center" value="${targetsStr}" placeholder="科目:语文; 姓名:张三">
+                    </div>
+
+                    <!-- 参数区域（选时段按钮在此渲染） -->
+                    <div class="rule-params-container w-full max-w-md"></div>
+                </div>
             </div>`;
 
             document.getElementById('rules-container').insertAdjacentHTML('beforeend', html);
@@ -2087,28 +2290,31 @@
             const selectEl = document.getElementById(ruleId).querySelector('.rule-type');
             updateRuleParams(selectEl);
 
-            // 回填复杂参数
+            // 回填复杂参数逻辑
             if (Object.keys(params).length > 0) {
                 const card = document.getElementById(ruleId);
-                if (type === 'FORBIDDEN_SLOTS' || type === 'ZONE_COUNT' || type === 'FIXED_SLOTS') {
-                    const el = card.querySelector('.rule-param-slots');
-                    if (el) el.value = JSON.stringify(params.slots || []);
-                    if (type === 'ZONE_COUNT') {
-                        const countEl = card.querySelector('.rule-param-count');
-                        if (countEl) countEl.value = params.count || 0;
+                try {
+                    if (type === 'FORBIDDEN_SLOTS' || type === 'FIXED_SLOTS' || type === 'ZONE_COUNT') {
+                        const el = card.querySelector('.rule-param-slots');
+                        if (el) el.value = JSON.stringify(params.slots || []);
+                        if (type === 'ZONE_COUNT') {
+                            const countEl = card.querySelector('.rule-param-count');
+                            if (countEl) countEl.value = params.count || 0;
+                        }
+                    } else if (type === 'CONSECUTIVE') {
+                        const el = card.querySelector('.rule-param-max');
+                        if (el) el.value = params.max || 1;
+                    } else if (type === 'GLOBAL_CAPACITY') {
+                        const el = card.querySelector('.rule-param-capacity');
+                        if (el) el.value = params.capacity || 1;
+                    } else if (type === 'SPECIAL_DAYS') {
+                        const el = card.querySelector('.rule-param-days');
+                        if (el) el.value = JSON.stringify(params.days || []);
                     }
-                } else if (type === 'CONSECUTIVE') {
-                    const el = card.querySelector('.rule-param-max');
-                    if (el) el.value = params.max || 1;
-                } else if (type === 'GLOBAL_CAPACITY') {
-                    const el = card.querySelector('.rule-param-capacity');
-                    if (el) el.value = params.capacity || 1;
-                } else if (type === 'SPECIAL_DAYS') {
-                    const el = card.querySelector('.rule-param-days');
-                    if (el) el.value = JSON.stringify(params.days || []);
-                }
+                } catch (e) { console.error("Params fill error", e); }
             }
         }
+
 
         function updateTotalHours() {
             let t = 0;
@@ -2193,9 +2399,9 @@
             }
 
             // 更新：规则中心
-            document.getElementById('rules-center-body').innerHTML = '';
+            document.getElementById('rules-container').innerHTML = '';
             (config.rules || []).forEach(r => {
-                addRuleRow(r.targets, r.type, r.params, r.weight);
+                addRuleRow(r.targets, r.type, r.params, r.weight, r.name || '');
             });
         }
         // ========================================================
@@ -2283,8 +2489,9 @@
             let rules = [];
             document.querySelectorAll('.rule-card').forEach(card => {
                 // ... (之前已有的提取逻辑)
-                const targetsStr = card.querySelector('.rule-targets').value;
                 const type = card.querySelector('.rule-type').value;
+                const targetsStr = card.querySelector('.rule-targets').value;
+                const name = card.querySelector('.rule-name').value;
                 const weight = parseInt(card.querySelector('.rule-weight').value) || 100;
                 let targets = {};
                 let selectedGrades = [];
@@ -2324,7 +2531,7 @@
                         params.days = JSON.parse(daysInput || '[]');
                     }
                 } catch (e) { console.error("Rule parsing error", e); }
-                rules.push({ targets, type, params, weight });
+                rules.push({ name, targets, type, params, weight });
             });
 
             // [新增/容错] 如果规则中心为空（例如页面刷新后），且存在特殊科目，则注入默认核心规则
@@ -2401,6 +2608,22 @@
                         bootstrap.Modal.getOrCreateInstance(document.getElementById('settingsModal')).hide();
                         bootstrap.Modal.getOrCreateInstance(document.getElementById('constraintModal')).hide();
                     } else {
+                        // === [修改开始] 失败时也要处理报告 ===
+
+                        // 1. 如果后端返回了报告，立即更新报告按钮状态
+                        if (data.rule_report) {
+                            // 手动更新全局报告数据
+                            globalRuleReport = data.rule_report;
+
+                            const btn = document.getElementById('btn-rule-report');
+                            btn.disabled = false; // 激活按钮
+
+                            // 强制显示为红色警告状态
+                            btn.classList.add('animate-pulse', 'text-red-500');
+                            btn.innerHTML = `<i class="bi bi-exclamation-octagon-fill text-xl"></i> 查看失败原因`;
+                        }
+
+                        // 2. 显示原有的错误建议弹窗 (保持不变)
                         if (data.suggestions && data.suggestions.length > 0) {
                             const ul = document.getElementById('failure-suggestions');
                             ul.innerHTML = data.suggestions.map(s => `<li class="flex items-start gap-2"><i class="bi bi-lightbulb-fill text-yellow-400 shrink-0 mt-0.5"></i><span>${s}</span></li>`).join('');
@@ -2408,6 +2631,7 @@
                         } else {
                             alert(data.message);
                         }
+                        // === [修改结束] ===
                     }
                 })
                 .catch(e => {
@@ -2617,7 +2841,126 @@
                     btn.innerHTML = originalText;
                 });
         }
+
+        let globalRuleReport = [];
+
+        function showRuleReport() {
+            const listEl = document.getElementById('report-list');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            let sCount = 0, fCount = 0, wCount = 0;
+
+            globalRuleReport.forEach(rule => {
+                if (rule.status === 'success') sCount++;
+                if (rule.status === 'failed') fCount++;
+                if (rule.status === 'warning') wCount++;
+
+                const isFail = rule.status === 'failed';
+                const isWarn = rule.status === 'warning';
+                const isSuccess = rule.status === 'success';
+
+                let icon = '<i class="bi bi-check-circle-fill text-green-500 text-lg"></i>';
+                let bgClass = 'bg-white border-green-50';
+                let statusText = '执行完美';
+
+                if (isFail) {
+                    icon = '<i class="bi bi-x-octagon-fill text-red-500 text-lg"></i>';
+                    bgClass = 'bg-red-50 border-red-100';
+                    statusText = '硬性约束失败';
+                } else if (isWarn) {
+                    icon = '<i class="bi bi-exclamation-triangle-fill text-yellow-500 text-lg"></i>';
+                    bgClass = 'bg-yellow-50 border-yellow-100';
+                    statusText = `软约束偏差 (${rule.violation_count}处)`;
+                }
+
+                let detailsHtml = '';
+                if ((isFail || isWarn) && rule.violations && rule.violations.length > 0) {
+                    detailsHtml = `
+                    <div class="mt-2 pt-2 border-t border-slate-200/50">
+                        <div class="text-[10px] font-bold text-slate-400 mb-1">违规详情 (前5条):</div>
+                        <ul class="text-xs text-slate-600 space-y-1 font-mono">
+                            ${rule.violations.slice(0, 5).map(v => `<li>• ${v}</li>`).join('')}
+                            ${rule.violations.length > 5 ? `<li class="italic text-slate-400">...以及其他 ${rule.violations.length - 5} 处</li>` : ''}
+                        </ul>
+                    </div>`;
+                }
+
+                const html = `
+                <li class="p-4 rounded-2xl border shadow-sm ${bgClass} transition-all">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-3">
+                            ${icon}
+                            <div>
+                                <div class="font-black text-slate-700 text-sm">${rule.name}</div>
+                                <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                    类型: ${rule.type} | 权重: ${rule.weight}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-xs font-bold ${isFail ? 'text-red-500' : (isWarn ? 'text-yellow-500' : 'text-green-500')}">
+                            ${statusText}
+                        </div>
+                    </div>
+                    ${detailsHtml}
+                </li>`;
+
+                listEl.insertAdjacentHTML('beforeend', html);
+            });
+
+            document.getElementById('report-success-count').innerText = sCount;
+            document.getElementById('report-fail-count').innerText = fCount;
+            document.getElementById('report-warn-count').innerText = wCount;
+
+            if (fCount > 0) document.getElementById('report-advice').classList.remove('hidden');
+            else document.getElementById('report-advice').classList.add('hidden');
+
+            new bootstrap.Modal(document.getElementById('reportModal')).show();
+        }
     </script>
+    <div class="modal fade" id="reportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content !bg-[#eef2f6] border-0 !rounded-[2rem] overflow-hidden">
+                <div class="modal-header border-0 px-6 py-5 pb-2">
+                    <h5 class="modal-title font-black text-slate-700 text-lg flex items-center gap-2">
+                        <i class="bi bi-clipboard-data-fill text-green-500"></i> 规则执行体检报告
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="px-6 pb-2">
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-1 clay-card p-3 text-center bg-green-50">
+                            <div class="text-xs text-slate-400 font-bold uppercase">成功应用</div>
+                            <div id="report-success-count" class="text-2xl font-black text-green-500">0</div>
+                        </div>
+                        <div class="flex-1 clay-card p-3 text-center bg-red-50">
+                            <div class="text-xs text-slate-400 font-bold uppercase">硬性冲突</div>
+                            <div id="report-fail-count" class="text-2xl font-black text-red-500">0</div>
+                        </div>
+                        <div class="flex-1 clay-card p-3 text-center bg-yellow-50">
+                            <div class="text-xs text-slate-400 font-bold uppercase">软约束偏差</div>
+                            <div id="report-warn-count" class="text-2xl font-black text-yellow-500">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body px-6 pb-6 pt-0">
+                    <div class="clay-card p-4 !shadow-clay-inner max-h-[400px] overflow-y-auto custom-scrollbar">
+                        <ul id="report-list" class="space-y-3">
+                        </ul>
+                    </div>
+                    <div id="report-advice"
+                        class="mt-4 text-xs text-slate-500 bg-white p-3 rounded-xl border border-dashed border-slate-300 hidden">
+                        <i class="bi bi-info-circle-fill mr-1"></i>
+                        <span class="font-bold">改进建议：</span>
+                        若出现硬性冲突，可能是规则目标设定有误（如目标科目名不匹配），或与其他固定规则冲突。建议检查“规则中心”中的设置。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

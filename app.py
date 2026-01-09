@@ -160,25 +160,59 @@ def init_schedule():
         result = normal.run_scheduler(config)
         
         if result['status'] != 'success':
-            # 如果 result 已经包含了具体的错误信息(由 normal.py 预检逻辑返回)
+            # 1. 定义变量存储即将生成的报告
+            failure_report = []
+
+            # 情况A: 预检失败 (如老师课时超限)，result 中已有具体信息
             if 'error_type' in result:
                 logger.warning(f"排课拦截 - {result['error_type']}: {result['message']}")
+                
+                # 手动构造一条“失败的规则报告”
+                failure_report.append({
+                    "name": "前置条件检查 (Pre-check)",
+                    "type": "SYSTEM_CONSTRAINT",
+                    "weight": 100,
+                    "is_hard": True,
+                    "status": "failed",
+                    "violations": [
+                        f"错误类型: {result.get('error_type')}",
+                        f"详情: {result.get('message')}"
+                    ] + [f"建议: {s}" for s in result.get('suggestions', [])],
+                    "violation_count": 1
+                })
+                
                 return jsonify({
                     "status": "error",
                     "error_type": result['error_type'],
                     "message": result['message'],
-                    "suggestions": result.get('suggestions', [])
+                    "suggestions": result.get('suggestions', []),
+                    "rule_report": failure_report  # <--- [关键] 将报告传回前端
                 }), 400
                 
-            # 否则执行通用故障分析
+            # 情况B: 求解器运算后失败 (Infeasible)，进行故障分析
             error_analysis = analyze_failure(config)
             logger.warning(f"排课失败 - {error_analysis['error_type']}: {error_analysis['message']}")
             
+            # 构造一条关于求解器失败的报告
+            failure_report.append({
+                "name": "求解器运算结果",
+                "type": "SOLVER_STATUS",
+                "weight": 100,
+                "is_hard": True,
+                "status": "failed",
+                "violations": [
+                    "无法找到满足所有硬性约束的课表 (INFEASIBLE)",
+                    f"可能原因: {error_analysis['message']}"
+                ],
+                "violation_count": 1
+            })
+
             return jsonify({
                 "status": "error",
                 "error_type": error_analysis['error_type'],
                 "message": error_analysis['message'],
-                "suggestions": error_analysis['suggestions']
+                "suggestions": error_analysis['suggestions'],
+                "rule_report": failure_report # <--- [关键] 将报告传回前端
             }), 400
             
         schedule_id = str(uuid.uuid4())
@@ -187,6 +221,9 @@ def init_schedule():
         system_instance = substitution.SubstitutionSystem(result)
         
         # 存入会话
+        if 'rule_report' not in result:
+             result['rule_report'] = []
+             
         SCHEDULE_SESSIONS[schedule_id] = {
             'result': result,
             'system': system_instance
@@ -207,6 +244,7 @@ def init_schedule():
             "teachers": teacher_list,
             "schedule": serialize_schedule(system_instance),
             "stats": result.get('stats', {}),
+            "rule_report": result.get('rule_report', []), # [新增]
             "class_names": result.get('class_names', {}), # [新增]
             "sharding_info": result.get('sharding_info', []), # [新增]
             "evaluation": result.get('evaluation', {'score': 100, 'details': []})
@@ -349,7 +387,8 @@ def save_schedule():
     schedule_data = {
         "schedule": serialize_schedule(global_system),
         "teachers": sorted([{"id": t['id'], "name": t['name']} for t in global_result['teachers_db']], 
-                          key=lambda x: x['name'])
+                          key=lambda x: x['name']),
+        "rule_report": global_result.get('rule_report', []) # [新增] 保存体检报告
     }
     
     config = data.get('config', {})
@@ -627,37 +666,83 @@ def ai_generate_rule():
         grades = current_context.get('grades', [])
         teachers = current_context.get('teachers', [])  # 新增老师名单
         
-        # --- 核心 Prompt 设计 (优化版：支持多规则) ---
+        # --- 核心 Prompt 设计 (增强版：修复每天/全周的坐标识别) ---
         system_prompt = f"""
-你是一个排课规则解析专家。请分析用户的自然语言需求，提取出一条或多条排课规则。
+你是一个排课规则解析专家。请分析用户的自然语言需求，提取出排课规则 JSON。
+
+### 关键：时间与坐标定义 (必须严格遵守)
+系统的课表坐标为 [day, period]：
+- **Day (0-4)**: 周一=0, 周二=1, 周三=2, 周四=3, 周五=4
+- **Period (0-7)**: 
+  - 上午: 0, 1, 2, 3
+  - 下午: 4, 5, 6, 7
+
+### 常见词汇对应的 Slots (请直接抄写以下逻辑)
+1. **"每天" / "全周" (Every Day)**:
+   这意味着 slots 必须包含从周一到周五的所有节次。
+   slots = [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7], [1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7], [2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7], [3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7], [4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7]] (共40个坐标)
+   
+2. **"上午" (Morning)**:
+   slots 必须包含周一到周五的第 0,1,2,3 节。
+   slots = [[0,0],[0,1],[0,2],[0,3], [1,0],[1,1],[1,2],[1,3], [2,0],[2,1],[2,2],[2,3], [3,0],[3,1],[3,2],[3,3], [4,0],[4,1],[4,2],[4,3]]
+   
+3. **"下午" (Afternoon)**:
+   slots 必须包含周一到周五的第 4,5,6,7 节。
+   slots = [[0,4],[0,5],[0,6],[0,7], [1,4],[1,5],[1,6],[1,7], [2,4],[2,5],[2,6],[2,7], [3,4],[3,5],[3,6],[3,7], [4,4],[4,5],[4,6],[4,7]]
+
+### 规则类型 (Type) 指南
+1. **ZONE_COUNT**: 用于"每天一节"、"每周5节"、"上午必须排2节"。
+   - 这里的 slots 定义了计数区域。
+   - 如果用户说"每天必须上一节"，通常意味着：针对每一天生成5条独立的规则
+   
+   
+2. **FORBIDDEN_SLOTS**: 用于"不排"、"禁止"。
+3. **FIXED_SLOTS**: 用于"固定在"、"必须在"。
 
 ### 上下文信息
-- 现有科目: {", ".join(subjects) if subjects else "语文, 数学, 英语, 物理, 化学等"}
-- 现有年级: {", ".join(grades) if grades else "初一, 初二, 初三"}
-- 现有老师: {", ".join(teachers[:20]) if teachers else "无"}
-- 时间定义: 
-  - 周一到周五对应 day: 0, 1, 2, 3, 4
-  - 第1节到第8节对应 period: 0 到 7 (其中0-3为上午, 4-7为下午)
+- 科目: {", ".join(subjects) if subjects else "语文, 数学, 英语"}
 
-### 支持的规则类型 (type)
-1. FORBIDDEN_SLOTS - 时段禁排 (某人/某课在特定时间不能排)
-2. ZONE_COUNT - 区域课时 (某课在某时段区域内必须排多少节)
-3. SPECIAL_DAYS - 特定日禁排 (某人/某课某几天完全不排)
-4. CONSECUTIVE - 连堂限制 (不要连堂)
+### 任务
+返回一个 JSON 数组。不要包含 Markdown 格式。
 
-### 你的任务
-请返回一个 JSON 数组 (Array)，数组中包含一个或多个规则对象。
-不要包含 Markdown 格式 (如 ```json)。
-如果用户提到"上午"，slots需包含该日 period 0,1,2,3。
-如果用户提到"下午"，slots需包含该日 period 4,5,6,7。
-权重 (weight) 默认设为 100。
-
-### 输出示例
-用户输入: "语文上午排，体育不要排第一节"
+### 示例
+用户输入: "语文数学英语每天都要有一节课"
+思考: 用户希望这三门主课在一周内排满5节，且分布在每一天。虽然严格的"每天一节"需要5条规则，但通常理解为"全周总共5节"。
 你的输出:
 [
-  {{"type": "ZONE_COUNT", "targets": {{"subjects": ["语文"]}}, "params": {{"slots": [[0,0],[0,1],[0,2],[0,3],[1,0],[1,1],[1,2],[1,3],[2,0],[2,1],[2,2],[2,3],[3,0],[3,1],[3,2],[3,3],[4,0],[4,1],[4,2],[4,3]], "count": 5, "relation": ">="}}, "weight": 80}},
-  {{"type": "FORBIDDEN_SLOTS", "targets": {{"subjects": ["体育"]}}, "params": {{"slots": [[0,0], [1,0], [2,0], [3,0], [4,0]]}}, "weight": 100}}
+  {{
+    "name": "语文全周排满5节",
+    "type": "ZONE_COUNT",
+    "targets": {{"subjects": ["语文"]}},
+    "params": {{
+      "slots": [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7]],
+      "count": 5,
+      "relation": "=="
+    }},
+    "weight": 100
+  }},
+  {{
+    "name": "数学全周排满5节",
+    "type": "ZONE_COUNT",
+    "targets": {{"subjects": ["数学"]}},
+    "params": {{
+      "slots": [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7]],
+      "count": 5,
+      "relation": "=="
+    }},
+    "weight": 100
+  }},
+  {{
+    "name": "英语全周排满5节",
+    "type": "ZONE_COUNT",
+    "targets": {{"subjects": ["英语"]}},
+    "params": {{
+      "slots": [[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7]],
+      "count": 5,
+      "relation": "=="
+    }},
+    "weight": 100
+  }}
 ]
 """
 
@@ -775,5 +860,5 @@ def import_config():
         return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8015)
+    app.run(host='0.0.0.0', debug=True, port=8015)
     

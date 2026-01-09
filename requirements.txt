@@ -3,3 +3,4 @@ flask-cors
 ortools
 pandas
 openpyxl
+openai

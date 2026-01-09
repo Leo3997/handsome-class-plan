@@ -608,6 +608,144 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                             penalties.append(v * -weight)
 
 
+
+def verify_rules(schedule_map, rules, class_metadata, teachers_db, class_teacher_map, days, periods):
+    """
+    独立验算模块：不依赖求解器逻辑，直接检查结果字典
+    schedule_map: {(class_id, day, period): {"subject": "xxx", "teacher_name": "xxx", ...}}
+    """
+    report = []
+    
+    # 辅助：构建更易查询的数据结构
+    # 1. 按班级查询: class_schedule[c][d][p] = subj
+    class_schedule = collections.defaultdict(lambda: {})
+    # 2. 按老师查询: teacher_schedule[tid][(d,p)] = class_id
+    teacher_schedule = collections.defaultdict(list)
+    
+    # 填充辅助结构
+    for (c, d, p), info in schedule_map.items():
+        subj = info['subject']
+        # 去除自动分片的后缀，还原由原始科目名，以便规则匹配
+        clean_subj = subj.replace('_AUTO_SUB', '')
+        # 如果是分身(例如 语文A)，也应该被视为 语文
+        if clean_subj[-1:].isalpha() and clean_subj[:-1] in class_metadata.get(c, {}).get('requirements', {}):
+             clean_subj = clean_subj[:-1]
+             
+        class_schedule[c][(d, p)] = clean_subj
+        
+        tid = class_teacher_map.get((c, subj)) # 注意这里用原始 subj 查 tid
+        if tid:
+            teacher_schedule[tid].append((d, p))
+
+    # 开始逐条验证规则
+    for rule in rules:
+        rule_name = rule.get('name', '未命名规则')
+        r_type = rule.get('type')
+        targets = rule.get('targets', {})
+        params = rule.get('params', {})
+        weight = rule.get('weight', 0)
+        
+        # 筛选目标 (复用之前的 get_filtered_targets，但需要只拿 ID/Name)
+        filtered = get_filtered_targets(teachers_db, class_metadata, targets)
+        target_tids = filtered['teacher_ids']
+        target_class_subjs = filtered['class_subjects'] # [(c_id, subj), ...]
+
+        violation_details = []
+        is_hard = weight >= 100
+        
+        # --- 1. 时段禁排 / 固定时段 验证 ---
+        if r_type == 'FORBIDDEN_SLOTS' or r_type == 'FIXED_SLOTS':
+            check_slots = params.get('slots', [])
+            
+            # 检查班级-科目
+            for c_id, subj in target_class_subjs:
+                clean_target_subj = subj.replace('_AUTO_SUB', '')
+                
+                # 找出该班级该科目所有的排课时间
+                actual_slots = []
+                for (d, p), s_name in class_schedule[c_id].items():
+                    # 模糊匹配：课表里的名字包含规则目标名字 (例如 "语文A" 包含 "语文")
+                    if s_name == clean_target_subj or clean_target_subj in s_name:
+                        actual_slots.append([d, p])
+                
+                if r_type == 'FORBIDDEN_SLOTS':
+                    # 禁排：actual_slots 里不能有 check_slots
+                    for d, p in check_slots:
+                        if [d, p] in actual_slots or (d, p) in actual_slots:
+                            violation_details.append(f"班级{c_id} {subj} 违规排在 周{d+1}第{p+1}节")
+                            
+                elif r_type == 'FIXED_SLOTS':
+                     # 固定：check_slots 必须都在 actual_slots 里
+                     for d, p in check_slots:
+                        if [d, p] not in actual_slots and (d, p) not in actual_slots:
+                             violation_details.append(f"班级{c_id} {subj} 未排在固定位置 周{d+1}第{p+1}节")
+
+            # 检查老师 (仅禁排)
+            if r_type == 'FORBIDDEN_SLOTS':
+                for tid in target_tids:
+                    t_name = next((t['name'] for t in teachers_db if t['id'] == tid), tid)
+                    t_slots = teacher_schedule.get(tid, [])
+                    for d, p in check_slots:
+                        if (d, p) in t_slots or [d, p] in t_slots:
+                             violation_details.append(f"老师 {t_name} 违规排在 周{d+1}第{p+1}节")
+
+        # --- 2. 区域课时 (ZONE_COUNT) 验证 ---
+        elif r_type == 'ZONE_COUNT':
+            zone_slots = params.get('slots', [])
+            expected = params.get('count', 0)
+            
+            for c_id, subj in target_class_subjs:
+                clean_target_subj = subj.replace('_AUTO_SUB', '')
+                actual_count = 0
+                for d, p in zone_slots:
+                    s_name = class_schedule[c_id].get((d, p))
+                    if s_name and (s_name == clean_target_subj or clean_target_subj in s_name):
+                        actual_count += 1
+                
+                if actual_count != expected:
+                     violation_details.append(f"班级{c_id} {subj} 区域内实排 {actual_count} 节 (要求 {expected} 节)")
+
+        # --- 3. 连堂限制 (CONSECUTIVE) ---
+        elif r_type == 'CONSECUTIVE':
+            limit = params.get('max', 2)
+            # 检查老师
+            for tid in target_tids:
+                t_name = next((t['name'] for t in teachers_db if t['id'] == tid), tid)
+                t_slots = sorted(teacher_schedule.get(tid, []))
+                # 按天分组
+                daily = collections.defaultdict(list)
+                for d, p in t_slots: daily[d].append(p)
+                
+                for d, periods in daily.items():
+                    periods.sort()
+                    cons = 1
+                    for i in range(len(periods)-1):
+                        if periods[i+1] == periods[i] + 1:
+                            cons += 1
+                        else:
+                            if cons > limit:
+                                violation_details.append(f"老师 {t_name} 周{d+1} 连续上课 {cons} 节 (上限 {limit})")
+                            cons = 1
+                    if cons > limit:
+                         violation_details.append(f"老师 {t_name} 周{d+1} 连续上课 {cons} 节 (上限 {limit})")
+
+        # --- 4. 汇总结果 ---
+        status = "success"
+        if violation_details:
+            status = "failed" if is_hard else "warning" # 硬约束失败为failed，软约束为warning
+            
+        report.append({
+            "name": rule_name,
+            "type": r_type,
+            "weight": weight,
+            "is_hard": is_hard,
+            "status": status,
+            "violations": violation_details,
+            "violation_count": len(violation_details)
+        })
+        
+    return report
+
 def run_scheduler(config=None):
     if config is None: config = DEFAULT_CONFIG
     
@@ -1236,8 +1374,20 @@ def run_scheduler(config=None):
                                 stats[t_name]["daily"][d] += 1
                             
                             # 2. 存入结果字典
-                            formatted_schedule[(c, d, p)] = {"subject": subj}
+                            tid = CLASS_TEACHER_MAP.get((c, subj))
+                            t_name = ""
+                            if tid: t_name = next((t['name'] for t in TEACHERS_DB if t['id'] == tid), "")
+                            formatted_schedule[(c, d, p)] = {
+                                "subject": subj,
+                                "teacher_name": t_name,
+                                "teacher_id": tid
+                            }
                             break
+
+        # [新增] 调用规则验算报告
+        rule_report = verify_rules(
+            formatted_schedule, rules, class_metadata, TEACHERS_DB, CLASS_TEACHER_MAP, DAYS, PERIODS
+        )
 
         # [新增] 调用评估函数
         evaluation = evaluate_quality(
@@ -1247,6 +1397,7 @@ def run_scheduler(config=None):
 
         return {
             "status": "success",
+            "rule_report": rule_report,  # <--- 将报告返回给前端
             "sharding_info": sharding_report, # [新增] 向前端传递替换详情
             "stats": stats,
             "evaluation": evaluation,
