@@ -27,14 +27,14 @@ class SubstitutionSystem:
         """
         solver_result: normal.run_scheduler 返回的字典
         """
-        self.solver = solver_result['solver']
-        self.vars = solver_result['vars']
-        self.teachers_db = solver_result['teachers_db']
-        self.class_teacher_map = solver_result['class_teacher_map']
-        self.classes = solver_result['classes']
-        self.days = solver_result['days'] # 5
-        self.periods = solver_result['periods'] # 6
-        self.courses = solver_result['courses']
+        self.solver = solver_result.get('solver')
+        self.vars = solver_result.get('vars')
+        self.teachers_db = solver_result.get('teachers_db', [])
+        self.class_teacher_map = solver_result.get('class_teacher_map', {})
+        self.classes = solver_result.get('classes', [])
+        self.days = solver_result.get('days', 5)
+        self.periods = solver_result.get('periods', 8)
+        self.courses = solver_result.get('courses', {})
         self.resources = solver_result.get('resources', [])
         
         self.final_schedule = {} 
@@ -45,7 +45,8 @@ class SubstitutionSystem:
         self.name_to_id = {t['name']: t['id'] for t in self.teachers_db}
         self.subject_teachers = {}
         for t in self.teachers_db:
-            self.subject_teachers.setdefault(t['subject'], []).append(t['id'])
+            if 'subject' in t:
+                self.subject_teachers.setdefault(t['subject'], []).append(t['id'])
             
         # 构建 subject -> resource_name room map
         self.subj_room_map = {}
@@ -55,8 +56,10 @@ class SubstitutionSystem:
                 targets = [s.strip() for s in targets.replace('，', ',').split(',') if s.strip()]
             for s in targets:
                 self.subj_room_map[s] = res.get('name', '')
-
-        self._parse_original_schedule()
+        
+        # 仅在有 solver 时解析原始课表变量
+        if self.solver:
+            self._parse_original_schedule()
 
     def _parse_original_schedule(self):
         for c in self.classes:
@@ -266,7 +269,12 @@ class SubstitutionSystem:
         if (from_class, swap_day, swap_period) in self.final_schedule:
             return False
         
-        # 条件4: 代课老师原课的班级在原时间必须空闲（应该已经是空的，因为代课老师要去代课）
+        # [修复] 条件4: 代课老师原本的班级(to_class)在目标时间必须是空闲的
+        # 防止将代课老师的课换到该班级已经有课的时间
+        if (to_class, swap_day, swap_period) in self.final_schedule:
+            return False
+        
+        # 条件5: 代课老师原课的班级在原时间必须空闲（应该已经是空的，因为代课老师要去代课）
         # 这个条件实际上由代课操作保证，不需要额外检查
         
         return True

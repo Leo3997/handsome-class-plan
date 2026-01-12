@@ -444,17 +444,25 @@ def get_filtered_targets(teachers_db, class_metadata, targets):
         "class_subjects": selected_class_subjects
     }
 
-def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, TID_TO_ASSIGNMENTS, ALL_SUBJECTS_IN_VARS, SLOTS, penalties):
+def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, TID_TO_ASSIGNMENTS, ALL_SUBJECTS_IN_VARS, SLOTS, penalties, assumption_literals, rule_mapping):
     """
     规则工厂：分发解析并应用通用规则
     """
     if not rules: return
     
-    for rule in rules:
+    for idx, rule in enumerate(rules):
         r_type = rule.get('type')
         targets = rule.get('targets', {})
         params = rule.get('params', {})
         weight = rule.get('weight', 100) 
+        rule_name = rule.get('name', f'Rule_{idx}')
+        
+        # [核心] 为每条硬规则创建一个开关
+        switch_var = None
+        if weight >= 100:
+            switch_var = model.NewBoolVar(f'switch_rule_{idx}_{r_type}')
+            assumption_literals.append(switch_var)
+            rule_mapping[switch_var.Index()] = f"【用户规则】{rule_name}" 
         
         filtered = get_filtered_targets(teachers_db, class_metadata, targets)
         tids = filtered['teacher_ids']
@@ -476,7 +484,7 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                 
                 if vars_to_block:
                     if weight >= 100:
-                        model.Add(sum(vars_to_block) == 0)
+                        model.Add(sum(vars_to_block) == 0).OnlyEnforceIf(switch_var)
                     else:
                         # 软约束：如果是负数，则为奖励(尽量排)，正数为惩罚(尽量不排)
                         for v in vars_to_block:
@@ -594,14 +602,26 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                 
                 if fixed_slot_vars:
                     if weight >= 100:
-                        # [诊断修改] 将非固定时段排课改为软约束惩罚（高权重），而不是硬禁止
-                        # 这样可以诊断是否是这个约束导致 INFEASIBLE
+                        # 非固定时段用高惩罚软约束
                         if non_fixed_slot_vars:
-                            # model.Add(sum(non_fixed_slot_vars) == 0)  # 临时禁用
                             for v in non_fixed_slot_vars:
-                                penalties.append(v * 1000)  # 高惩罚鼓励不在非固定时段排课
-                        # 固定时段内至少排一节
-                        model.Add(sum(fixed_slot_vars) >= 1)
+                                penalties.append(v * 1000)
+                        
+                        # [核心修复] 获取该班级该科目的周课时数
+                        subj_count = 0
+                        if c_id in class_metadata and subj in class_metadata[c_id].get('requirements', {}):
+                            req = class_metadata[c_id]['requirements'][subj]
+                            subj_count = req.get('count', 0) if isinstance(req, dict) else req
+                        
+                        num_fixed_slots = len(slots)
+                        
+                        # 当固定时段数 == 课时数时，强制每个时段都排1节
+                        if num_fixed_slots > 0 and subj_count == num_fixed_slots:
+                            for fv in fixed_slot_vars:
+                                model.Add(fv == 1)
+                        else:
+                            # 否则只要求在固定时段内至少排一节
+                            model.Add(sum(fixed_slot_vars) >= 1)
                     else:
                         # 软约束：奖励排在固定时段
                         for v in fixed_slot_vars:
@@ -903,9 +923,20 @@ def run_scheduler(config=None):
                         if subj == "政教活动":
                              logger.info(f"  -> Found FIXED_SLOTS rule for {subj}. Slots: {f_slots}, Affected Classes: {len(affected_classes)}")
                         
-                        # 这些班级在这些时段都有 1 节课的需求
-                        for s in f_slots:
-                            slot_concurrency_demands[tuple(s)] += math.ceil(len(affected_classes) / len(f_slots))
+                        # [核心修复] 检查课时数是否等于固定时段数
+                        # 如果相等，说明每个班在每个固定时段都要排1节课
+                        if affected_classes:
+                            sample_req = class_metadata.get(affected_classes[0], {}).get('requirements', {})
+                            subj_weekly_count = sample_req.get(subj, {}).get('count', 1) if isinstance(sample_req.get(subj), dict) else 1
+                            
+                            if len(f_slots) == subj_weekly_count:
+                                # 每个班在每个固定时段都排1节，并发需求等于班级数
+                                for s in f_slots:
+                                    slot_concurrency_demands[tuple(s)] += len(affected_classes)
+                            else:
+                                # 原有逻辑：班级平摊到多个时段
+                                for s in f_slots:
+                                    slot_concurrency_demands[tuple(s)] += math.ceil(len(affected_classes) / len(f_slots))
         
         # [新增] 扫描「手动预排」(Constraints) 产生的并发需求
         fixed_constraints = config.get('constraints', {}).get('fixed_courses', {})
@@ -935,12 +966,24 @@ def run_scheduler(config=None):
         if num_splits > 1:
             needs_sharding = True
         
+        # [性能优化] 活动类科目不需要真实老师资源，使用虚拟老师池
+        # 这些科目一个老师可以同时带多个班级，不产生老师冲突
+        ACTIVITY_SUBJECTS = {'政教活动', '课外活动', '拓展课'}
+        is_activity_subject = subj in ACTIVITY_SUBJECTS
+        
         # [核心修复] 如果并发需求超过了可用老师数，标记为需要一对一分配
-        # 条件：concurrency > base_count（而不是 >= total_assigned_classes，那太严格了）
-        is_high_concurrency = concurrency_demand > base_count and concurrency_demand > 1
+        # 条件：concurrency > base_count（活动类科目除外）
+        is_high_concurrency = concurrency_demand > base_count and concurrency_demand > 1 and not is_activity_subject
             
         if needs_sharding:
             logger.info(f"Subject {subj} triggers Smart Sharding Pro. (Total: {total_assigned_classes}, Load Factor: {split_factor_by_load}, Concurrency Factor: {split_factor_by_concurrency})")
+            
+            # [性能优化] 活动类科目使用虚拟老师池，不需要真实分片
+            if is_activity_subject:
+                # 只生成少量虚拟老师（实际不产生冲突约束）
+                final_teacher_names[subj] = [f"v_{subj}{i+1}" for i in range(10)]
+                logger.info(f"  -> [Activity] {subj} uses virtual teacher pool (no conflict constraints)")
+                continue  # 跳过后续的高并发分片逻辑
             
             # [升级逻辑] 动态扩充老师名单
             expanded_names = []
@@ -1109,10 +1152,21 @@ def run_scheduler(config=None):
     # ====================================================================
 
     # 2. 建模
+    # 2. 建模
     model = cp_model.CpModel()
+    schedule = {}
+    penalties = []
+    
+    # [核心新增] 全局冲突诊断映射表
+    assumption_literals = []
+    rule_mapping = {}
     schedule = {}
     penalties = [] # [移动到此处] 确保全局可用
     
+    # [核心新增] 全局冲突诊断映射表
+    assumption_literals = []
+    rule_mapping = {}
+
     for c in CLASSES:
         for d in range(DAYS):
             for p in range(PERIODS):
@@ -1159,47 +1213,57 @@ def run_scheduler(config=None):
         for d, p in SLOTS:
             model.Add(sum(schedule[(c, d, p, s)] for s in ALL_SUBJECTS_IN_VARS) <= 1)
     
-    # 2. 差异化课时总量控制
+    # 2. 差异化课时总量控制 (硬约束，不需要诊断开关)
+    # [性能优化] 移除了为每个(班级,科目)创建诊断开关的逻辑
+    # 系统基础约束本身不会冲突，直接使用硬约束提升求解速度
     for c in CLASSES:
         c_reqs = class_metadata[c]["requirements"]
-        # 处理原始科目和自动拆分科目
         for subj in ALL_SUBJECTS_IN_VARS:
-            # 如果是自动拆分科目 (SUB)
+
             if "_AUTO_SUB" in subj:
                 base_subj = subj.replace("_AUTO_SUB", "")
                 if base_subj in c_reqs:
-                    # 检查该老师在该科目的最大限制
                     t_id = CLASS_TEACHER_MAP.get((c, base_subj))
                     t_name = next((t['name'] for t in TEACHERS_DB if t['id'] == t_id), "")
-                    limit = get_teacher_max_limit(t_name)
-                    total_needed = c_reqs[base_subj]["count"]
+                    limit = 999 
+                    for k, v in config.get("teacher_limits", {}).items():
+                         if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
                     
+                    total_needed = c_reqs[base_subj]["count"]
                     if total_needed > limit:
-                        # 分身课课时 = 总需 - 限制
                         model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == (total_needed - limit))
                     else:
                         model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
                 else:
                     model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
             else:
-                # 原始科目 (本体)
                 if subj in c_reqs:
                     t_id = CLASS_TEACHER_MAP.get((c, subj))
                     t_name = next((t['name'] for t in TEACHERS_DB if t['id'] == t_id), "")
-                    limit = get_teacher_max_limit(t_name)
+                    limit = 999
+                    for k, v in config.get("teacher_limits", {}).items():
+                         if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
+                    
                     total_needed = c_reqs[subj]["count"]
-                    # 本体课时 = min(总需, 限制)
                     model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == min(total_needed, limit))
                 else:
-                    # 如果该班根本不上这门课，且它不是 SUB 课，则为 0
                     if "_AUTO_SUB" not in subj:
                         model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
 
+
     # 3. 老师冲突约束 (核心约束：同一老师同一时刻只能在一个班级上课)
+    # [性能优化] 活动类科目使用虚拟老师，跳过冲突约束
+    ACTIVITY_SUBJECTS = {'政教活动', '课外活动', '拓展课'}
+    
     for tid, assignments in teacher_assignments.items():
         # assignments: list of (class_id, subject)
         if len(assignments) <= 1:
             continue  # 只教一个班级的老师不需要冲突约束
+        
+        # [性能优化] 检查这个老师是否只教活动类科目
+        taught_subjects = set(s for (c, s) in assignments)
+        if taught_subjects.issubset(ACTIVITY_SUBJECTS):
+            continue  # 活动类科目的虚拟老师不需要冲突约束
             
         for d in range(DAYS):
             for p in range(PERIODS):
@@ -1234,7 +1298,7 @@ def run_scheduler(config=None):
         logger.info("Using SHAOXING_PRESET_RULES because rules list is empty and legacy mode is enabled.")
 
     # 注入通用规则
-    apply_universal_rules(model, schedule, rules, TEACHERS_DB, class_metadata, teacher_assignments, ALL_SUBJECTS_IN_VARS, SLOTS, penalties)
+    apply_universal_rules(model, schedule, rules, TEACHERS_DB, class_metadata, teacher_assignments, ALL_SUBJECTS_IN_VARS, SLOTS, penalties, assumption_literals, rule_mapping)
 
     # --- 6. 教室资源约束 (Classroom Constraints) ---
         
@@ -1247,39 +1311,7 @@ def run_scheduler(config=None):
     for t in TEACHERS_DB:
         name_to_tids[t['name']].append(t['id'])
 
-    # 处理老师禁排
-    unavailable_settings = CONSTRAINTS.get('teacher_unavailable', {})
-    fixed_courses = CONSTRAINTS.get('fixed_courses', {})
-
-    # [新增] 约束：固定课程 (Fixed Courses / Pre-scheduling)
-    # 格式: fixed_courses = { "1": { "0_0": "语文" } }
-    if fixed_courses:
-        logger.info(f"Fixed Course Constraints: {len(fixed_courses)} classes")
-        for c_str, fixes in fixed_courses.items():
-            try:
-                c = int(c_str)
-            except:
-                continue
-            if c not in CLASSES: continue
-            
-            for slot_key, subj_name in fixes.items():
-                if subj_name not in global_course_requirements: continue
-                try:
-                    d_str, p_str = slot_key.split('_')
-                    d, p = int(d_str), int(p_str)
-                    if 0 <= d < DAYS and 0 <= p < PERIODS:
-                        model.Add(schedule[(c, d, p, subj_name)] == 1)
-                except Exception as e:
-                     pass
-
-    for t_name, slots in unavailable_settings.items():
-        tids = name_to_tids.get(t_name, [])
-        for tid in tids:
-            # 找到该老师教的所有 (班级, 科目)
-            assignments = teacher_assignments.get(tid, [])
-            for day, period in slots:
-                if assignments:
-                    model.Add(sum(schedule[(c, day, period, s)] for (c, s) in assignments) == 0)
+    # (Legacy constraints logic moved to switch-controlled section below)
 
     # 6. 教室资源约束 (Classroom Constraints) - 暂时禁用以测试
     # config.resources 格式: [{'name': '音乐教室', 'capacity': 1, 'subjects': ['音乐']}]
@@ -1310,27 +1342,45 @@ def run_scheduler(config=None):
 
     if fixed_courses:
         for c_str, fixes in fixed_courses.items():
-            try:
-                c = int(c_str)
-                if c not in CLASSES: continue
-                for slot_key, subj_name in fixes.items():
-                    if subj_name not in global_course_requirements: continue
+            try: c = int(c_str)
+            except: continue
+            if c not in CLASSES: continue
+            
+            for slot_key, subj_name in fixes.items():
+                if subj_name not in ALL_SUBJECTS_IN_VARS: continue
+                try:
                     d_str, p_str = slot_key.split('_')
-                    model.Add(schedule[(c, int(d_str), int(p_str), subj_name)] == 1)
-            except: pass
+                    d, p = int(d_str), int(p_str)
+                    
+                    # 创建开关
+                    sys_switch = model.NewBoolVar(f'sys_fixed_{c}_{d}_{p}')
+                    assumption_literals.append(sys_switch)
+                    rule_mapping[sys_switch.Index()] = f"【系统预排】{c}班_{subj_name}_固定({d},{p})"
+                    
+                    model.Add(schedule[(c, d, p, subj_name)] == 1).OnlyEnforceIf(sys_switch)
+                except: pass
 
     for t_name, slots in unavailable_settings.items():
         tids = name_to_tids.get(t_name, [])
         for tid in tids:
             assignments = teacher_assignments.get(tid, [])
+            if not assignments: continue
             for day, period in slots:
-                if assignments:
-                    model.Add(sum(schedule[(c, day, period, s)] for (c, s) in assignments) == 0)
+                 if 0 <= day < DAYS and 0 <= period < PERIODS:
+                    sys_switch = model.NewBoolVar(f'sys_unavail_{t_name}_{day}_{period}')
+                    assumption_literals.append(sys_switch)
+                    rule_mapping[sys_switch.Index()] = f"【老师禁排】{t_name}_周{day+1}第{period+1}节"
+                    model.Add(sum(schedule[(c, day, period, s)] for (c, s) in assignments) == 0).OnlyEnforceIf(sys_switch)
 
 
     # 设置总目标：最小化惩罚
     if penalties:
         model.Minimize(sum(penalties))
+
+    # 激活所有开关
+    logger.info(f"DEBUG: assumption_literals count: {len(assumption_literals)}")
+    if assumption_literals:
+        model.AddAssumptions(assumption_literals)
 
     # 求解
     solver = cp_model.CpSolver()
@@ -1415,4 +1465,39 @@ def run_scheduler(config=None):
             "resources": config.get('resources', [])  # 使用配置中的resources
         }
     else:
-        return {"status": "fail"}
+        # === INFEASIBLE 诊断模块 ===
+        suggestions = ["尝试减少课时需求", "检查是否有老师课时超限", "移除部分固定课程"]
+        error_msg = "无法找到满足所有硬性约束的课表 (INFEASIBLE)"
+        
+        if status == cp_model.INFEASIBLE and assumption_literals:
+            logger.info("DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...")
+            conflict_indices = solver.SufficientAssumptionsForInfeasibility()
+            logger.info(f"DEBUG: Pass 1 indices: {conflict_indices}")
+            conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
+            
+            if not conflict_rules:
+                logger.info("DEBUG: Pass 1 returned empty. Retrying with Presolve=False...")
+                solver_diag = cp_model.CpSolver()
+                solver_diag.parameters.cp_model_presolve = False
+                solver_diag.parameters.max_time_in_seconds = 10.0
+                status_diag = solver_diag.Solve(model)
+                
+                if status_diag == cp_model.INFEASIBLE:
+                    conflict_indices = solver_diag.SufficientAssumptionsForInfeasibility()
+                    conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
+            
+            if conflict_rules:
+                error_msg = f"排课失败: 检测到 {len(conflict_rules)} 个约束发生冲突"
+                suggestions = [f"冲突核心: {', '.join(conflict_rules)}"]
+                suggestions.append("建议: 尝试放宽约束")
+                suggestions.append("建议: 减少一键生成中的硬约束数量")
+                suggestions.append("建议: 减少固定课程设置")
+            else:
+                 suggestions.append("【严重】可能是老师资源物理不足（同一时段需要上课的班级数 > 老师人数）。")
+
+        return {
+            "status": "error",
+            "error_type": "infeasible", 
+            "message": error_msg,
+            "suggestions": suggestions
+        }

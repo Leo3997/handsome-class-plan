@@ -386,8 +386,12 @@ def save_schedule():
     # 准备保存数据
     schedule_data = {
         "schedule": serialize_schedule(global_system),
-        "teachers": sorted([{"id": t['id'], "name": t['name']} for t in global_result['teachers_db']], 
-                          key=lambda x: x['name']),
+        "teachers": sorted([{
+            "id": t['id'], 
+            "name": t['name'],
+            "subject": t.get('subject', ''),
+            "type": t.get('type', 'minor')
+        } for t in global_result['teachers_db']], key=lambda x: x['name']),
         "rule_report": global_result.get('rule_report', []) # [新增] 保存体检报告
     }
     
@@ -406,25 +410,78 @@ def load_schedule(name):
     if result['status'] == 'success':
         data = result['data']
         
-        # 每次加载都创建一个新的隔离会话，用于导出或查看
-        # 注意：这里我们只能创建一个"空壳"或"伪造"的 context，因为没有 Solver 状态
-        # 但为了 API 兼容 (如 export 需要 system 对象), 我们尽力而为
-        
         schedule_id = str(uuid.uuid4())
-        # 这里比较棘手，因为 Serialization 丢失了 model 对象。
-        # 如果只是为了由 load -> export，我们可以构造一个 Dummy System
-        # 目前先存一个空的 system，如果后续操作需要 full system 可能会报错
-        # 但前端通常加载后是看，或者点击"初始化"重新排。
         
-        # 不过，为了让前端拿到 ID，我们还是生成一个
-        # 将被加载的数据作为 Payload
+        # === [核心修复] 重建 SubstitutionSystem 实例，确保加载后可直接移课/代课 ===
+        config = data.get('config', {})
+        teachers_db = data.get('teachers', [])
+        loaded_schedule = data.get('schedule', {})
+        
+        # 1. 尝试将班级 ID 转为整数，保持与 final_schedule 键值类型一致
+        raw_classes = list(loaded_schedule.keys())
+        typed_classes = []
+        for c in raw_classes:
+            try:
+                typed_classes.append(int(c))
+            except:
+                typed_classes.append(c)
+
+        # 2. 创建空的系统实例 (headless 模式)
+        system_instance = substitution.SubstitutionSystem({
+            'solver': None,
+            'vars': {},
+            'teachers_db': teachers_db,
+            'class_teacher_map': {}, 
+            'classes': typed_classes, # 使用转换后的类型
+            'days': 5,
+            'periods': 8,
+            'courses': config.get('courses', {}),
+            'resources': config.get('resources', [])
+        })
+        
+        # 3. 从序列化数据重建 final_schedule
+        new_final = {}
+        teacher_busy = set()
+        for c_id_raw in raw_classes:
+            try:
+                c_id = int(c_id_raw)
+            except:
+                c_id = c_id_raw
+                
+            periods = loaded_schedule[c_id_raw]
+                
+            for p_str, days in periods.items():
+                p = int(p_str)
+                for d_str, info in days.items():
+                    d = int(d_str)
+                    if info:
+                        new_final[(c_id, d, p)] = info
+                        tid = info.get('teacher_id')
+                        if tid:
+                            teacher_busy.add((tid, d, p))
+                            
+        system_instance.final_schedule = new_final
+        system_instance.teacher_busy = teacher_busy
+        
+        # 3. 注入会话状态
+        SCHEDULE_SESSIONS[schedule_id] = {
+            'result': {
+                'teachers_db': teachers_db,
+                'rule_report': data.get('rule_report', []),
+                'stats': {}
+            },
+            'system': system_instance
+        }
+        
+        logger.info(f"方案 '{name}' 加载成功，已重建会话 [{schedule_id}]")
         
         return jsonify({
             "status": "success",
             "message": f"方案 '{name}' 加载成功",
-            "schedule_id": schedule_id, # 虽然是个空壳ID，但前端需要
-            "schedule": data.get("schedule", {}),
-            "config": data.get("config", {})
+            "schedule_id": schedule_id,
+            "schedule": loaded_schedule,
+            "config": config,
+            "teachers": teachers_db # 同时返回老师列表，前端需要
         })
     else:
         return jsonify(result), 400
@@ -858,6 +915,78 @@ def import_config():
     except Exception as e:
         logger.error(f"导入配置异常: {str(e)}", exc_info=True)
         return jsonify({"status": "error", "message": str(e)}), 500
+
+# ============ AI 冲突诊断接口 ============
+@app.route('/api/analyze_conflict', methods=['POST'])
+def ai_analyze_conflict():
+    """使用 Qwen Plus 分析规则冲突并给出建议"""
+    try:
+        data = request.json
+        report = data.get('report', [])
+        
+        # 筛选出有问题的规则 (Failed 或 Warning)
+        issues = [r for r in report if r['status'] in ['failed', 'warning']]
+        
+        if not issues:
+            return jsonify({
+                "status": "success", 
+                "suggestion": "当前规则执行完美，无需改进。"
+            })
+        
+        # 构建 Prompt 上下文
+        issues_text = ""
+        for i, r in enumerate(issues):
+            status_str = "【硬性冲突-必须修复】" if r['is_hard'] else "【软约束-扣分项】"
+            # 安全获取 violations，防止某些规则没有该字段
+            violations_list = r.get('violations', [])
+            violations_str = "; ".join(violations_list[:3]) if violations_list else "无详细信息"
+            
+            issues_text += f"{i+1}. {r['name']} ({status_str})\n   - 类型: {r['type']}\n   - 权重: {r['weight']}\n   - 违规详情: {violations_str}...\n\n"
+
+        system_prompt = """
+你是一个运筹优化与排课系统专家。用户会提供一份"排课规则执行失败报告"。
+请分析这些冲突，并针对每一条有问题的规则给出具体的**改进建议**。
+
+### 分析维度：
+1. **硬约束冲突 (Failed)**: 
+   - 是否条件过于苛刻？(如：禁止的时段太多，导致无处可排)
+   - 是否资源不足？(如：老师课时总需求 > 可用时段)
+   - **建议方向**: "建议将权重降低为 90 改为软约束" 或 "建议减少禁止时段" 或 "检查相关老师是否课时过满"。
+
+2. **软约束偏差 (Warning)**:
+   - 说明这是为了满足硬约束而做出的妥协。
+   - **建议方向**: 如果用户非要满足此规则，建议"提高权重到 100"，但警告可能会导致排课失败；或者"增加满足该规则的可用资源"。
+
+### 输出格式：
+请返回一段清晰的 HTML 格式文本（不要包含 ```html 标记），使用 <ul class="list-disc pl-5 space-y-2"> 列表。
+重点加粗关键建议。
+"""
+
+        user_prompt = f"以下是排课系统的规则执行报告，请帮我分析冲突原因并给出修改参数的建议：\n\n{issues_text}"
+
+        # 调用 Qwen-Plus
+        completion = qwen_client.chat.completions.create(
+            model="qwen-plus", 
+            messages=[
+                {'role': 'system', 'content': system_prompt},
+                {'role': 'user', 'content': user_prompt}
+            ],
+            temperature=0.3 # 降低随机性，要求分析准确
+        )
+        
+        suggestion = completion.choices[0].message.content
+        # 清理可能存在的 markdown 标记
+        suggestion = suggestion.replace('```html', '').replace('```', '').strip()
+        
+        return jsonify({
+            "status": "success",
+            "suggestion": suggestion
+        })
+
+    except Exception as e:
+        logger.error(f"AI 诊断失败: {str(e)}", exc_info=True)
+        return jsonify({"status": "error", "message": f"AI 分析失败: {str(e)}"}), 500
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True, port=8015)

@@ -730,7 +730,7 @@
                                 <ul class="dropdown-menu shadow-lg border-0 rounded-xl">
                                     <li><a class="dropdown-item text-xs font-bold py-2" href="#"
                                             onclick="loadRuleTemplate('shaoxing')">
-                                            <i class="bi bi-building mr-2"></i>导入标准模板
+                                            <i class="bi bi-building mr-2"></i>导入绍兴第一初级中学排课模板
                                         </a></li>
                                     <li>
                                         <hr class="dropdown-divider">
@@ -926,7 +926,7 @@
 
                     <div id="ai-loading" class="hidden text-center py-4">
                         <div class="spinner-border text-purple-500 w-8 h-8" role="status"></div>
-                        <p class="text-xs text-purple-400 font-bold mt-2">Qwen 正在思考中...</p>
+                        <p class="text-xs text-purple-400 font-bold mt-2">AI排课助手正在思考中...</p>
                     </div>
 
                     <div id="ai-result-preview" class="hidden clay-card p-3 bg-white mb-3 border border-purple-100">
@@ -1884,8 +1884,9 @@
                     g.courses.forEach(c => {
                         allSubjects.add(c.name);
                         if (c.teachers) {
-                            c.teachers.split(/[,，\s]+/).forEach(t => {
-                                if (t.trim()) allTeachers.add(t.trim());
+                            c.teachers.split(/[,，]+/).forEach(t => {
+                                const trimT = t.trim();
+                                if (trimT) allTeachers.add(trimT);
                             });
                         }
                     });
@@ -2431,7 +2432,7 @@
                         pm_count: c.pm_count
                     };
                     if (c.teachers) {
-                        const tList = c.teachers.split(/[,，\s]+/).filter(x => x);
+                        const tList = c.teachers.split(/[,，]+/).map(t => t.trim()).filter(x => x);
                         if (!globalTeacherNames[c.name]) globalTeacherNames[c.name] = new Set();
                         tList.forEach(t => globalTeacherNames[c.name].add(t));
                     }
@@ -2456,7 +2457,7 @@
                 gradeTeacherNames[gradeName] = {};
                 gradesData[gradeName].courses.forEach(c => {
                     if (c.teachers) {
-                        gradeTeacherNames[gradeName][c.name] = c.teachers.split(/[,，\s]+/).filter(x => x);
+                        gradeTeacherNames[gradeName][c.name] = c.teachers.split(/[,，]+/).map(t => t.trim()).filter(x => x);
                     }
                 });
             });
@@ -2534,24 +2535,8 @@
                 rules.push({ name, targets, type, params, weight });
             });
 
-            // [新增/容错] 如果规则中心为空（例如页面刷新后），且存在特殊科目，则注入默认核心规则
-            if (rules.length === 0) {
-                console.log("No rules detected, injecting default core rules...");
-                rules.push({
-                    name: "自动注入-政教活动",
-                    type: "FIXED_SLOTS",
-                    targets: { subjects: ["政教活动"] },
-                    params: { slots: [[4, 7]] },
-                    weight: 100
-                });
-                rules.push({
-                    name: "自动注入-拓展课",
-                    type: "FIXED_SLOTS",
-                    targets: { subjects: ["拓展课"] },
-                    params: { slots: [[4, 6]] },
-                    weight: 100
-                });
-            }
+            // [修改] 移除硬编码的默认规则注入，改为在 saveSettingsAndInit 中智能加载完整模板
+            // if (rules.length === 0) { ... }
 
             // 6. 收集开关
             const avoidConsecutive = document.getElementById('check-avoid-consecutive')?.checked || false;
@@ -2578,7 +2563,7 @@
         // ========================================================
         // saveSettingsAndInit - 重构后更清爽
         // ========================================================
-        function saveSettingsAndInit() {
+        async function saveSettingsAndInit() {
             // 1. 同步数据
             try {
                 syncUItoConfig();
@@ -2592,6 +2577,25 @@
             const spinner = document.getElementById('init-spinner');
             if (btn) btn.disabled = true;
             if (spinner) spinner.classList.remove('d-none');
+
+            // [新增] 智能加载默认规则 (如果当前无规则，则自动加载绍兴模板)
+            if (!config.rules || config.rules.length === 0) {
+                try {
+                    console.log("No rules found, loading default Shaoxing template...");
+                    const res = await fetch('/static/rules/shaoxing_rules.json');
+                    if (res.ok) {
+                        const defaultRules = await res.json();
+                        config.rules = defaultRules;
+                        console.log(`Loaded ${config.rules.length} default rules automatically.`);
+
+                        // [可选] 也可以在这里通过 addRuleRow 把它们渲染到界面上，
+                        // 但为了保持"一键生成"的流畅性，我们在后台注入即可，
+                        // 用户如果想看，可以在生成后的"规则执行报告"中看到。
+                    }
+                } catch (e) {
+                    console.error("Failed to load default rules", e);
+                }
+            }
 
             // 3. 发送请求 (直接使用全局 config)
             fetch('/api/init', {
@@ -2845,6 +2849,13 @@
         let globalRuleReport = [];
 
         function showRuleReport() {
+            // [新增] 每次打开重置 AI 建议区
+            const aiBox = document.getElementById('ai-diagnosis-box');
+            if (aiBox) {
+                aiBox.classList.add('hidden');
+                document.getElementById('ai-diagnosis-content').innerHTML = '';
+            }
+
             const listEl = document.getElementById('report-list');
             if (!listEl) return;
             listEl.innerHTML = '';
@@ -2917,6 +2928,52 @@
 
             new bootstrap.Modal(document.getElementById('reportModal')).show();
         }
+
+        // 调用 AI 诊断接口
+        async function callAiDiagnosis() {
+            // 1. 获取当前有问题的规则
+            const issues = globalRuleReport.filter(r => r.status === 'failed' || r.status === 'warning');
+
+            if (issues.length === 0) {
+                alert("当前报告完美，没有冲突需要分析！");
+                return;
+            }
+
+            // 2. UI 状态切换
+            const btn = document.getElementById('btn-ai-diagnose');
+            const box = document.getElementById('ai-diagnosis-box');
+            const content = document.getElementById('ai-diagnosis-content');
+
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm mr-2"></span> Qwen 正在思考解决方案...';
+
+            try {
+                const res = await fetch('/api/analyze_conflict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ report: globalRuleReport }) // 发送完整报告
+                });
+
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    box.classList.remove('hidden');
+                    // 渲染 HTML 内容
+                    content.innerHTML = data.suggestion;
+                    // 滚动到底部
+                    box.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert("分析失败: " + data.message);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("网络请求失败");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }
     </script>
     <div class="modal fade" id="reportModal" tabindex="-1">
         <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -2946,16 +3003,35 @@
                 </div>
 
                 <div class="modal-body px-6 pb-6 pt-0">
-                    <div class="clay-card p-4 !shadow-clay-inner max-h-[400px] overflow-y-auto custom-scrollbar">
+                    <div class="clay-card p-4 !shadow-clay-inner max-h-[300px] overflow-y-auto custom-scrollbar">
                         <ul id="report-list" class="space-y-3">
                         </ul>
                     </div>
+
+                    <div id="ai-diagnosis-box" class="hidden mt-4">
+                        <div class="clay-card p-4 bg-purple-50 border border-purple-100">
+                            <div class="flex items-center gap-2 mb-2 text-purple-600 font-black text-sm">
+                                <i class="bi bi-stars"></i> 智能排课助手诊断建议
+                            </div>
+                            <div id="ai-diagnosis-content" class="text-xs text-slate-600 leading-relaxed">
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="report-advice"
                         class="mt-4 text-xs text-slate-500 bg-white p-3 rounded-xl border border-dashed border-slate-300 hidden">
                         <i class="bi bi-info-circle-fill mr-1"></i>
-                        <span class="font-bold">改进建议：</span>
-                        若出现硬性冲突，可能是规则目标设定有误（如目标科目名不匹配），或与其他固定规则冲突。建议检查“规则中心”中的设置。
+                        <span class="font-bold">通用提示：</span>
+                        若出现硬性冲突，建议检查目标是否存在拼写错误，或是否存在逻辑互斥（如：同一老师既要求在周一上课，又在周一禁排）。
                     </div>
+                </div>
+
+                <div class="modal-footer border-0 px-6 pb-6 pt-0">
+                    <button id="btn-ai-diagnose" onclick="callAiDiagnosis()"
+                        class="w-full clay-btn py-3 text-white font-bold shadow-lg hover:scale-[1.02] transition-transform"
+                        style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">
+                        <i class="bi bi-magic mr-2"></i> AI 智能分析如何改进规则
+                    </button>
                 </div>
             </div>
         </div>
