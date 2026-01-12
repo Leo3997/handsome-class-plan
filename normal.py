@@ -8,6 +8,14 @@ import math
 import json
 import os
 
+class StopAfterFirstSolution(cp_model.CpSolverSolutionCallback):
+    """在找到第一个可行解时停止搜索的回调类。"""
+    def __init__(self):
+        cp_model.CpSolverSolutionCallback.__init__(self)
+
+    def on_solution_callback(self):
+        self.StopSearch()
+
 logger = logging.getLogger(__name__)
 
 # 绍兴一中默认规则配置 (用于迁移硬编码)
@@ -499,9 +507,9 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                 relevant_vars = [schedule[(c_id, d, p, subj)] for d, p in zone_slots if (c_id, d, p, subj) in schedule]
                 if relevant_vars:
                     if weight >= 100:
-                        if rel == '==': model.Add(sum(relevant_vars) == count)
-                        elif rel == '<=': model.Add(sum(relevant_vars) <= count)
-                        elif rel == '>=': model.Add(sum(relevant_vars) >= count)
+                        if rel == '==': model.Add(sum(relevant_vars) == count).OnlyEnforceIf(switch_var)
+                        elif rel == '<=': model.Add(sum(relevant_vars) <= count).OnlyEnforceIf(switch_var)
+                        elif rel == '>=': model.Add(sum(relevant_vars) >= count).OnlyEnforceIf(switch_var)
                     else:
                         # 软约束：惩罚偏离度
                         diff = model.NewIntVar(-10, 10, f'zone_diff_{c_id}_{subj}_{rule.get("name","")}')
@@ -523,14 +531,20 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                     for d in range(5):
                         daily_vars = [schedule[(c, d, p, s)] for (c, s) in assignments for p in slots_in_day if (c, d, p, s) in schedule]
                         if daily_vars:
-                            model.Add(sum(daily_vars) <= limit)
+                            if weight >= 100:
+                                model.Add(sum(daily_vars) <= limit).OnlyEnforceIf(switch_var)
+                            else:
+                                model.Add(sum(daily_vars) <= limit)
                             
             # 对班级生效 (如有需要)
             for c_id, subj in class_subjects:
                 for d in range(5):
                     daily_vars = [schedule[(c_id, d, p, subj)] for p in slots_in_day if (c_id, d, p, subj) in schedule]
                     if daily_vars:
-                        model.Add(sum(daily_vars) <= limit)
+                        if weight >= 100:
+                            model.Add(sum(daily_vars) <= limit).OnlyEnforceIf(switch_var)
+                        else:
+                            model.Add(sum(daily_vars) <= limit)
 
         elif r_type == 'SPECIAL_DAYS':
             days = params.get('days', [])
@@ -545,7 +559,10 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                             vars_to_block.append(schedule[(c_id, d, p, subj)])
                     
                     if vars_to_block:
-                        model.Add(sum(vars_to_block) == 0)
+                        if weight >= 100:
+                            model.Add(sum(vars_to_block) == 0).OnlyEnforceIf(switch_var)
+                        else:
+                            model.Add(sum(vars_to_block) == 0)
 
         elif r_type == 'CONSECUTIVE':
             mode = params.get('mode', 'avoid') 
@@ -559,7 +576,7 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                             window_vars = [schedule[(c_id, d, p+i, subj)] for i in range(limit + 1) if (c_id, d, p+i, subj) in schedule]
                             if len(window_vars) > limit:
                                 if weight >= 100:
-                                    model.Add(sum(window_vars) <= limit)
+                                    model.Add(sum(window_vars) <= limit).OnlyEnforceIf(switch_var)
                                 else:
                                     is_cons = model.NewBoolVar(f'cons_{c_id}_{d}_{p}_{subj}')
                                     model.Add(sum(window_vars) >= limit + 1).OnlyEnforceIf(is_cons)
@@ -578,7 +595,7 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                                     window_vars.extend([schedule[(c, d, p+i, s)] for (c, s) in assignments if (c, d, p+i, s) in schedule])
                                 if window_vars:
                                     if weight >= 100:
-                                        model.Add(sum(window_vars) <= limit)
+                                        model.Add(sum(window_vars) <= limit).OnlyEnforceIf(switch_var)
                                     else:
                                         is_cons = model.NewBoolVar(f'cons_tid_{tid}_{d}_{p}')
                                         model.Add(sum(window_vars) >= limit + 1).OnlyEnforceIf(is_cons)
@@ -618,14 +635,35 @@ def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, T
                         # 当固定时段数 == 课时数时，强制每个时段都排1节
                         if num_fixed_slots > 0 and subj_count == num_fixed_slots:
                             for fv in fixed_slot_vars:
-                                model.Add(fv == 1)
+                                if weight >= 100:
+                                    model.Add(fv == 1).OnlyEnforceIf(switch_var)
+                                else:
+                                    model.Add(fv == 1)
                         else:
                             # 否则只要求在固定时段内至少排一节
-                            model.Add(sum(fixed_slot_vars) >= 1)
+                            if weight >= 100:
+                                model.Add(sum(fixed_slot_vars) >= 1).OnlyEnforceIf(switch_var)
+                            else:
+                                model.Add(sum(fixed_slot_vars) >= 1)
                     else:
                         # 软约束：奖励排在固定时段
                         for v in fixed_slot_vars:
                             penalties.append(v * -weight)
+
+        elif r_type == 'GLOBAL_CAPACITY':
+            capacity = params.get('capacity', 1)
+            subjects = targets.get('subjects', [])
+            for d in range(5):
+                for p in range(8):
+                    slot_vars = [schedule[(c, d, p, s)] for c in class_metadata for s in subjects if (c, d, p, s) in schedule]
+                    if slot_vars:
+                        if weight >= 100:
+                            model.Add(sum(slot_vars) <= capacity).OnlyEnforceIf(switch_var)
+                        else:
+                            # 溢出惩罚
+                            excess = model.NewIntVar(0, len(class_metadata), f'excess_{d}_{p}_{idx}')
+                            model.Add(excess >= sum(slot_vars) - capacity)
+                            penalties.append(excess * weight)
 
 
 
@@ -880,14 +918,16 @@ def run_scheduler(config=None):
             continue
 
         # 确定每个老师理想的班级数上限
-        # 语数英科由于 Rule 2 (上午4节)，上限设为 4 班 (原本5班在教研禁排下会无解)
-        # 社会由于 Rule 2 (下午3节)，上限设为 4 班
-        # 其他副课 (体育/音美信心)，上限设为 12 班 (留出弹性空间)
+        # 语数英科由于 Rule 1 (上午4节)，上限设为 2 班 (确保上午仅排 8 节，留出 12 个空位避开教研/领导假)
+        # 社会由于 Rule 3 (上午2节)，上限设为 2 班
+        # 其他副课 (体育/音美信心)，上限设为 10 班 (符合一周 15 节左右的工作量)
         class_limit_per_teacher = 15
         if subj in ["语文", "数学", "英语", "科学", "社会"]:
-            class_limit_per_teacher = 4
+            class_limit_per_teacher = 2
         elif subj == "体育":
-            class_limit_per_teacher = 10 # 场地有限
+            class_limit_per_teacher = 6 # 降低体育老师上限，确保 20 人均分 60 班
+        elif subj in ["音乐", "美术", "信息", "心理"]:
+            class_limit_per_teacher = 10 
         
         # 计算当前名单是否足够支撑总班级数
         num_names = len(assigned_teachers) if assigned_teachers else 1
@@ -980,16 +1020,20 @@ def run_scheduler(config=None):
             
             # [性能优化] 活动类科目使用虚拟老师池，不需要真实分片
             if is_activity_subject:
-                # 只生成少量虚拟老师（实际不产生冲突约束）
-                final_teacher_names[subj] = [f"v_{subj}{i+1}" for i in range(10)]
-                logger.info(f"  -> [Activity] {subj} uses virtual teacher pool (no conflict constraints)")
+                # [核心修复] 虚拟老师名额必须覆盖全校班级并发需求
+                # 之前固定为 10，导致 60 班量级在固定活动课时会出现 INFEASIBLE
+                total_classes = len(class_metadata)
+                final_teacher_names[subj] = [f"v_{subj}{i+1}" for i in range(total_classes + 10)]
+                logger.info(f"  -> [Activity] {subj} uses virtual teacher pool (size: {total_classes + 10})")
                 continue  # 跳过后续的高并发分片逻辑
             
             # [升级逻辑] 动态扩充老师名单
             expanded_names = []
             if not assigned_teachers:
                 # 默认老师名格式: 科目+序号 (全校共用)
-                assigned_teachers = [f"{subj}{i+1}" for i in range(10)]
+                # [核心调整] 体育老师默认生成 20 人以降低负载
+                default_count = 20 if subj == "体育" else 10
+                assigned_teachers = [f"{subj}{i+1}" for i in range(default_count)]
             
             # [核心修复] 对于高并发科目，确保分片数 >= 班级总数
             if is_high_concurrency:
@@ -1397,7 +1441,11 @@ def run_scheduler(config=None):
         solver.parameters.num_search_workers = 12
     solver.parameters.randomize_search = True 
     solver.parameters.log_search_progress = True
-    status = solver.Solve(model)
+    
+    # 增加首解停止逻辑
+    solution_callback = StopAfterFirstSolution()
+    status = solver.Solve(model, solution_callback)
+    
     logger.info(f"Solver status: {solver.StatusName(status)}")
 
     if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:

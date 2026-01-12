@@ -12470,3 +12470,2056 @@ NameError: name '_load_preset_rules' is not defined
 2026-01-12 17:59:36,434 - INFO -   [26] FIXED_SLOTS: ['课外活动']
 2026-01-12 17:59:36,435 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
 2026-01-12 17:59:36,753 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 18:51:52,003 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 18:51:52,003 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 18:51:52,004 - INFO -  * Restarting with stat
+2026-01-12 18:51:53,047 - WARNING -  * Debugger is active!
+2026-01-12 18:51:53,051 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 18:52:02,121 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "GET / HTTP/1.1" 200 -
+2026-01-12 18:52:02,134 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,367 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,446 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,447 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,448 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,677 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 18:52:02,798 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:02] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 18:52:03,729 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:03] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 18:52:03,730 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:03] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-12 18:52:03,989 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:03] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 18:52:11,254 - INFO - 127.0.0.1 - - [12/Jan/2026 18:52:11] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 18:52:28,431 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 18:52:28,431 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 18:52:28,431 - INFO - Received config courses type: <class 'list'>
+2026-01-12 18:52:28,431 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 18:52:28,431 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 18:52:28,431 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:52:28,431 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 18:52:28,431 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 18:52:28,431 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 18:52:28,431 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 18:52:28,431 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:52:28,431 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 18:52:28,431 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 18:52:28,431 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 18:52:28,431 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 18:52:28,431 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 18:52:28,431 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 18:52:28,432 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 18:52:28,432 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 18:52:28,432 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 18:52:28,432 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:52:28,432 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 18:52:28,432 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 18:52:28,432 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 18:52:28,432 - INFO - Subject Sharding Report Complete.
+2026-01-12 18:52:28,432 - INFO - ===== 排课诊断信息 =====
+2026-01-12 18:52:28,432 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 18:52:28,432 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 18:52:28,432 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 18:52:28,432 - INFO - =========================
+2026-01-12 18:52:28,432 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 18:52:28,432 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 18:52:28,825 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 18:52:28,825 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 18:52:28,825 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 18:52:28,825 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 18:52:28,825 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 18:52:28,825 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 18:52:28,825 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 18:52:28,825 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 18:52:28,825 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 18:52:28,825 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 18:52:28,825 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 18:52:28,825 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 18:52:28,825 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 18:52:28,825 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 18:52:28,825 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 18:52:28,825 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 18:52:28,825 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 18:52:28,825 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 18:52:28,825 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 18:52:28,825 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 18:52:28,825 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 18:52:28,825 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:52:28,825 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:52:28,825 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:52:28,826 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:52:28,826 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:52:28,826 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:52:28,826 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 18:52:28,921 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 18:58:34,832 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 18:58:34,832 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 18:58:34,833 - INFO -  * Restarting with stat
+2026-01-12 18:58:35,859 - WARNING -  * Debugger is active!
+2026-01-12 18:58:35,861 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 18:58:38,895 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:38] "GET / HTTP/1.1" 200 -
+2026-01-12 18:58:38,907 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:38] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,148 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,216 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,216 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,217 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,452 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 18:58:39,564 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:39] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 18:58:40,470 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:40] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 18:58:40,717 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:40] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 18:58:46,680 - INFO - 127.0.0.1 - - [12/Jan/2026 18:58:46] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 18:59:04,847 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 18:59:04,847 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 18:59:04,847 - INFO - Received config courses type: <class 'list'>
+2026-01-12 18:59:04,848 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 18:59:04,848 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 18:59:04,848 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 18:59:04,848 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 18:59:04,848 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 18:59:04,848 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:59:04,848 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 18:59:04,848 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 18:59:04,848 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:59:04,848 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 18:59:04,848 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 18:59:04,848 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 18:59:04,848 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 18:59:04,848 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 18:59:04,848 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 18:59:04,848 - INFO - Subject Sharding Report Complete.
+2026-01-12 18:59:04,848 - INFO - ===== 排课诊断信息 =====
+2026-01-12 18:59:04,848 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 18:59:04,848 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 18:59:04,848 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 18:59:04,848 - INFO - =========================
+2026-01-12 18:59:04,849 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 18:59:04,849 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 18:59:05,212 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 18:59:05,212 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 18:59:05,212 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 18:59:05,213 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 18:59:05,213 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 18:59:05,213 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 18:59:05,213 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 18:59:05,213 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 18:59:05,213 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 18:59:05,213 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 18:59:05,213 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 18:59:05,213 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 18:59:05,213 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 18:59:05,213 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 18:59:05,213 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 18:59:05,213 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 18:59:05,213 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 18:59:05,213 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 18:59:05,213 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 18:59:05,213 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 18:59:05,213 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 18:59:05,213 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:59:05,213 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:59:05,213 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 18:59:05,213 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:59:05,213 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:59:05,213 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 18:59:05,213 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 18:59:05,303 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 18:59:13,056 - INFO - Solver status: FEASIBLE
+2026-01-12 18:59:13,127 - INFO - 排课成功 [28f819c4-45d5-48cd-8e1b-7924196cbcee] - 生成 60 个班级的课表
+2026-01-12 18:59:13,130 - INFO - 127.0.0.1 - - [12/Jan/2026 18:59:13] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:01:27,668 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:01:27,668 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:01:27,668 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:01:27,668 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:01:27,668 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:01:27,668 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:01:27,668 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:01:27,668 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:01:27,668 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:01:27,668 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:01:27,668 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:01:27,668 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:01:27,668 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:01:27,668 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:01:27,669 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:01:27,669 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:01:27,669 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:01:27,669 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:01:27,669 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:01:27,669 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:01:27,669 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:01:27,669 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:01:27,669 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:01:27,669 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:01:27,669 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:01:27,669 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:01:27,669 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:01:27,669 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:01:27,669 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:01:27,669 - INFO - =========================
+2026-01-12 19:01:27,669 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:01:27,670 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:01:28,001 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:01:28,001 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:01:28,001 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:01:28,001 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:01:28,001 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:01:28,001 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:01:28,001 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:01:28,001 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:01:28,001 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:01:28,001 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:01:28,001 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:01:28,001 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:01:28,001 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:01:28,001 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:01:28,001 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:01:28,001 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:01:28,001 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:01:28,001 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:01:28,002 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:01:28,002 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:01:28,002 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:01:28,002 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:01:28,002 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:01:28,002 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:01:28,002 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:01:28,002 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:01:28,002 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:01:28,002 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:01:28,096 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 19:01:35,592 - INFO - Solver status: FEASIBLE
+2026-01-12 19:01:35,664 - INFO - 排课成功 [97c134b4-02bb-4b84-8ff8-76e27244f3ae] - 生成 60 个班级的课表
+2026-01-12 19:01:35,667 - INFO - 127.0.0.1 - - [12/Jan/2026 19:01:35] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:03:12,485 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "GET / HTTP/1.1" 200 -
+2026-01-12 19:03:12,494 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 19:03:12,731 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:03:12,796 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:03:12,798 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 19:03:12,799 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:12] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 19:03:13,037 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:13] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 19:03:13,121 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:13] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 19:03:13,934 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:13] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:03:14,197 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:14] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:03:25,159 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:03:25,160 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:03:25,160 - INFO -  * Restarting with stat
+2026-01-12 19:03:26,172 - WARNING -  * Debugger is active!
+2026-01-12 19:03:26,174 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:03:26,676 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:26] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 19:03:26,938 - INFO - 接收到排课请求 - 班级数: 18, 科目数: 13
+2026-01-12 19:03:26,938 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:03:26,938 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:03:26,938 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:03:26,938 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 18
+2026-01-12 19:03:26,938 - INFO - Subject 政教活动 Peak Concurrency Demand: 18
+2026-01-12 19:03:26,938 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:03:26,938 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:26,938 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:03:26,938 - INFO - Subject 课外活动 Peak Concurrency Demand: 12
+2026-01-12 19:03:26,938 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:03:26,938 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:26,938 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:03:26,938 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:03:26,938 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:03:26,938 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:03:26,939 - INFO - Subject 拓展课 Peak Concurrency Demand: 12
+2026-01-12 19:03:26,939 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:03:26,939 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:26,939 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:03:26,939 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:03:26,939 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:03:26,939 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:03:26,939 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:03:26,939 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:03:26,939 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:03:26,939 - INFO - 班级数: 18, 科目数: 13
+2026-01-12 19:03:26,939 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:03:26,939 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:03:26,939 - INFO - =========================
+2026-01-12 19:03:26,939 - INFO - Generated 138 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:03:26,939 - INFO - 最繁忙老师: 体育1, 周课时: 9, 分配班级数: 3
+2026-01-12 19:03:27,020 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:03:27,020 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:03:27,020 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:03:27,020 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:03:27,020 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:03:27,020 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:03:27,020 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:03:27,020 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:03:27,020 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:03:27,021 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:03:27,021 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:03:27,021 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:03:27,021 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:03:27,021 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:03:27,021 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:03:27,021 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:03:27,021 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:03:27,021 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:03:27,021 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:03:27,021 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:03:27,021 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:03:27,021 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:27,021 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:27,021 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:27,021 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:27,021 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:27,021 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:27,021 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 19:03:27,044 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:03:27,187 - INFO - Solver status: OPTIMAL
+2026-01-12 19:03:27,231 - INFO - 排课成功 [6634bd84-e842-404e-a98c-1063df8d3f77] - 生成 18 个班级的课表
+2026-01-12 19:03:27,233 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:27] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:03:36,377 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:36] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 19:03:53,877 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:03:53,877 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:03:53,877 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:03:53,877 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:03:53,877 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:03:53,877 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:03:53,877 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:03:53,877 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:53,877 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:03:53,877 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:03:53,877 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:03:53,877 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:53,877 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:03:53,877 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:03:53,877 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:03:53,877 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:03:53,877 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:03:53,877 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:03:53,877 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:03:53,878 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:03:53,878 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:03:53,878 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:03:53,878 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:03:53,878 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:03:53,878 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:03:53,878 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:03:53,878 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:03:53,878 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:03:53,878 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:03:53,878 - INFO - =========================
+2026-01-12 19:03:53,878 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:03:53,878 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:03:54,207 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:03:54,207 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:03:54,208 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:03:54,208 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:03:54,208 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:03:54,208 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:03:54,208 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:03:54,208 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:03:54,208 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:03:54,208 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:03:54,208 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:03:54,208 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:03:54,208 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:03:54,208 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:03:54,208 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:03:54,208 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:03:54,208 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:03:54,208 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:03:54,208 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:03:54,208 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:03:54,208 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:03:54,208 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:54,208 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:54,208 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:03:54,208 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:54,208 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:54,208 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:03:54,208 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:03:54,272 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:03:54,704 - INFO - Solver status: INFEASIBLE
+2026-01-12 19:03:54,704 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 19:03:54,704 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 19:03:54,715 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 19:03:54,715 - INFO - 127.0.0.1 - - [12/Jan/2026 19:03:54] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 19:09:08,497 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:09:08,498 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:09:08,498 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:09:08,498 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:09:08,498 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:09:08,498 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:09:08,498 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:09:08,498 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:08,498 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:09:08,498 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:09:08,498 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:09:08,498 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:08,498 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:09:08,498 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:09:08,498 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:09:08,498 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:08,498 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:09:08,498 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:09:08,498 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:09:08,498 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:09:08,498 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:09:08,498 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:09:08,498 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:09:08,498 - INFO - =========================
+2026-01-12 19:09:08,499 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:09:08,499 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:09:08,830 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:09:08,830 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:09:08,830 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:09:08,830 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:09:08,830 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:09:08,830 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:09:08,830 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:09:08,830 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:09:08,830 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:09:08,830 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:09:08,830 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:09:08,830 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:09:08,830 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:09:08,830 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:09:08,830 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:09:08,830 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:09:08,830 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:09:08,830 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:09:08,830 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:09:08,830 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:09:08,830 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:09:08,830 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:08,830 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:08,830 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:08,830 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:08,830 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:08,830 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:08,830 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:09:08,896 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:09:09,344 - INFO - Solver status: INFEASIBLE
+2026-01-12 19:09:09,344 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 19:09:09,344 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 19:09:09,355 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 19:09:09,356 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:09] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 19:09:15,457 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:15] "GET / HTTP/1.1" 200 -
+2026-01-12 19:09:15,748 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:15] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 19:09:15,776 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:15] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:09:15,777 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:15] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:09:15,777 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:15] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 19:09:16,082 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:16] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 19:09:16,082 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:16] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 19:09:16,096 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:16] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 19:09:16,684 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:16] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:09:16,999 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:16] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:09:21,638 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:21] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 19:09:36,046 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:09:36,046 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:09:36,046 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:09:36,046 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:09:36,046 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:09:36,046 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:09:36,046 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:09:36,046 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:36,046 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:09:36,046 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:09:36,046 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:09:36,046 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:36,046 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:09:36,046 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:09:36,046 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:09:36,046 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:09:36,046 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:09:36,046 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:09:36,046 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:09:36,046 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:09:36,046 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:09:36,046 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:09:36,047 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:09:36,047 - INFO - =========================
+2026-01-12 19:09:36,047 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:09:36,047 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:09:36,420 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:09:36,420 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:09:36,420 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:09:36,420 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:09:36,420 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:09:36,420 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:09:36,420 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:09:36,420 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:09:36,420 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:09:36,420 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:09:36,420 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:09:36,420 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:09:36,420 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:09:36,420 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:09:36,420 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:09:36,420 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:09:36,420 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:09:36,420 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:09:36,420 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:09:36,420 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:09:36,420 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:09:36,420 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:36,420 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:36,420 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:09:36,420 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:36,420 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:36,420 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:09:36,420 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:09:36,505 - INFO - DEBUG: assumption_literals count: 20
+2026-01-12 19:09:45,475 - INFO - Solver status: FEASIBLE
+2026-01-12 19:09:45,547 - INFO - 排课成功 [25dde429-8cad-486a-90a4-63890796b4a8] - 生成 60 个班级的课表
+2026-01-12 19:09:45,551 - INFO - 127.0.0.1 - - [12/Jan/2026 19:09:45] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:18:47,497 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 19:18:47,625 - INFO -  * Restarting with stat
+2026-01-12 19:18:48,698 - WARNING -  * Debugger is active!
+2026-01-12 19:18:48,700 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:20:04,020 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:20:04,020 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:20:04,021 - INFO -  * Restarting with stat
+2026-01-12 19:20:05,020 - WARNING -  * Debugger is active!
+2026-01-12 19:20:05,022 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:20:13,564 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:20:13,564 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:20:13,564 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:20:13,564 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:20:13,564 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:20:13,564 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:20:13,564 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:20:13,564 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:20:13,564 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:20:13,565 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:20:13,565 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:20:13,565 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:20:13,565 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:20:13,565 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:20:13,565 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:20:13,565 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:20:13,565 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:20:13,565 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:20:13,565 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:20:13,565 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:20:13,565 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:20:13,565 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:20:13,565 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:20:13,565 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:20:13,565 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:20:13,565 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:20:13,565 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:20:13,565 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:20:13,565 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:20:13,565 - INFO - =========================
+2026-01-12 19:20:13,565 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:20:13,566 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:20:13,936 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:20:13,936 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:20:13,936 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:20:13,936 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:20:13,936 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:20:13,936 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:20:13,936 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:20:13,936 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:20:13,936 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:20:13,936 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:20:13,936 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:20:13,936 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:20:13,936 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:20:13,936 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:20:13,936 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:20:13,936 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:20:13,936 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:20:13,936 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:20:13,936 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:20:13,936 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:20:13,936 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:20:13,936 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:20:13,936 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:20:13,936 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:20:13,936 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:20:13,936 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:20:13,936 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:20:13,936 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:20:14,020 - INFO - DEBUG: assumption_literals count: 20
+2026-01-12 19:20:18,210 - INFO - Solver status: FEASIBLE
+2026-01-12 19:20:18,277 - INFO - 排课成功 [ee330e5b-5d63-4b3b-9b41-f44ff57bd6ae] - 生成 60 个班级的课表
+2026-01-12 19:20:18,281 - INFO - 127.0.0.1 - - [12/Jan/2026 19:20:18] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:21:48,202 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:21:48,202 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:21:48,203 - INFO -  * Restarting with stat
+2026-01-12 19:21:49,248 - WARNING -  * Debugger is active!
+2026-01-12 19:21:49,249 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:22:01,386 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:22:01,387 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:22:01,387 - INFO -  * Restarting with stat
+2026-01-12 19:22:02,422 - WARNING -  * Debugger is active!
+2026-01-12 19:22:02,424 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:22:03,264 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:22:03,264 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:22:03,264 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:22:03,264 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:22:03,264 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:22:03,264 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:03,264 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:22:03,264 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:22:03,264 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:22:03,264 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:03,264 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:22:03,264 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:22:03,264 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:22:03,264 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:22:03,264 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:22:03,264 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:03,264 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:22:03,264 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:22:03,264 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:22:03,264 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:22:03,264 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:22:03,264 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:22:03,264 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:22:03,265 - INFO - =========================
+2026-01-12 19:22:03,265 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:22:03,265 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:22:03,616 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:22:03,616 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:22:03,616 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:22:03,616 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:22:03,616 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:22:03,616 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:22:03,616 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:22:03,616 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:22:03,616 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:22:03,616 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:22:03,616 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:22:03,616 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:22:03,616 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:22:03,616 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:22:03,616 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:22:03,616 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:22:03,616 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:22:03,616 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:22:03,616 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:22:03,616 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:22:03,616 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:22:03,616 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:03,616 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:03,616 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:03,616 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:03,616 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:03,616 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:03,616 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:22:03,698 - INFO - DEBUG: assumption_literals count: 20
+2026-01-12 19:22:08,193 - INFO - Solver status: FEASIBLE
+2026-01-12 19:22:08,277 - INFO - 排课成功 [971d7fcc-f57e-4649-8a44-970036032d5c] - 生成 60 个班级的课表
+2026-01-12 19:22:08,281 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:08] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 19:22:16,202 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET / HTTP/1.1" 200 -
+2026-01-12 19:22:16,500 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/css/output.css HTTP/1.1" 200 -
+2026-01-12 19:22:16,516 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/css/bootstrap.min.css HTTP/1.1" 200 -
+2026-01-12 19:22:16,517 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/logo.png HTTP/1.1" 200 -
+2026-01-12 19:22:16,517 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/css/bootstrap-icons.min.css HTTP/1.1" 200 -
+2026-01-12 19:22:16,517 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/js/bootstrap.bundle.min.js HTTP/1.1" 200 -
+2026-01-12 19:22:16,519 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:16] "GET /static/js/chart.js HTTP/1.1" 200 -
+2026-01-12 19:22:17,514 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:17] "GET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1" 200 -
+2026-01-12 19:22:19,763 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:19] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:22:20,065 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:20] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:22:20,079 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-01-12 19:22:40,251 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:40] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 19:22:45,375 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:22:45,375 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:22:45,375 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:22:45,375 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:22:45,375 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:22:45,375 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:45,375 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:22:45,375 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:22:45,376 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:22:45,376 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:22:45,376 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:45,376 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:22:45,376 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:22:45,376 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:22:45,376 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:22:45,376 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:22:45,376 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:22:45,376 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:22:45,376 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:22:45,376 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:22:45,376 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:22:45,376 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:22:45,376 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:22:45,376 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:22:45,376 - INFO - =========================
+2026-01-12 19:22:45,376 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:22:45,377 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:22:45,722 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:22:45,723 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:22:45,723 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:22:45,723 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:22:45,723 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:22:45,723 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:22:45,723 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:22:45,723 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:22:45,723 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:22:45,723 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:22:45,723 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:22:45,723 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:22:45,723 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:22:45,723 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:22:45,723 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:22:45,723 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:22:45,723 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:22:45,723 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:22:45,723 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:22:45,723 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:22:45,723 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:22:45,723 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:45,723 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:45,723 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:22:45,723 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:45,723 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:45,723 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:22:45,723 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:22:45,794 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:22:46,215 - INFO - Solver status: INFEASIBLE
+2026-01-12 19:22:46,215 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 19:22:46,215 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 19:22:46,226 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 19:22:46,227 - INFO - 127.0.0.1 - - [12/Jan/2026 19:22:46] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 19:40:09,164 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 19:40:09,284 - INFO -  * Restarting with stat
+2026-01-12 19:40:10,344 - WARNING -  * Debugger is active!
+2026-01-12 19:40:10,346 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:48:51,096 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:48:51,096 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:48:51,097 - INFO -  * Restarting with stat
+2026-01-12 19:48:52,143 - WARNING -  * Debugger is active!
+2026-01-12 19:48:52,144 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:49:34,449 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:49:34,449 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:49:34,449 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:49:34,450 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:49:34,450 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:49:34,450 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:49:34,450 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:49:34,450 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:49:34,450 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:49:34,450 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:49:34,450 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:49:34,450 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:49:34,450 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:49:34,450 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:49:34,450 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:49:34,450 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:49:34,450 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:49:34,450 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (no conflict constraints)
+2026-01-12 19:49:34,450 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:49:34,450 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:49:34,450 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:49:34,450 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:49:34,450 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:49:34,450 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:49:34,450 - INFO - =========================
+2026-01-12 19:49:34,451 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:49:34,451 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:49:34,804 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:49:34,804 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:49:34,804 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:49:34,804 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:49:34,804 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:49:34,804 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:49:34,804 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:49:34,804 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:49:34,804 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:49:34,804 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:49:34,804 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:49:34,804 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:49:34,804 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:49:34,804 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:49:34,804 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:49:34,804 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:49:34,804 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:49:34,804 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:49:34,804 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:49:34,804 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:49:34,804 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:49:34,804 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:49:34,804 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:49:34,804 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:49:34,804 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:49:34,804 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:49:34,804 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:49:34,805 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:49:34,867 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:49:35,282 - INFO - Solver status: INFEASIBLE
+2026-01-12 19:49:35,282 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 19:49:35,282 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 19:49:35,293 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 19:49:35,294 - INFO - 127.0.0.1 - - [12/Jan/2026 19:49:35] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 19:58:39,426 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 19:58:39,511 - INFO -  * Restarting with stat
+2026-01-12 19:58:40,604 - WARNING -  * Debugger is active!
+2026-01-12 19:58:40,606 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:59:42,207 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 19:59:42,207 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 19:59:42,207 - INFO -  * Restarting with stat
+2026-01-12 19:59:43,284 - WARNING -  * Debugger is active!
+2026-01-12 19:59:43,285 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 19:59:49,694 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 19:59:49,694 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:59:49,694 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:59:49,694 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:59:49,694 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 19:59:49,694 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 19:59:49,694 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 19:59:49,694 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 19:59:49,694 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:59:49,694 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 19:59:49,694 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:59:49,694 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 19:59:49,694 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:59:49,694 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:59:49,694 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 19:59:49,694 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 19:59:49,694 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 19:59:49,694 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:59:49,694 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:59:49,694 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:59:49,694 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 19:59:49,694 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:59:49,694 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:59:49,695 - INFO - =========================
+2026-01-12 19:59:49,695 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:59:49,695 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 19:59:50,055 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:59:50,056 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:59:50,056 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:59:50,056 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:59:50,056 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:59:50,056 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:59:50,056 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:59:50,056 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:59:50,056 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:59:50,056 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:59:50,056 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:59:50,056 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:59:50,056 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:59:50,056 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:59:50,056 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:59:50,056 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:59:50,056 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:59:50,056 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:59:50,056 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:59:50,056 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:59:50,056 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:59:50,056 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:50,056 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:50,056 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:50,056 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:50,056 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:50,056 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:50,056 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 19:59:50,122 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 19:59:50,564 - INFO - Solver status: INFEASIBLE
+2026-01-12 19:59:50,564 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 19:59:50,564 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 19:59:50,574 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 19:59:50,575 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:50] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 19:59:53,014 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "GET / HTTP/1.1" 200 -
+2026-01-12 19:59:53,309 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,325 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,325 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,327 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,327 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,329 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 19:59:53,639 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:53] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 19:59:54,129 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:54] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:59:54,436 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:54] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 19:59:55,810 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:55] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 19:59:56,117 - INFO - 接收到排课请求 - 班级数: 18, 科目数: 13
+2026-01-12 19:59:56,117 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 19:59:56,117 - INFO - Received config courses type: <class 'list'>
+2026-01-12 19:59:56,117 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 19:59:56,117 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 18
+2026-01-12 19:59:56,117 - INFO - Subject 政教活动 Peak Concurrency Demand: 18
+2026-01-12 19:59:56,117 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:59:56,117 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 28)
+2026-01-12 19:59:56,117 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 19:59:56,117 - INFO - Subject 拓展课 Peak Concurrency Demand: 12
+2026-01-12 19:59:56,117 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:59:56,117 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 28)
+2026-01-12 19:59:56,117 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 19:59:56,117 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 19:59:56,117 - INFO - Subject 课外活动 Peak Concurrency Demand: 12
+2026-01-12 19:59:56,117 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 19:59:56,117 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 28)
+2026-01-12 19:59:56,117 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 19:59:56,117 - INFO - Subject Sharding Report Complete.
+2026-01-12 19:59:56,117 - INFO - ===== 排课诊断信息 =====
+2026-01-12 19:59:56,117 - INFO - 班级数: 18, 科目数: 13
+2026-01-12 19:59:56,117 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 19:59:56,117 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 19:59:56,117 - INFO - =========================
+2026-01-12 19:59:56,118 - INFO - Generated 138 teachers after sharding. Total subjects in model: 13
+2026-01-12 19:59:56,118 - INFO - 最繁忙老师: 体育1, 周课时: 9, 分配班级数: 3
+2026-01-12 19:59:56,202 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 19:59:56,202 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 19:59:56,202 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 19:59:56,202 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 19:59:56,202 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 19:59:56,202 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 19:59:56,202 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 19:59:56,202 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:59:56,202 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 19:59:56,202 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 19:59:56,202 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 19:59:56,202 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 19:59:56,202 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 19:59:56,202 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 19:59:56,202 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 19:59:56,202 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 19:59:56,202 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 19:59:56,202 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 19:59:56,202 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:59:56,202 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 19:59:56,202 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 19:59:56,202 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:56,202 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:56,202 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 19:59:56,202 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:56,202 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:56,202 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 19:59:56,202 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 19:59:56,235 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 19:59:56,734 - INFO - Solver status: FEASIBLE
+2026-01-12 19:59:56,755 - INFO - 排课成功 [c54c16ec-c1b2-462a-9618-041cbfdc8f12] - 生成 18 个班级的课表
+2026-01-12 19:59:56,756 - INFO - 127.0.0.1 - - [12/Jan/2026 19:59:56] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 20:00:12,451 - INFO - 127.0.0.1 - - [12/Jan/2026 20:00:12] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 20:00:12,765 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 20:00:12,765 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 20:00:12,765 - INFO - Received config courses type: <class 'list'>
+2026-01-12 20:00:12,766 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 20:00:12,766 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 20:00:12,766 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 20:00:12,766 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 20:00:12,766 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:00:12,766 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 20:00:12,766 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 20:00:12,766 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:00:12,766 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 20:00:12,766 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 20:00:12,766 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 20:00:12,766 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 20:00:12,766 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:00:12,766 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:00:12,766 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 20:00:12,766 - INFO - Subject Sharding Report Complete.
+2026-01-12 20:00:12,766 - INFO - ===== 排课诊断信息 =====
+2026-01-12 20:00:12,766 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 20:00:12,766 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 20:00:12,766 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 20:00:12,766 - INFO - =========================
+2026-01-12 20:00:12,767 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 20:00:12,767 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 20:00:13,106 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 20:00:13,106 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 20:00:13,106 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 20:00:13,106 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 20:00:13,106 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 20:00:13,106 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 20:00:13,106 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 20:00:13,106 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:00:13,106 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 20:00:13,106 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 20:00:13,107 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 20:00:13,107 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 20:00:13,107 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 20:00:13,107 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 20:00:13,107 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 20:00:13,107 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:00:13,107 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 20:00:13,107 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 20:00:13,107 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:00:13,107 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:00:13,107 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 20:00:13,107 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:00:13,107 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:00:13,107 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:00:13,107 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:00:13,107 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:00:13,107 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:00:13,107 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 20:00:13,213 - INFO - DEBUG: assumption_literals count: 16
+2026-01-12 20:00:22,259 - INFO - Solver status: FEASIBLE
+2026-01-12 20:00:22,331 - INFO - 排课成功 [2aecdea5-b61f-4851-9b2d-f7107f5113c6] - 生成 60 个班级的课表
+2026-01-12 20:00:22,335 - INFO - 127.0.0.1 - - [12/Jan/2026 20:00:22] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 20:04:15,353 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\update_weights_script.py', reloading
+2026-01-12 20:04:15,499 - INFO -  * Restarting with stat
+2026-01-12 20:04:16,615 - WARNING -  * Debugger is active!
+2026-01-12 20:04:16,617 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:07:25,874 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 20:07:25,874 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 20:07:25,875 - INFO -  * Restarting with stat
+2026-01-12 20:07:27,052 - WARNING -  * Debugger is active!
+2026-01-12 20:07:27,054 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:07:27,563 - INFO - 127.0.0.1 - - [12/Jan/2026 20:07:27] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 20:07:27,820 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 20:07:27,820 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 20:07:27,820 - INFO - Received config courses type: <class 'list'>
+2026-01-12 20:07:27,820 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 20:07:27,820 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 20:07:27,820 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 20:07:27,820 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 20:07:27,820 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 20:07:27,821 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 20:07:27,821 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 20:07:27,821 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:07:27,821 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 20:07:27,821 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 20:07:27,821 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 20:07:27,821 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:07:27,821 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:07:27,821 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 20:07:27,821 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 20:07:27,821 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 20:07:27,821 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 20:07:27,821 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 20:07:27,821 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 20:07:27,821 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:07:27,821 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 20:07:27,821 - INFO - Subject Sharding Report Complete.
+2026-01-12 20:07:27,821 - INFO - ===== 排课诊断信息 =====
+2026-01-12 20:07:27,821 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 20:07:27,821 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 20:07:27,821 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 20:07:27,821 - INFO - =========================
+2026-01-12 20:07:27,821 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 20:07:27,822 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 20:07:28,231 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 20:07:28,231 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 20:07:28,231 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 20:07:28,231 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 20:07:28,231 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 20:07:28,231 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 20:07:28,231 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 20:07:28,231 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:07:28,231 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 20:07:28,231 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 20:07:28,231 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 20:07:28,231 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 20:07:28,231 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 20:07:28,231 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 20:07:28,231 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 20:07:28,231 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:07:28,231 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 20:07:28,231 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 20:07:28,231 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:07:28,231 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:07:28,231 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 20:07:28,232 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:07:28,232 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:07:28,232 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:07:28,232 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:07:28,232 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:07:28,232 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:07:28,232 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 20:07:28,336 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 20:07:28,900 - INFO - Solver status: INFEASIBLE
+2026-01-12 20:07:28,900 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 20:07:28,900 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 20:07:28,912 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 20:07:28,913 - INFO - 127.0.0.1 - - [12/Jan/2026 20:07:28] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 20:13:31,991 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 20:13:32,123 - INFO -  * Restarting with stat
+2026-01-12 20:13:33,422 - WARNING -  * Debugger is active!
+2026-01-12 20:13:33,423 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:13:48,676 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 20:13:48,795 - INFO -  * Restarting with stat
+2026-01-12 20:13:50,018 - WARNING -  * Debugger is active!
+2026-01-12 20:13:50,020 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:14:04,140 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 20:14:04,261 - INFO -  * Restarting with stat
+2026-01-12 20:14:05,477 - WARNING -  * Debugger is active!
+2026-01-12 20:14:05,478 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:50:33,546 - INFO -  * Detected change in 'e:\\实习\\schedule_system\\normal.py', reloading
+2026-01-12 20:50:33,708 - INFO -  * Restarting with stat
+2026-01-12 20:50:34,974 - WARNING -  * Debugger is active!
+2026-01-12 20:50:34,976 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 20:53:08,605 - INFO - 127.0.0.1 - - [12/Jan/2026 20:53:08] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 20:53:08,865 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 20:53:08,865 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 20:53:08,865 - INFO - Received config courses type: <class 'list'>
+2026-01-12 20:53:08,865 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 20:53:08,865 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 20:53:08,865 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:53:08,866 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 20:53:08,866 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 20:53:08,866 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 20:53:08,866 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 20:53:08,866 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:53:08,866 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 20:53:08,866 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 20:53:08,866 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 20:53:08,866 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 20:53:08,866 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 20:53:08,866 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 20:53:08,866 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 20:53:08,866 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 20:53:08,866 - INFO - Subject Sharding Report Complete.
+2026-01-12 20:53:08,866 - INFO - ===== 排课诊断信息 =====
+2026-01-12 20:53:08,866 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 20:53:08,866 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 20:53:08,866 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 20:53:08,866 - INFO - =========================
+2026-01-12 20:53:08,866 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 20:53:08,867 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 20:53:09,305 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 20:53:09,306 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 20:53:09,306 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 20:53:09,306 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 20:53:09,306 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 20:53:09,306 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 20:53:09,306 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 20:53:09,306 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:53:09,306 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 20:53:09,306 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 20:53:09,306 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 20:53:09,306 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 20:53:09,306 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 20:53:09,306 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 20:53:09,306 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 20:53:09,306 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 20:53:09,306 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 20:53:09,306 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 20:53:09,306 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:53:09,306 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 20:53:09,306 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 20:53:09,306 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:53:09,306 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:53:09,306 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 20:53:09,306 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:53:09,306 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:53:09,306 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 20:53:09,306 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 20:53:09,416 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 20:53:09,988 - INFO - Solver status: INFEASIBLE
+2026-01-12 20:53:09,988 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 20:53:09,988 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 20:53:10,001 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 20:53:10,002 - INFO - 127.0.0.1 - - [12/Jan/2026 20:53:10] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 21:18:57,583 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 21:18:57,583 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 21:18:57,584 - INFO -  * Restarting with stat
+2026-01-12 21:18:58,687 - WARNING -  * Debugger is active!
+2026-01-12 21:18:58,688 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 21:19:08,547 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "GET / HTTP/1.1" 200 -
+2026-01-12 21:19:08,559 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 21:19:08,797 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:19:08,876 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:19:08,876 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 21:19:08,877 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 21:19:08,878 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:08] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 21:19:09,198 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:09] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 21:19:09,747 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:09] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:19:10,065 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:10] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:19:11,458 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:11] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 21:19:11,771 - INFO - 接收到排课请求 - 班级数: 18, 科目数: 13
+2026-01-12 21:19:11,771 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:19:11,771 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:19:11,771 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:19:11,771 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:19:11,771 - INFO - Subject 课外活动 Peak Concurrency Demand: 12
+2026-01-12 21:19:11,771 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 21:19:11,771 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 28)
+2026-01-12 21:19:11,772 - INFO - Subject 拓展课 Peak Concurrency Demand: 12
+2026-01-12 21:19:11,772 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 21:19:11,772 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 28)
+2026-01-12 21:19:11,772 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:19:11,772 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:19:11,772 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:19:11,772 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:19:11,772 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 18
+2026-01-12 21:19:11,772 - INFO - Subject 政教活动 Peak Concurrency Demand: 18
+2026-01-12 21:19:11,772 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 18, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 21:19:11,772 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 28)
+2026-01-12 21:19:11,772 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:19:11,772 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:19:11,772 - INFO - 班级数: 18, 科目数: 13
+2026-01-12 21:19:11,772 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:19:11,772 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:19:11,772 - INFO - =========================
+2026-01-12 21:19:11,772 - INFO - Generated 138 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:19:11,772 - INFO - 最繁忙老师: 体育1, 周课时: 9, 分配班级数: 3
+2026-01-12 21:19:11,867 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:19:11,867 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:19:11,867 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:19:11,867 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:19:11,867 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:19:11,867 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:19:11,867 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:19:11,867 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:19:11,867 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:19:11,868 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:19:11,868 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:19:11,868 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:19:11,868 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:19:11,868 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:19:11,868 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:19:11,868 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:19:11,868 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:19:11,868 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:19:11,868 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:19:11,868 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:19:11,868 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:19:11,868 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:11,868 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:11,868 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:11,868 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:11,868 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:11,868 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:11,868 - INFO -   [27] DAILY_LIMIT: ['语文', '数学', '英语']
+2026-01-12 21:19:11,937 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:19:12,126 - INFO - Solver status: FEASIBLE
+2026-01-12 21:19:12,148 - INFO - 排课成功 [83f46f9e-c6bb-4de6-b95b-2f72e94f94e4] - 生成 18 个班级的课表
+2026-01-12 21:19:12,150 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:12] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:19:21,651 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:21] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 21:19:37,330 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:19:37,330 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:19:37,330 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:19:37,330 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:19:37,330 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:19:37,330 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:19:37,330 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:19:37,330 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:19:37,330 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:19:37,330 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:19:37,330 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:19:37,330 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:19:37,330 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:19:37,330 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:19:37,330 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:19:37,330 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:19:37,330 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:19:37,330 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:19:37,330 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:19:37,330 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:19:37,330 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:19:37,330 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:19:37,330 - INFO - =========================
+2026-01-12 21:19:37,331 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:19:37,331 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:19:37,725 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:19:37,725 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:19:37,725 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:19:37,725 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:19:37,725 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:19:37,725 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:19:37,725 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:19:37,725 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:19:37,725 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:19:37,725 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:19:37,725 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:19:37,725 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:19:37,725 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:19:37,725 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:19:37,725 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:19:37,725 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:19:37,725 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:19:37,725 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:19:37,725 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:19:37,726 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:19:37,726 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:19:37,726 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:37,726 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:37,726 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:19:37,726 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:37,726 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:37,726 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:19:37,726 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:19:37,819 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:19:39,982 - INFO - Solver status: FEASIBLE
+2026-01-12 21:19:40,062 - INFO - 排课成功 [6ae25c5a-098e-4d88-a155-53d8c778ce3e] - 生成 60 个班级的课表
+2026-01-12 21:19:40,066 - INFO - 127.0.0.1 - - [12/Jan/2026 21:19:40] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:52:28,316 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:52:28,316 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:52:28,316 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:52:28,316 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:52:28,316 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:52:28,316 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:52:28,316 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:52:28,316 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:52:28,316 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:52:28,316 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:52:28,317 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:52:28,317 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:52:28,317 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:52:28,317 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:52:28,317 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:52:28,317 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:52:28,317 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:52:28,317 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:52:28,317 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:52:28,317 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:52:28,317 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:52:28,317 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:52:28,317 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:52:28,317 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:52:28,317 - INFO - =========================
+2026-01-12 21:52:28,317 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:52:28,318 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:52:28,690 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:52:28,690 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:52:28,690 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:52:28,690 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:52:28,690 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:52:28,690 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:52:28,690 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:52:28,690 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:52:28,690 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:52:28,690 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:52:28,690 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:52:28,690 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:52:28,690 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:52:28,690 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:52:28,690 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:52:28,690 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:52:28,690 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:52:28,690 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:52:28,690 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:52:28,690 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:52:28,690 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:52:28,690 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:52:28,690 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:52:28,690 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:52:28,690 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:52:28,690 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:52:28,690 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:52:28,690 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:52:28,782 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:52:30,805 - INFO - Solver status: FEASIBLE
+2026-01-12 21:52:30,877 - INFO - 排课成功 [a24b8acb-1b12-41dc-8eb8-d3a634aab87e] - 生成 60 个班级的课表
+2026-01-12 21:52:30,881 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:30] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:52:44,007 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "GET / HTTP/1.1" 200 -
+2026-01-12 21:52:44,312 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,328 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,329 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,330 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,330 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,332 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 21:52:44,650 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:44] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 21:52:45,232 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:52:45,544 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:45] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:52:50,181 - INFO - 127.0.0.1 - - [12/Jan/2026 21:52:50] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 21:53:04,625 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:53:04,626 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:53:04,626 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:53:04,626 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:53:04,626 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:53:04,626 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:53:04,626 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:53:04,626 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:53:04,626 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:53:04,626 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:53:04,626 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:53:04,626 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:53:04,626 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:53:04,626 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:53:04,626 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:53:04,626 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:53:04,626 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:53:04,626 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:53:04,626 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:53:04,626 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:53:04,626 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:53:04,626 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:53:04,626 - INFO - =========================
+2026-01-12 21:53:04,627 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:53:04,627 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:53:05,067 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:53:05,067 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:53:05,067 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:53:05,067 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:53:05,067 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:53:05,067 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:53:05,067 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:53:05,067 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:53:05,067 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:53:05,067 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:53:05,067 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:53:05,067 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:53:05,067 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:53:05,067 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:53:05,067 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:53:05,067 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:53:05,067 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:53:05,067 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:53:05,067 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:53:05,067 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:53:05,067 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:53:05,067 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:53:05,067 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:53:05,067 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:53:05,067 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:53:05,067 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:53:05,067 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:53:05,067 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:53:05,154 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:53:07,189 - INFO - Solver status: FEASIBLE
+2026-01-12 21:53:07,262 - INFO - 排课成功 [b40a4b8e-26a7-484b-9567-16e592abb591] - 生成 60 个班级的课表
+2026-01-12 21:53:07,266 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:07] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:53:46,502 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 21:53:46,502 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 21:53:46,503 - INFO -  * Restarting with stat
+2026-01-12 21:53:47,719 - WARNING -  * Debugger is active!
+2026-01-12 21:53:47,721 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 21:53:49,383 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "GET / HTTP/1.1" 200 -
+2026-01-12 21:53:49,393 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/css/output.css HTTP/1.1[0m" 304 -
+2026-01-12 21:53:49,633 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/css/bootstrap.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:53:49,710 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/css/bootstrap-icons.min.css HTTP/1.1[0m" 304 -
+2026-01-12 21:53:49,710 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/logo.png HTTP/1.1[0m" 304 -
+2026-01-12 21:53:49,711 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/js/bootstrap.bundle.min.js HTTP/1.1[0m" 304 -
+2026-01-12 21:53:49,712 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:49] "[36mGET /static/js/chart.js HTTP/1.1[0m" 304 -
+2026-01-12 21:53:50,032 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:50] "[36mGET /static/css/fonts/bootstrap-icons.woff2?dd67030699838ea613ee6dbda90effa6 HTTP/1.1[0m" 304 -
+2026-01-12 21:53:50,472 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:50] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:53:50,786 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:50] "GET /api/list HTTP/1.1" 200 -
+2026-01-12 21:53:54,722 - INFO - 127.0.0.1 - - [12/Jan/2026 21:53:54] "[36mGET /static/rules/shaoxing_rules.json HTTP/1.1[0m" 304 -
+2026-01-12 21:54:07,641 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:54:07,641 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:54:07,641 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:54:07,641 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:54:07,641 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:54:07,641 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:54:07,641 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:54:07,641 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:54:07,641 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:54:07,642 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:54:07,642 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:54:07,642 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:54:07,642 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:54:07,642 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:54:07,642 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:54:07,642 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:54:07,642 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:54:07,642 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:54:07,642 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:54:07,642 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:54:07,642 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:54:07,642 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:54:07,642 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:54:07,642 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:54:07,642 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:54:07,642 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:54:07,642 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:54:07,642 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:54:07,642 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:54:07,642 - INFO - =========================
+2026-01-12 21:54:07,643 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:54:07,643 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:54:08,069 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:54:08,069 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:54:08,069 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:54:08,069 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:54:08,069 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:54:08,069 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:54:08,069 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:54:08,069 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:54:08,069 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:54:08,069 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:54:08,069 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:54:08,069 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:54:08,069 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:54:08,069 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:54:08,069 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:54:08,069 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:54:08,069 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:54:08,069 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:54:08,069 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:54:08,069 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:54:08,069 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:54:08,069 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:54:08,069 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:54:08,069 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:54:08,069 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:54:08,069 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:54:08,069 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:54:08,069 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:54:08,159 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:54:10,626 - INFO - Solver status: FEASIBLE
+2026-01-12 21:54:10,700 - INFO - 排课成功 [15293403-d952-4950-ab03-4490960af81d] - 生成 60 个班级的课表
+2026-01-12 21:54:10,704 - INFO - 127.0.0.1 - - [12/Jan/2026 21:54:10] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:55:51,100 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8015
+ * Running on http://198.18.0.1:8015
+2026-01-12 21:55:51,101 - INFO - [33mPress CTRL+C to quit[0m
+2026-01-12 21:55:51,101 - INFO -  * Restarting with stat
+2026-01-12 21:55:52,265 - WARNING -  * Debugger is active!
+2026-01-12 21:55:52,267 - INFO -  * Debugger PIN: 291-399-553
+2026-01-12 21:56:47,320 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:56:47,320 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:56:47,320 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:56:47,320 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:56:47,320 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:56:47,320 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:56:47,320 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:56:47,320 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:56:47,320 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:56:47,320 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:56:47,320 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:56:47,320 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:56:47,320 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:56:47,320 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:56:47,320 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:56:47,321 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:56:47,321 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:56:47,321 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:56:47,321 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:56:47,321 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:56:47,321 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:56:47,321 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:56:47,321 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:56:47,321 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:56:47,321 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:56:47,321 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:56:47,321 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:56:47,321 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:56:47,321 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:56:47,321 - INFO - =========================
+2026-01-12 21:56:47,321 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:56:47,321 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:56:47,751 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:56:47,751 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:56:47,751 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:56:47,751 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:56:47,751 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:56:47,751 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:56:47,751 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:56:47,751 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:56:47,751 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:56:47,751 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:56:47,751 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:56:47,751 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:56:47,751 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:56:47,751 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:56:47,751 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:56:47,751 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:56:47,751 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:56:47,751 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:56:47,751 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:56:47,751 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:56:47,751 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:56:47,752 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:56:47,752 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:56:47,752 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:56:47,752 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:56:47,752 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:56:47,752 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:56:47,752 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:56:47,845 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:56:51,667 - INFO - Solver status: FEASIBLE
+2026-01-12 21:56:51,752 - INFO - 排课成功 [8168d109-8bdd-436e-bf52-ec069940ff52] - 生成 60 个班级的课表
+2026-01-12 21:56:51,757 - INFO - 127.0.0.1 - - [12/Jan/2026 21:56:51] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:57:11,705 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:57:11,706 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:57:11,706 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:57:11,706 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:57:11,706 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:57:11,706 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:57:11,706 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:11,706 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:57:11,706 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:57:11,706 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:57:11,706 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:11,706 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:57:11,706 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:57:11,706 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:57:11,706 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:57:11,706 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:11,706 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:57:11,706 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:57:11,706 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:57:11,706 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:57:11,706 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:57:11,706 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:57:11,706 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:57:11,706 - INFO - =========================
+2026-01-12 21:57:11,707 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:57:11,707 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:57:12,103 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:57:12,103 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:57:12,103 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:57:12,103 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:57:12,103 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:57:12,103 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:57:12,103 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:57:12,103 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:57:12,103 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:57:12,103 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:57:12,103 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:57:12,103 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:57:12,103 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:57:12,103 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:57:12,103 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:57:12,103 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:57:12,103 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:57:12,103 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:57:12,103 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:57:12,103 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:57:12,103 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:57:12,103 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:12,103 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:12,103 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:12,103 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:12,103 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:12,103 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:12,103 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:57:12,197 - INFO - DEBUG: assumption_literals count: 21
+2026-01-12 21:57:15,815 - INFO - Solver status: FEASIBLE
+2026-01-12 21:57:15,887 - INFO - 排课成功 [134d3372-4b9d-40c2-8e62-d50635f24adb] - 生成 60 个班级的课表
+2026-01-12 21:57:15,890 - INFO - 127.0.0.1 - - [12/Jan/2026 21:57:15] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 21:57:23,416 - INFO - 127.0.0.1 - - [12/Jan/2026 21:57:23] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 21:57:25,665 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 21:57:25,665 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 21:57:25,665 - INFO - Received config courses type: <class 'list'>
+2026-01-12 21:57:25,666 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 21:57:25,666 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 21:57:25,666 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:57:25,666 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:25,666 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 21:57:25,666 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 21:57:25,666 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 21:57:25,666 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:25,666 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 21:57:25,666 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 21:57:25,666 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 21:57:25,666 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 21:57:25,666 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 21:57:25,666 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 21:57:25,666 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 21:57:25,666 - INFO - Subject Sharding Report Complete.
+2026-01-12 21:57:25,666 - INFO - ===== 排课诊断信息 =====
+2026-01-12 21:57:25,666 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 21:57:25,666 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 21:57:25,666 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 21:57:25,666 - INFO - =========================
+2026-01-12 21:57:25,667 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 21:57:25,667 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 21:57:26,129 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 21:57:26,129 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 21:57:26,129 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 21:57:26,129 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 21:57:26,129 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 21:57:26,129 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 21:57:26,129 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 21:57:26,129 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:57:26,129 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 21:57:26,129 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 21:57:26,129 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 21:57:26,129 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 21:57:26,129 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 21:57:26,129 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 21:57:26,129 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 21:57:26,129 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 21:57:26,129 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 21:57:26,129 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 21:57:26,129 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:57:26,129 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 21:57:26,129 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 21:57:26,129 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:26,129 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:26,129 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 21:57:26,129 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:26,129 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:26,129 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 21:57:26,129 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 21:57:26,221 - INFO - DEBUG: assumption_literals count: 27
+2026-01-12 21:57:26,736 - INFO - Solver status: INFEASIBLE
+2026-01-12 21:57:26,736 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 21:57:26,736 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223, 31224, 31225, 31226]
+2026-01-12 21:57:26,750 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 27 个约束发生冲突
+2026-01-12 21:57:26,751 - INFO - 127.0.0.1 - - [12/Jan/2026 21:57:26] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 22:01:38,600 - INFO - 127.0.0.1 - - [12/Jan/2026 22:01:38] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 22:01:41,760 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 22:01:41,760 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 22:01:41,760 - INFO - Received config courses type: <class 'list'>
+2026-01-12 22:01:41,760 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 22:01:41,761 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 22:01:41,761 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:01:41,761 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 22:01:41,761 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 22:01:41,761 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 22:01:41,761 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:01:41,761 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:01:41,761 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 22:01:41,761 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 22:01:41,761 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 22:01:41,761 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 22:01:41,761 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:01:41,761 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 22:01:41,761 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 22:01:41,761 - INFO - Subject Sharding Report Complete.
+2026-01-12 22:01:41,761 - INFO - ===== 排课诊断信息 =====
+2026-01-12 22:01:41,761 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 22:01:41,761 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 22:01:41,761 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 22:01:41,761 - INFO - =========================
+2026-01-12 22:01:41,762 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 22:01:41,762 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 22:01:42,152 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 22:01:42,152 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 22:01:42,152 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 22:01:42,152 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 22:01:42,152 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 22:01:42,152 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 22:01:42,152 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 22:01:42,152 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:01:42,152 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 22:01:42,153 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 22:01:42,153 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 22:01:42,153 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 22:01:42,153 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 22:01:42,153 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 22:01:42,153 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 22:01:42,153 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:01:42,153 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 22:01:42,153 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 22:01:42,153 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:01:42,153 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:01:42,153 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 22:01:42,153 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:01:42,153 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:01:42,153 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:01:42,153 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:01:42,153 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:01:42,153 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:01:42,153 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 22:01:42,262 - INFO - DEBUG: assumption_literals count: 23
+2026-01-12 22:01:51,686 - INFO - Solver status: FEASIBLE
+2026-01-12 22:01:51,772 - INFO - 排课成功 [82127070-f032-4cf4-aa7a-6568db886b6a] - 生成 60 个班级的课表
+2026-01-12 22:01:51,776 - INFO - 127.0.0.1 - - [12/Jan/2026 22:01:51] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 22:02:42,808 - INFO - 127.0.0.1 - - [12/Jan/2026 22:02:42] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 22:02:44,861 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 22:02:44,862 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 22:02:44,862 - INFO - Received config courses type: <class 'list'>
+2026-01-12 22:02:44,862 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 22:02:44,862 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 22:02:44,862 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:02:44,862 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 22:02:44,862 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 22:02:44,862 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 22:02:44,862 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:02:44,862 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:02:44,862 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 22:02:44,862 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 22:02:44,862 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 22:02:44,862 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 22:02:44,862 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:02:44,862 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 22:02:44,862 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 22:02:44,862 - INFO - Subject Sharding Report Complete.
+2026-01-12 22:02:44,862 - INFO - ===== 排课诊断信息 =====
+2026-01-12 22:02:44,862 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 22:02:44,862 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 22:02:44,862 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 22:02:44,862 - INFO - =========================
+2026-01-12 22:02:44,863 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 22:02:44,863 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 22:02:45,259 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 22:02:45,259 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 22:02:45,259 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 22:02:45,259 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 22:02:45,259 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 22:02:45,259 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 22:02:45,259 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 22:02:45,259 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:02:45,259 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 22:02:45,259 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 22:02:45,259 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 22:02:45,259 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 22:02:45,259 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 22:02:45,259 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 22:02:45,259 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 22:02:45,260 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:02:45,260 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 22:02:45,260 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 22:02:45,260 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:02:45,260 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:02:45,260 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 22:02:45,260 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:02:45,260 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:02:45,260 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:02:45,260 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:02:45,260 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:02:45,260 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:02:45,260 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 22:02:45,360 - INFO - DEBUG: assumption_literals count: 24
+2026-01-12 22:02:45,894 - INFO - Solver status: INFEASIBLE
+2026-01-12 22:02:45,894 - INFO - DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...
+2026-01-12 22:02:45,894 - INFO - DEBUG: Pass 1 indices: [31200, 31201, 31202, 31203, 31204, 31205, 31206, 31207, 31208, 31209, 31210, 31211, 31212, 31213, 31214, 31215, 31216, 31217, 31218, 31219, 31220, 31221, 31222, 31223]
+2026-01-12 22:02:45,911 - WARNING - 排课拦截 - infeasible: 排课失败: 检测到 24 个约束发生冲突
+2026-01-12 22:02:45,912 - INFO - 127.0.0.1 - - [12/Jan/2026 22:02:45] "[31m[1mPOST /api/init HTTP/1.1[0m" 400 -
+2026-01-12 22:31:34,070 - INFO - 127.0.0.1 - - [12/Jan/2026 22:31:34] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 22:31:47,548 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 22:31:47,548 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 22:31:47,548 - INFO - Received config courses type: <class 'list'>
+2026-01-12 22:31:47,548 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 22:31:47,548 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 22:31:47,548 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:31:47,548 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 22:31:47,548 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 体育 uses original pool: 10 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 22:31:47,548 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 22:31:47,548 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 22:31:47,548 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:31:47,548 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 27
+2026-01-12 22:31:47,548 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 22:31:47,548 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 22:31:47,548 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 22:31:47,548 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 22:31:47,548 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 22:31:47,548 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 22:31:47,548 - INFO - Subject Sharding Report Complete.
+2026-01-12 22:31:47,548 - INFO - ===== 排课诊断信息 =====
+2026-01-12 22:31:47,548 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 22:31:47,548 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 22:31:47,548 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 22:31:47,548 - INFO - =========================
+2026-01-12 22:31:47,549 - INFO - Generated 230 teachers after sharding. Total subjects in model: 13
+2026-01-12 22:31:47,549 - INFO - 最繁忙老师: 体育1, 周课时: 18, 分配班级数: 6
+2026-01-12 22:31:48,047 - INFO - [规则诊断] 收到 27 条规则:
+2026-01-12 22:31:48,047 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 22:31:48,047 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 22:31:48,047 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 22:31:48,047 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 22:31:48,047 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 22:31:48,047 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 22:31:48,047 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:31:48,047 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 22:31:48,047 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 22:31:48,047 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 22:31:48,047 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 22:31:48,047 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 22:31:48,047 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 22:31:48,047 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 22:31:48,047 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 22:31:48,048 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 22:31:48,048 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 22:31:48,048 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:31:48,048 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 22:31:48,048 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 22:31:48,048 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:31:48,048 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:31:48,048 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 22:31:48,048 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:31:48,048 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:31:48,048 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 22:31:48,048 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 22:31:48,140 - INFO - DEBUG: assumption_literals count: 22
+2026-01-12 22:31:52,024 - INFO - Solver status: FEASIBLE
+2026-01-12 22:31:52,104 - INFO - 排课成功 [4b3e59ed-110c-442a-9bda-3ba27fe1293b] - 生成 60 个班级的课表
+2026-01-12 22:31:52,108 - INFO - 127.0.0.1 - - [12/Jan/2026 22:31:52] "POST /api/init HTTP/1.1" 200 -
+2026-01-12 22:33:10,347 - INFO - HTTP Request: POST https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions "HTTP/1.1 200 OK"
+2026-01-12 22:33:10,350 - INFO - 127.0.0.1 - - [12/Jan/2026 22:33:10] "POST /api/analyze_conflict HTTP/1.1" 200 -
+2026-01-12 23:36:12,202 - INFO - 127.0.0.1 - - [12/Jan/2026 23:36:12] "GET /static/rules/shaoxing_rules.json HTTP/1.1" 200 -
+2026-01-12 23:36:17,828 - INFO - 接收到排课请求 - 班级数: 60, 科目数: 13
+2026-01-12 23:36:17,828 - INFO - 自定义老师科目: ['语文', '数学', '英语', '科学', '社会', '体育', '美术', '音乐', '信息', '心理', '课外活动', '拓展课', '政教活动']
+2026-01-12 23:36:17,828 - INFO - Received config courses type: <class 'list'>
+2026-01-12 23:36:17,828 - INFO -   -> 社会 uses original pool: 30 teachers
+2026-01-12 23:36:17,829 - INFO -   -> 信息 uses original pool: 10 teachers
+2026-01-12 23:36:17,829 - INFO - Subject 拓展课 Peak Concurrency Demand: 40
+2026-01-12 23:36:17,829 - INFO - Subject 拓展课 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 23:36:17,829 - INFO -   -> [Activity] 拓展课 uses virtual teacher pool (size: 70)
+2026-01-12 23:36:17,829 - INFO -   -> 美术 uses original pool: 10 teachers
+2026-01-12 23:36:17,829 - INFO -   -> 科学 uses original pool: 30 teachers
+2026-01-12 23:36:17,829 - INFO - Subject 体育 Peak Concurrency Demand: 15
+2026-01-12 23:36:17,829 - INFO - Subject 体育 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 2)
+2026-01-12 23:36:17,829 - INFO -   -> [High Concurrency] 体育 marked for 1:1 allocation. Required identities: 60
+2026-01-12 23:36:17,829 - INFO -   -> Generated 60 sharded identities for 体育
+2026-01-12 23:36:17,829 - INFO -   -> 音乐 uses original pool: 10 teachers
+2026-01-12 23:36:17,829 - INFO - Subject 课外活动 Peak Concurrency Demand: 40
+2026-01-12 23:36:17,829 - INFO - Subject 课外活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 4)
+2026-01-12 23:36:17,829 - INFO -   -> [Activity] 课外活动 uses virtual teacher pool (size: 70)
+2026-01-12 23:36:17,829 - INFO - Checking Sharding for 政教活动: Total Rules in Config: 28
+2026-01-12 23:36:17,829 - INFO -   -> Found FIXED_SLOTS rule for 政教活动. Slots: [[4, 7]], Affected Classes: 60
+2026-01-12 23:36:17,829 - INFO - Subject 政教活动 Peak Concurrency Demand: 60
+2026-01-12 23:36:17,829 - INFO - Subject 政教活动 triggers Smart Sharding Pro. (Total: 60, Load Factor: 1, Concurrency Factor: 6)
+2026-01-12 23:36:17,829 - INFO -   -> [Activity] 政教活动 uses virtual teacher pool (size: 70)
+2026-01-12 23:36:17,829 - INFO -   -> 心理 uses original pool: 10 teachers
+2026-01-12 23:36:17,829 - INFO -   -> 语文 uses original pool: 30 teachers
+2026-01-12 23:36:17,829 - INFO -   -> 数学 uses original pool: 30 teachers
+2026-01-12 23:36:17,829 - INFO -   -> 英语 uses original pool: 30 teachers
+2026-01-12 23:36:17,829 - INFO - Subject Sharding Report Complete.
+2026-01-12 23:36:17,829 - INFO - ===== 排课诊断信息 =====
+2026-01-12 23:36:17,829 - INFO - 班级数: 60, 科目数: 13
+2026-01-12 23:36:17,829 - INFO - 每周可用时段: 40 (5天 x 8节)
+2026-01-12 23:36:17,829 - INFO - 样本班级 (1) 课时需求: 36 节
+2026-01-12 23:36:17,829 - INFO - =========================
+2026-01-12 23:36:17,830 - INFO - [高并发诊断] 体育: 60 个独立老师被分配
+2026-01-12 23:36:17,830 - INFO - Generated 280 teachers after sharding. Total subjects in model: 13
+2026-01-12 23:36:17,830 - INFO - 最繁忙老师: 课外活动1, 周课时: 12, 分配班级数: 6
+2026-01-12 23:36:18,165 - INFO - [规则诊断] 收到 28 条规则:
+2026-01-12 23:36:18,165 - INFO -   [1] ZONE_COUNT: ['语文', '数学', '英语']
+2026-01-12 23:36:18,165 - INFO -   [2] ZONE_COUNT: ['科学']
+2026-01-12 23:36:18,165 - INFO -   [3] ZONE_COUNT: ['科学']
+2026-01-12 23:36:18,165 - INFO -   [4] ZONE_COUNT: ['社会']
+2026-01-12 23:36:18,165 - INFO -   [5] FORBIDDEN_SLOTS: ['语文', '数学', '英语', '科学']
+2026-01-12 23:36:18,165 - INFO -   [6] FORBIDDEN_SLOTS: ['社会']
+2026-01-12 23:36:18,165 - INFO -   [7] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 23:36:18,165 - INFO -   [8] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息', '心理']
+2026-01-12 23:36:18,165 - INFO -   [9] FORBIDDEN_SLOTS: ['语文', '社会', '英语']
+2026-01-12 23:36:18,165 - INFO -   [10] FORBIDDEN_SLOTS: ['数学', '科学']
+2026-01-12 23:36:18,165 - INFO -   [11] FORBIDDEN_SLOTS: ['音乐']
+2026-01-12 23:36:18,165 - INFO -   [12] FORBIDDEN_SLOTS: ['美术']
+2026-01-12 23:36:18,165 - INFO -   [13] FORBIDDEN_SLOTS: ['陈安', '谢飞', '叶青峰', '王伟锋', '许敏', '曹峻燕', '寿海峰', '余慧菁', '刘建灿', '王清', '傅佳情', '陈彦羽', '沈黎松', '鲍伟佳']
+2026-01-12 23:36:18,165 - INFO -   [14] GLOBAL_CAPACITY: ['体育']
+2026-01-12 23:36:18,165 - INFO -   [15] FORBIDDEN_SLOTS: ['体育']
+2026-01-12 23:36:18,165 - INFO -   [16] FORBIDDEN_SLOTS: ['信息']
+2026-01-12 23:36:18,165 - INFO -   [17] FORBIDDEN_SLOTS: ['初三']
+2026-01-12 23:36:18,165 - INFO -   [18] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 23:36:18,165 - INFO -   [19] FORBIDDEN_SLOTS: ['音乐', '体育', '美术', '信息']
+2026-01-12 23:36:18,165 - INFO -   [20] FIXED_SLOTS: ['政教活动']
+2026-01-12 23:36:18,165 - INFO -   [21] FIXED_SLOTS: ['拓展课']
+2026-01-12 23:36:18,165 - INFO -   [22] FIXED_SLOTS: ['拓展课']
+2026-01-12 23:36:18,165 - INFO -   [23] FIXED_SLOTS: ['拓展课']
+2026-01-12 23:36:18,165 - INFO -   [24] FIXED_SLOTS: ['课外活动']
+2026-01-12 23:36:18,165 - INFO -   [25] FIXED_SLOTS: ['课外活动']
+2026-01-12 23:36:18,165 - INFO -   [26] FIXED_SLOTS: ['课外活动']
+2026-01-12 23:36:18,165 - INFO -   [27] FORBIDDEN_SLOTS: ['语文', '数学', '英语']
+2026-01-12 23:36:18,166 - INFO -   [28] FIXED_SLOTS: ['体育']
+2026-01-12 23:36:18,240 - INFO - DEBUG: assumption_literals count: 23
+2026-01-12 23:36:27,039 - INFO - Solver status: FEASIBLE
+2026-01-12 23:36:27,107 - INFO - 排课成功 [d52335c7-af1c-4221-a7ff-776c51150208] - 生成 60 个班级的课表
+2026-01-12 23:36:27,111 - INFO - 127.0.0.1 - - [12/Jan/2026 23:36:27] "POST /api/init HTTP/1.1" 200 -
