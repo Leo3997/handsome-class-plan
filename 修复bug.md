@@ -1,442 +1,174 @@
-这是一个非常关键的发现！日志中的 `DEBUG: Pass 1 indices: [9594]` 揭示了真正的 Bug 所在。
+这是对你提供的 `normal.py` 代码的深度逻辑审查。代码结构已经很完整了，包含了数据预处理、OR-Tools 建模、求解和后处理统计。
 
-### 问题诊断：索引错位 (Index Mismatch)
+然而，代码中存在 **3 个致命的逻辑缺陷** 和 **2 个严重的性能隐患**，这会导致排课结果“能跑通但不好用”，或者出现“同一个老师分身乏术”的 Bug。
 
-* **现象**：
-* `assumption_literals count: 236`（你加了 236 个开关）。
-* `Pass 1 indices: [9594]`（求解器说：导致死锁的是 ID 为 9594 的那个变量）。
-* `Pass 1 returned empty`（代码去查 `rule_mapping`，发现找不到 9594，因为你的 mapping 只有 0-235）。
+以下是详细分析：
 
+### 🛑 1. 致命逻辑：优化被强制中断 (The Optimization Killer)
 
-* **原因**：
-* **Google OR-Tools 的行为**：`solver.SufficientAssumptionsForInfeasibility()` 返回的是**变量的全局唯一 ID (Literal Index)**（比如 `9594`），而不是它在你那个 `assumption_literals` 列表里的**位置下标**（比如 `0, 1, 2...`）。
-* **你的代码逻辑**：`rule_mapping` 目前是按**列表下标**（List Index）存储的（`len(assumption_literals) - 1`）。
-* **结果**：拿着 `9594` 去查只有 `0-235` 的字典，当然查不到，导致显示“无解但找不到原因”。
+**位置：** `StopAfterFirstSolution` 类 和 `status = solver.Solve(model, solution_callback)`
 
+**问题描述：**
+你在第 1232 行精心设置了 `model.Minimize(sum(penalties))`，目的是让求解器寻找“代价最小”（即最符合软规则）的课表。
+但是，你在第 1253 行传入了 `StopAfterFirstSolution` 回调。这意味着：**只要求解器找到任何一个“不报错”的课表（哪怕是最差的解），它就会立即停止**。
 
+**后果：**
 
-### 修复方案
+* 你的所有 `weight < 100` 的规则（如“副课尽量排下午”、“教案尽量均匀”）**完全失效**。
+* 求解器根本没有时间去运行优化算法，你设置的 `max_time_in_seconds` (10分钟/5分钟) 也变得毫无意义，因为通常 0.1 秒找到第一个解后程序就退出了。
 
-我们需要修改 `normal.py`，将 `rule_mapping` 的 Key 从 **列表下标** 改为 **变量的 .Index()**。
-
-请对 `normal.py` 做以下 **4 处** 修改：
-
-#### 1. 修改 `apply_universal_rules` 函数
-
-找到该函数中创建 `switch_var` 的地方：
+**✅ 修复方案：**
+删除回调，让求解器利用你设置的时间去搜索最优解。
 
 ```python
-# [旧代码]
-# rule_mapping[len(assumption_literals) - 1] = f"【用户规则】{rule_name}"
+# 修改前
+# solution_callback = StopAfterFirstSolution()
+# status = solver.Solve(model, solution_callback)
 
-# [新代码] 请改为：
-rule_mapping[switch_var.Index()] = f"【用户规则】{rule_name}"
-
-```
-
-#### 2. 修改 `run_scheduler` 中的“系统基础约束”部分
-
-找到创建 `sys_switch` 的地方（在 `--- 2. 基础约束：课时总量控制 ---` 附近）：
-
-```python
-# [旧代码]
-# rule_mapping[len(assumption_literals)-1] = f"【系统基础】{class_metadata[c]['name']}_{subj}_课时要求"
-
-# [新代码] 请改为：
-rule_mapping[sys_switch.Index()] = f"【系统基础】{class_metadata[c]['name']}_{subj}_课时要求"
-
-```
-
-#### 3. 修改 `run_scheduler` 中的“固定课程”部分
-
-找到处理 `fixed_courses` 的地方：
-
-```python
-# [旧代码]
-# rule_mapping[len(assumption_literals)-1] = f"【固定课】{c}班_{subj_name}_周{d+1}第{p+1}节"
-
-# [新代码] 请改为：
-rule_mapping[sys_switch.Index()] = f"【固定课】{c}班_{subj_name}_周{d+1}第{p+1}节"
-
-```
-
-#### 4. 修改 `run_scheduler` 中的“老师禁排”部分
-
-找到处理 `unavailable_settings` 的地方：
-
-```python
-# [旧代码]
-# rule_mapping[len(assumption_literals)-1] = f"【老师禁排】{t_name}_周{day+1}第{period+1}节"
-
-# [新代码] 请改为：
-rule_mapping[sys_switch.Index()] = f"【老师禁排】{t_name}_周{day+1}第{period+1}节"
+# 修改后
+# 不传 callback，让 solver 跑满 max_time_in_seconds 或直到找到最优解
+status = solver.Solve(model)
 
 ```
 
 ---
 
-### 懒人包：可以直接复制覆盖的 `normal.py`
+### 🛑 2. 致命逻辑：老师“分身” Bug (The Doppelgänger Bug)
 
-为了确保万无一失，这里提供一份已经修复了上述 **Index Mismatch** 问题，并且清理了**重复代码**的完整 `normal.py` 核心部分。
+**位置：** `get_or_create_teacher_id` 与 老师冲突约束
+
+**问题描述：**
+在生成 ID 时，你为了按年级隔离主课老师，使用了这样的逻辑：
 
 ```python
-
-from ortools.sat.python import cp_model
-import pandas as pd
-import sys
-import collections
-import statistics
-import logging
-import math
-import json
-import os
-
-logger = logging.getLogger(__name__)
-
-# ... (保留 _load_preset_rules, generate_teachers_and_map, evaluate_quality, get_filtered_targets 不变) ...
-
-# ==========================================================
-# 1. 修复 apply_universal_rules：使用 .Index() 作为 Key
-# ==========================================================
-def apply_universal_rules(model, schedule, rules, teachers_db, class_metadata, TID_TO_ASSIGNMENTS, ALL_SUBJECTS_IN_VARS, SLOTS, penalties, assumption_literals, rule_mapping):
-    if not rules: return
-
-    for idx, rule in enumerate(rules):
-        r_type = rule.get('type')
-        targets = rule.get('targets', {})
-        params = rule.get('params', {})
-        weight = rule.get('weight', 100) 
-        rule_name = rule.get('name', f'Rule_{idx}')
-        
-        # [核心修复] 使用 switch_var.Index()
-        switch_var = None
-        if weight >= 100:
-            switch_var = model.NewBoolVar(f'switch_rule_{idx}_{r_type}')
-            assumption_literals.append(switch_var)
-            rule_mapping[switch_var.Index()] = f"【用户规则】{rule_name}"
-
-        filtered = get_filtered_targets(teachers_db, class_metadata, targets)
-        tids = filtered['teacher_ids']
-        class_subjects = filtered['class_subjects']
-        
-        # ... (以下约束逻辑保持不变，确保使用了 .OnlyEnforceIf(switch_var)) ...
-        if r_type == 'FORBIDDEN_SLOTS':
-            slots = params.get('slots', [])
-            for d, p in slots:
-                vars_to_block = []
-                for tid in tids:
-                    if tid in TID_TO_ASSIGNMENTS:
-                        vars_to_block.extend([schedule[(c, d, p, s)] for (c, s) in TID_TO_ASSIGNMENTS[tid] if (c, d, p, s) in schedule])
-                for c_id, subj in class_subjects:
-                    if (c_id, d, p, subj) in schedule:
-                        vars_to_block.append(schedule[(c_id, d, p, subj)])
-                    else:
-                        for var_subj in ALL_SUBJECTS_IN_VARS:
-                            if var_subj.startswith(str(subj) + "_"):
-                                if (c_id, d, p, var_subj) in schedule:
-                                    vars_to_block.append(schedule[(c_id, d, p, var_subj)])
-                
-                if vars_to_block:
-                    if weight >= 100:
-                        model.Add(sum(vars_to_block) == 0).OnlyEnforceIf(switch_var)
-                    else:
-                        for v in vars_to_block:
-                            penalties.append(v * weight)
-
-        elif r_type == 'FIXED_SLOTS':
-            slots = params.get('slots', [])
-            count = params.get('count', 1)
-            for c_id, subj in class_subjects:
-                relevant_vars = []
-                for d, p in slots:
-                    if (c_id, d, p, subj) in schedule:
-                        relevant_vars.append(schedule[(c_id, d, p, subj)])
-                    else:
-                        for var_subj in ALL_SUBJECTS_IN_VARS:
-                            if var_subj.startswith(str(subj) + "_"):
-                                if (c_id, d, p, var_subj) in schedule:
-                                    relevant_vars.append(schedule[(c_id, d, p, var_subj)])
-                if relevant_vars:
-                    if weight >= 100:
-                        model.Add(sum(relevant_vars) >= count).OnlyEnforceIf(switch_var)
-                    else:
-                         penalties.append(sum(relevant_vars) * (-weight))
-
-        elif r_type == 'ZONE_COUNT':
-            zone_slots = params.get('slots', [])
-            count = params.get('count', 0)
-            rel = params.get('relation', '==')
-            for c_id, subj in class_subjects:
-                relevant_vars = []
-                for d, p in zone_slots:
-                    if (c_id, d, p, subj) in schedule:
-                        relevant_vars.append(schedule[(c_id, d, p, subj)])
-                    else:
-                        for var_subj in ALL_SUBJECTS_IN_VARS:
-                            if var_subj.startswith(str(subj) + "_"):
-                                if (c_id, d, p, var_subj) in schedule:
-                                    relevant_vars.append(schedule[(c_id, d, p, var_subj)])
-
-                if relevant_vars:
-                    if weight >= 100:
-                        if rel == '==': model.Add(sum(relevant_vars) == count).OnlyEnforceIf(switch_var)
-                        elif rel == '<=': model.Add(sum(relevant_vars) <= count).OnlyEnforceIf(switch_var)
-                        elif rel == '>=': model.Add(sum(relevant_vars) >= count).OnlyEnforceIf(switch_var)
-                    else:
-                        diff = model.NewIntVar(-10, 10, f'zone_diff_{c_id}_{subj}_{idx}')
-                        model.Add(diff == sum(relevant_vars) - count)
-                        abs_diff = model.NewIntVar(0, 10, f'zone_abs_diff_{c_id}_{subj}_{idx}')
-                        model.AddAbsEquality(abs_diff, diff)
-                        penalties.append(abs_diff * abs(weight))
-
-        elif r_type == 'SPECIAL_DAYS':
-            days = params.get('days', [])
-            for d in days:
-                for p in range(8):
-                    vars_to_block = []
-                    for tid in tids:
-                        if tid in TID_TO_ASSIGNMENTS:
-                            vars_to_block.extend([schedule[(c, d, p, s)] for (c, s) in TID_TO_ASSIGNMENTS[tid] if (c, d, p, s) in schedule])
-                    for c_id, subj in class_subjects:
-                        if (c_id, d, p, subj) in schedule:
-                            vars_to_block.append(schedule[(c_id, d, p, subj)])
-                        else:
-                            for var_subj in ALL_SUBJECTS_IN_VARS:
-                                if var_subj.startswith(str(subj) + "_"):
-                                    if (c_id, d, p, var_subj) in schedule:
-                                        vars_to_block.append(schedule[(c_id, d, p, var_subj)])
-                    if vars_to_block:
-                         if weight >= 100:
-                            model.Add(sum(vars_to_block) == 0).OnlyEnforceIf(switch_var)
-
-        elif r_type == 'CONSECUTIVE':
-            mode = params.get('mode', 'avoid') 
-            limit = params.get('max', 1)
-            if mode == 'avoid':
-                for c_id, subj in class_subjects:
-                    subj_vars_map = {}
-                    for d in range(5):
-                        for p in range(8):
-                            if (c_id, d, p, subj) in schedule:
-                                subj_vars_map[(d,p)] = schedule[(c_id, d, p, subj)]
-                            else:
-                                for var_subj in ALL_SUBJECTS_IN_VARS:
-                                    if var_subj.startswith(str(subj) + "_"):
-                                        if (c_id, d, p, var_subj) in schedule:
-                                            subj_vars_map[(d,p)] = schedule[(c_id, d, p, var_subj)]
-                                            break
-                    window_size = limit + 1
-                    for d in range(5):
-                        for p in range(8 - window_size + 1):
-                            section = []
-                            for k in range(window_size):
-                                if (d, p+k) in subj_vars_map:
-                                    section.append(subj_vars_map[(d, p+k)])
-                            if len(section) == window_size:
-                                if weight >= 100:
-                                    model.Add(sum(section) <= limit).OnlyEnforceIf(switch_var)
-
-# ==========================================================
-# 2. 修复 run_scheduler：使用 .Index() 作为 Key
-# ==========================================================
-def run_scheduler(config=None):
-    if config is None: config = DEFAULT_CONFIG
-    
-    # ... (前面的初始化代码、Sharding 代码保持不变) ...
-    # 假设此处已执行到 "2. 建模" 部分
-    
-    # [前置补全]
-    SHAOXING_PRESET_RULES = _load_preset_rules()
-    TEACHERS_DB, CLASS_TEACHER_MAP = generate_teachers_and_map(...) # 使用完整参数
-    # ... (省略中间变量初始化) ...
-    
-    # [核心代码开始]
-    model = cp_model.CpModel()
-    schedule = {}
-    penalties = []
-    
-    assumption_literals = []
-    rule_mapping = {}
-
-    for c in CLASSES:
-        for d in range(DAYS):
-            for p in range(PERIODS):
-                for subj in ALL_SUBJECTS_IN_VARS:
-                    schedule[(c, d, p, subj)] = model.NewBoolVar(f'c{c}_{d}_{p}_{subj}')
-
-    # --- 1. 基础约束：唯一性 ---
-    for c in CLASSES:
-        for d, p in SLOTS:
-            model.Add(sum(schedule[(c, d, p, s)] for s in ALL_SUBJECTS_IN_VARS) <= 1)
-    
-    # --- 2. 基础约束：课时总量控制 (System Requirements) ---
-    for c in CLASSES:
-        c_reqs = class_metadata[c]["requirements"]
-        for subj in ALL_SUBJECTS_IN_VARS:
-            
-            # [核心修复] 使用 .Index()
-            sys_switch = model.NewBoolVar(f'sys_req_{c}_{subj}')
-            assumption_literals.append(sys_switch)
-            rule_mapping[sys_switch.Index()] = f"【系统基础】{class_metadata[c]['name']}_{subj}_课时要求"
-
-            if "_AUTO_SUB" in subj:
-                base_subj = subj.replace("_AUTO_SUB", "")
-                if base_subj in c_reqs:
-                    # ... limit logic ...
-                    t_id = CLASS_TEACHER_MAP.get((c, base_subj))
-                    t_name = next((t['name'] for t in TEACHERS_DB if t['id'] == t_id), "")
-                    limit = 999 
-                    for k, v in config.get("teacher_limits", {}).items():
-                         if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
-                    
-                    total_needed = c_reqs[base_subj]["count"]
-                    if total_needed > limit:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == (total_needed - limit)).OnlyEnforceIf(sys_switch)
-                    else:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0).OnlyEnforceIf(sys_switch)
-                else:
-                    model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0).OnlyEnforceIf(sys_switch)
-            else:
-                if subj in c_reqs:
-                    t_id = CLASS_TEACHER_MAP.get((c, subj))
-                    t_name = next((t['name'] for t in TEACHERS_DB if t['id'] == t_id), "")
-                    limit = 999
-                    for k, v in config.get("teacher_limits", {}).items():
-                         if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
-                    
-                    total_needed = c_reqs[subj]["count"]
-                    model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == min(total_needed, limit)).OnlyEnforceIf(sys_switch)
-                else:
-                    if "_AUTO_SUB" not in subj:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0).OnlyEnforceIf(sys_switch)
-
-    # --- 3. 老师冲突约束 (物理约束) ---
-    teacher_assignments = collections.defaultdict(list)
-    for (c, s), t_id in CLASS_TEACHER_MAP.items():
-        teacher_assignments[t_id].append((c, s))
-
-    for tid, assignments in teacher_assignments.items():
-        if len(assignments) <= 1: continue
-        for d in range(DAYS):
-            for p in range(PERIODS):
-                model.Add(sum(schedule[(c, d, p, s)] for (c, s) in assignments) <= 1)
-        # 连堂约束
-        model.Add(sum(schedule[(c, d, 3, s)] for (c, s) in assignments) + 
-                  sum(schedule[(c, d, 4, s)] for (c, s) in assignments) <= 1)
-
-    # --- 4. 规则引擎集成 ---
-    rules = config.get('rules', [])
-    use_legacy_rules = config.get('use_legacy_rules', True)
-    if use_legacy_rules:
-        existing_names = {r.get('name') for r in rules}
-        for preset in SHAOXING_PRESET_RULES:
-            if preset.get('name') not in existing_names:
-                rules.append(preset)
-
-    apply_universal_rules(
-        model, schedule, rules, TEACHERS_DB, class_metadata, 
-        teacher_assignments, ALL_SUBJECTS_IN_VARS, SLOTS, penalties,
-        assumption_literals, rule_mapping
-    )
-    
-    # --- 5. 高级约束 (Legacy Constraints) - 修正版：带开关 ---
-    # [修复] 确保这是唯一处理 constraints 的地方
-    CONSTRAINTS = config.get('constraints', {})
-    name_to_tids = collections.defaultdict(list)
-    for t in TEACHERS_DB:
-        name_to_tids[t['name']].append(t['id'])
-
-    unavailable_settings = CONSTRAINTS.get('teacher_unavailable', {})
-    fixed_courses = CONSTRAINTS.get('fixed_courses', {})
-
-    if fixed_courses:
-        for c_str, fixes in fixed_courses.items():
-            try: c = int(c_str)
-            except: continue
-            if c not in CLASSES: continue
-            
-            for slot_key, subj_name in fixes.items():
-                if subj_name not in ALL_SUBJECTS_IN_VARS: continue
-                try:
-                    d_str, p_str = slot_key.split('_')
-                    d, p = int(d_str), int(p_str)
-                    
-                    if 0 <= d < DAYS and 0 <= p < PERIODS:
-                        # [核心修复] 使用 .Index()
-                        sys_switch = model.NewBoolVar(f'sys_fixed_{c}_{d}_{p}')
-                        assumption_literals.append(sys_switch)
-                        rule_mapping[sys_switch.Index()] = f"【固定课】{c}班_{subj_name}_周{d+1}第{p+1}节"
-                        model.Add(schedule[(c, d, p, subj_name)] == 1).OnlyEnforceIf(sys_switch)
-                except: pass
-
-    if unavailable_settings:
-        for t_name, slots in unavailable_settings.items():
-            tids = name_to_tids.get(t_name, [])
-            if not tids: continue
-            for tid in tids:
-                assignments = teacher_assignments.get(tid, [])
-                if not assignments: continue
-                for day, period in slots:
-                    if 0 <= day < DAYS and 0 <= period < PERIODS:
-                        # [核心修复] 使用 .Index()
-                        sys_switch = model.NewBoolVar(f'sys_unavail_{t_name}_{day}_{period}')
-                        assumption_literals.append(sys_switch)
-                        rule_mapping[sys_switch.Index()] = f"【老师禁排】{t_name}_周{day+1}第{period+1}节"
-                        model.Add(sum(schedule[(c, day, period, s)] for (c, s) in assignments) == 0).OnlyEnforceIf(sys_switch)
-
-    # 激活所有开关
-    if assumption_literals:
-        model.AddAssumptions(assumption_literals)
-
-    # 求解
-    solver = cp_model.CpSolver()
-    solver.parameters.max_time_in_seconds = 10.0 
-    status = solver.Solve(model)
-
-    if status == cp_model.OPTIMAL or status == cp_model.FEASIBLE:
-        # ... (成功处理逻辑，保持不变) ...
-        # (为了篇幅省略，请确保原来的 success 分支逻辑还在)
-        pass 
-        return {
-            "status": "success",
-            "schedule": {}, # 占位
-            # ...
-        }
-
-    else:
-        suggestions = ["尝试减少课时需求", "检查是否有老师课时超限", "移除部分固定课程"]
-        error_msg = "无法找到满足所有硬性约束的课表 (INFEASIBLE)"
-        
-        if status == cp_model.INFEASIBLE and assumption_literals:
-            logger.info("Triggering SufficientAssumptionsForInfeasibility (Pass 1)...")
-            conflict_indices = solver.SufficientAssumptionsForInfeasibility()
-            logger.info(f"DEBUG: Pass 1 indices: {conflict_indices}")
-            
-            # [核心修复] rule_mapping 现在的 Key 是 Variable Index，直接查找即可
-            conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
-            
-            if not conflict_rules:
-                logger.info("Pass 1 returned empty (Indices not found in map). Retrying with Presolve=False...")
-                solver_diag = cp_model.CpSolver()
-                solver_diag.parameters.cp_model_presolve = False
-                solver_diag.parameters.max_time_in_seconds = 10.0
-                status_diag = solver_diag.Solve(model)
-                
-                if status_diag == cp_model.INFEASIBLE:
-                    conflict_indices = solver_diag.SufficientAssumptionsForInfeasibility()
-                    conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
-            
-            if conflict_rules:
-                error_msg = f"排课失败: 检测到 {len(conflict_rules)} 个规则导致冲突"
-                suggestions = [f"冲突核心: {', '.join(conflict_rules)}"] + suggestions
-            else:
-                suggestions.append("【严重】可能是老师资源物理不足（同一时段需要上课的班级数 > 老师人数）。")
-
-        return {
-            "status": "error",
-            "error_type": "infeasible", 
-            "message": error_msg,
-            "suggestions": suggestions
-        }
+id_key = f"{name}_{grade_name}" if type_ == "main" else name
 
 ```
+
+假设“王老师”既教初一数学（主课），又教初二数学（主课）。系统会生成两个 ID：`t_王老师_初一` 和 `t_王老师_初二`。
+
+在第 1135 行的冲突检测中：
+
+```python
+for tid, assignments in teacher_assignments.items():
+    # ...model.Add(sum(...) <= 1)
+
+```
+
+你是**按 TID 遍历**的。OR-Tools 认为 `t_王老师_初一` 和 `t_王老师_初二` 是**两个完全不同的人**。
+
+**后果：**
+**王老师会被排在同一天的同一节课**（比如周一第一节，初一在上一班，初二在另一班）。这是物理上不可能的。
+
+**✅ 修复方案：**
+必须建立“自然人”维度的冲突约束，而不是“Teacher ID”维度。
+
+```python
+# 1. 先构建 自然人 -> [所有相关 TID] 的映射
+real_person_map = collections.defaultdict(list)
+for t in TEACHERS_DB:
+    # 假设 name 是唯一标识自然人的键
+    real_person_map[t['name']].append(t['id'])
+
+# 2. 修改约束循环 (替换原有的 1135-1148 行)
+for name, tids in real_person_map.items():
+    # 获取该自然人名下所有 ID 的所有课程变量
+    all_assignments = []
+    for tid in tids:
+         if tid in teacher_assignments:
+             all_assignments.extend(teacher_assignments[tid])
+    
+    if not all_assignments: continue
+
+    # 对每一时刻，约束该自然人的所有分身总和 <= 1
+    for d in range(DAYS):
+        for p in range(PERIODS):
+            # 收集该自然人所有分身在该时刻的变量
+            vars_at_slot = [schedule[(c, d, p, s)] for (c, s) in all_assignments]
+            model.Add(sum(vars_at_slot) <= 1)
+
+```
+
+---
+
+### ⚠️ 3. 逻辑隐患：评估系统与求解目标脱节
+
+**位置：** `evaluate_quality` vs `apply_universal_rules`
+
+**问题描述：**
+
+* `evaluate_quality` 是用 Python 代码在事后计算分数的（扣分制）。
+* `apply_universal_rules` 是向 OR-Tools 添加 Penalty 约束的。
+* **脱节点**：例如 `evaluate_quality` 里有“方差计算”（负载均衡），但我在 `apply_universal_rules` 里没有看到对应的 Minimize Variance 建模。
+
+**后果：**
+求解器在跑的时候，并不知道你要“负载均衡”（因为它只看模型里的 Penalties）。排出来的课表在 `evaluate_quality` 里评分可能很低，但求解器觉得自己已经尽力了。你必须把 Python 的评分逻辑翻译成 OR-Tools 的约束才能真正生效。
+
+---
+
+### 📉 4. 性能隐患：变量爆炸 (Variable Explosion)
+
+**位置：** 变量定义循环
+
+**问题描述：**
+
+```python
+for subj in ALL_SUBJECTS_IN_VARS:
+    schedule[(c, d, p, subj)] = model.NewBoolVar(...)
+
+```
+
+你对**每个班级**的**每个时间点**，都创建了**所有科目**的布尔变量。
+如果全校有 30 个班，100 个老师（对应 100 个细分科目变量），5天8节。
+变量数 =  个布尔变量。
+紧接着在 你又强制把绝大多数变量设为 0（因为该班级根本不上这个老师的课）。
+
+**优化建议：**
+只为该班级“需要的”科目创建变量。
+
+```python
+# 优化思路
+for c in CLASSES:
+    # 只获取该班级需要的科目列表
+    required_subjects = class_metadata[c]['requirements'].keys()
+    for d in range(DAYS):
+        for p in range(PERIODS):
+            for subj in required_subjects:
+                schedule[(c, d, p, subj)] = model.NewBoolVar(...)
+
+```
+
+这可以将变量规模减少 90% 以上，极大提升求解速度。
+
+---
+
+### 🛠️ 5. 代码细节错误
+
+* **逻辑错误**：
+在循环内部：
+```python
+for k, v in config.get("teacher_limits", {}).items():
+     if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
+
+```
+
+
+你在最内层的 `d, p` 循环外层计算这个 `limit` 是对的，但在 1111 行这里，你没有 `break`。虽然功能没错，但效率极低（每次都遍历整个字典）。建议在循环外预处理好 `name -> limit` 的字典。
+* **绝对值约束滥用**：
+```python
+model.AddAbsEquality(abs_diff, diff)
+
+```
+
+
+在 OR-Tools 中，直接对 `diff` 平方或者直接用线性近似通常比 `AddAbsEquality` 更稳定，不过这个问题不大，可以保留。
+
+### 总结建议
+
+你的 `normal.py` 是一个非常典型的 OR-Tools 排课实现，结构很清晰。目前的当务之急是：
+
+1. **删除 `StopAfterFirstSolution**`（让软约束生效）。
+2. **重写老师冲突约束**（按 Name 而不是 ID 聚合，解决分身问题）。
+3. **优化变量创建**（只创建必要的变量，防止大规模排课时内存溢出）。
+
+解决这三点后，你的系统可用性会有质的飞跃。

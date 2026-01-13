@@ -1198,24 +1198,25 @@ def run_scheduler(config=None):
     # 2. 建模
     # 2. 建模
     model = cp_model.CpModel()
+    
+    # [核心新增] 全局冲突诊断映射表
+    assumption_literals = []
+    rule_mapping = {}
     schedule = {}
     penalties = []
-    
-    # [核心新增] 全局冲突诊断映射表
-    assumption_literals = []
-    rule_mapping = {}
-    schedule = {}
-    penalties = [] # [移动到此处] 确保全局可用
-    
-    # [核心新增] 全局冲突诊断映射表
-    assumption_literals = []
-    rule_mapping = {}
 
+    # [性能优化] 只为每个班级需要的科目创建变量，而非全部科目
+    # 这可以将变量规模减少约 90%，极大提升求解速度
     for c in CLASSES:
+        # 获取该班级需要的科目列表
+        required_subjects = set(class_metadata[c]['requirements'].keys())
+        
         for d in range(DAYS):
             for p in range(PERIODS):
                 for subj in ALL_SUBJECTS_IN_VARS:
-                    schedule[(c, d, p, subj)] = model.NewBoolVar(f'c{c}_{d}_{p}_{subj}')
+                    # 只有该班级需要的科目才创建变量
+                    if subj in required_subjects or subj.replace('_AUTO_SUB', '') in required_subjects:
+                        schedule[(c, d, p, subj)] = model.NewBoolVar(f'c{c}_{d}_{p}_{subj}')
 
     # === [新增] 特定老师的课时约束 ===
     # [修改版] 更健壮的名字匹配
@@ -1236,10 +1237,12 @@ def run_scheduler(config=None):
         assignments = teacher_assignments.get(tid, [])
         if not assignments: continue
         
-        # 计算该老师的总排课量 (Expression)
+        # 计算该老师的总排课量 (Expression)  
+        # [性能优化兼容] 添加存在性检查
         total_workload = sum(schedule[(c, d, p, s)] 
                              for (c, s) in assignments 
-                             for d, p in SLOTS)
+                             for d, p in SLOTS
+                             if (c, d, p, s) in schedule)
         
         # 添加最小课时约束
         if "min" in limits and str(limits["min"]).strip().isdigit():
@@ -1255,7 +1258,8 @@ def run_scheduler(config=None):
     # 1. 唯一性: 每个格子 <= 1 门课
     for c in CLASSES:
         for d, p in SLOTS:
-            model.Add(sum(schedule[(c, d, p, s)] for s in ALL_SUBJECTS_IN_VARS) <= 1)
+            # [性能优化兼容] 只对存在的变量求和
+            model.Add(sum(schedule[(c, d, p, s)] for s in ALL_SUBJECTS_IN_VARS if (c, d, p, s) in schedule) <= 1)
     
     # 2. 差异化课时总量控制 (硬约束，不需要诊断开关)
     # [性能优化] 移除了为每个(班级,科目)创建诊断开关的逻辑
@@ -1275,11 +1279,11 @@ def run_scheduler(config=None):
                     
                     total_needed = c_reqs[base_subj]["count"]
                     if total_needed > limit:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == (total_needed - limit))
+                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS if (c, d, p, subj) in schedule) == (total_needed - limit))
                     else:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
+                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS if (c, d, p, subj) in schedule) == 0)
                 else:
-                    model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
+                    pass  # [性能优化] 该班级不需要此科目，跳过；变量根本不存在
             else:
                 if subj in c_reqs:
                     t_id = CLASS_TEACHER_MAP.get((c, subj))
@@ -1289,37 +1293,51 @@ def run_scheduler(config=None):
                          if k.strip() == t_name.strip() and v.get('max'): limit = int(v['max'])
                     
                     total_needed = c_reqs[subj]["count"]
-                    model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == min(total_needed, limit))
+                    model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS if (c, d, p, subj) in schedule) == min(total_needed, limit))
                 else:
                     if "_AUTO_SUB" not in subj:
-                        model.Add(sum(schedule[(c, d, p, subj)] for d, p in SLOTS) == 0)
+                        pass  # [性能优化] 该班级不需要此科目，跳过；变量根本不存在
 
 
     # 3. 老师冲突约束 (核心约束：同一老师同一时刻只能在一个班级上课)
     # [性能优化] 活动类科目使用虚拟老师，跳过冲突约束
     ACTIVITY_SUBJECTS = {'政教活动', '课外活动', '拓展课'}
     
-    for tid, assignments in teacher_assignments.items():
-        # assignments: list of (class_id, subject)
-        if len(assignments) <= 1:
-            continue  # 只教一个班级的老师不需要冲突约束
+    # [修复] 新增：按"自然人"（姓名）聚合所有 TID，解决主课老师跨年级"分身"问题
+    # 之前只按 TID 遍历，导致 "t_王老师_初一" 和 "t_王老师_初二" 被视为两个人
+    real_person_map = collections.defaultdict(list)
+    for t in TEACHERS_DB:
+        real_person_map[t['name']].append(t['id'])
+    
+    for name, tids in real_person_map.items():
+        # 获取该自然人名下所有 ID 的所有课程分配
+        all_assignments = []
+        for tid in tids:
+            if tid in teacher_assignments:
+                all_assignments.extend(teacher_assignments[tid])
+        
+        if not all_assignments:
+            continue
         
         # [性能优化] 检查这个老师是否只教活动类科目
-        taught_subjects = set(s for (c, s) in assignments)
+        taught_subjects = set(s for (c, s) in all_assignments)
         if taught_subjects.issubset(ACTIVITY_SUBJECTS):
             continue  # 活动类科目的虚拟老师不需要冲突约束
             
         for d in range(DAYS):
             for p in range(PERIODS):
-                # 该老师在这个时段的所有可能排课变量
-                teacher_slot_vars = [schedule[(c, d, p, s)] for (c, s) in assignments]
+                # 该自然人在这个时段的所有可能排课变量（包括所有"分身"）
+                teacher_slot_vars = [schedule[(c, d, p, s)] for (c, s) in all_assignments if (c, d, p, s) in schedule]
                 # 约束：同一时刻最多只能上一节课
-                model.Add(sum(teacher_slot_vars) <= 1)
+                if teacher_slot_vars:
+                    model.Add(sum(teacher_slot_vars) <= 1)
             
             # --- [绍兴一中补全] 4.4.3 老师四五节不连堂 (硬约束) ---
             # 规则：上午最后一节 (p=3) 和下午第一节 (p=4) 不连堂
-            model.Add(sum(schedule[(c, d, 3, s)] for (c, s) in assignments) + 
-                      sum(schedule[(c, d, 4, s)] for (c, s) in assignments) <= 1)
+            vars_p3 = [schedule[(c, d, 3, s)] for (c, s) in all_assignments if (c, d, 3, s) in schedule]
+            vars_p4 = [schedule[(c, d, 4, s)] for (c, s) in all_assignments if (c, d, 4, s) in schedule]
+            if vars_p3 and vars_p4:
+                model.Add(sum(vars_p3) + sum(vars_p4) <= 1)
 
     # ====================================================================
     # 4. 规则引擎集成 (New Rule Engine)
@@ -1442,9 +1460,9 @@ def run_scheduler(config=None):
     solver.parameters.randomize_search = True 
     solver.parameters.log_search_progress = True
     
-    # 增加首解停止逻辑
-    solution_callback = StopAfterFirstSolution()
-    status = solver.Solve(model, solution_callback)
+    # [修复] 移除 StopAfterFirstSolution 回调，让求解器进行完整优化
+    # 这样软约束 (weight < 100) 的惩罚才会真正被最小化
+    status = solver.Solve(model)
     
     logger.info(f"Solver status: {solver.StatusName(status)}")
 
@@ -1521,9 +1539,69 @@ def run_scheduler(config=None):
             logger.info("DEBUG: Triggering SufficientAssumptionsForInfeasibility (Pass 1)...")
             conflict_indices = solver.SufficientAssumptionsForInfeasibility()
             logger.info(f"DEBUG: Pass 1 indices: {conflict_indices}")
-            conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
             
-            if not conflict_rules:
+            # ======= [新增] 精确冲突定位：最小冲突子集算法 =======
+            # 使用"逐一剔除法"找到真正的最小冲突集
+            def find_minimal_conflict_set(model, all_assumptions, initial_conflict_indices, rule_mapping):
+                """
+                从初始冲突集中找出最小必要冲突子集。
+                算法：对于每个疑似冲突规则，测试移除它后是否仍然无解。
+                     如果仍无解，说明该规则不是必要的，可以剔除。
+                     如果变为有解，说明该规则是冲突的必要成员。
+                """
+                # 将 indices 转换为对应的 assumption 变量
+                idx_to_var = {var.Index(): var for var in all_assumptions}
+                conflict_vars = [idx_to_var[i] for i in initial_conflict_indices if i in idx_to_var]
+                
+                if len(conflict_vars) <= 2:
+                    # 已经足够小，无需进一步精简
+                    return [rule_mapping.get(v.Index(), f"未知规则({v.Index()})") for v in conflict_vars]
+                
+                logger.info(f"DEBUG: 开始精简冲突集，初始大小: {len(conflict_vars)}")
+                
+                # 创建一个新的求解器用于快速测试
+                test_solver = cp_model.CpSolver()
+                test_solver.parameters.max_time_in_seconds = 2.0  # 快速测试
+                test_solver.parameters.cp_model_presolve = False
+                
+                # 最小化集合：逐一尝试移除
+                minimal_set = list(conflict_vars)
+                i = 0
+                while i < len(minimal_set):
+                    # 尝试移除第 i 个规则
+                    test_assumptions = minimal_set[:i] + minimal_set[i+1:]
+                    
+                    # 清除之前的 Assumptions 并添加新的
+                    model.ClearAssumptions()
+                    if test_assumptions:
+                        model.AddAssumptions(test_assumptions)
+                    
+                    test_status = test_solver.Solve(model)
+                    
+                    if test_status == cp_model.INFEASIBLE:
+                        # 移除后仍然无解，说明这个规则不是必要的
+                        logger.info(f"DEBUG: 规则 {rule_mapping.get(minimal_set[i].Index())} 非必要，移除")
+                        minimal_set = test_assumptions
+                        # 不增加 i，因为列表已经缩短
+                    else:
+                        # 移除后变为可行，说明这个规则是冲突的必要成员
+                        logger.info(f"DEBUG: 规则 {rule_mapping.get(minimal_set[i].Index())} 是冲突必要成员，保留")
+                        i += 1
+                    
+                    # 如果已经精简到2个以下，提前结束
+                    if len(minimal_set) <= 2:
+                        break
+                
+                # 恢复原始 Assumptions
+                model.ClearAssumptions()
+                model.AddAssumptions(all_assumptions)
+                
+                return [rule_mapping.get(v.Index(), f"未知规则({v.Index()})") for v in minimal_set]
+            
+            # 先获取初步冲突规则
+            initial_conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
+            
+            if not initial_conflict_rules:
                 logger.info("DEBUG: Pass 1 returned empty. Retrying with Presolve=False...")
                 solver_diag = cp_model.CpSolver()
                 solver_diag.parameters.cp_model_presolve = False
@@ -1532,14 +1610,22 @@ def run_scheduler(config=None):
                 
                 if status_diag == cp_model.INFEASIBLE:
                     conflict_indices = solver_diag.SufficientAssumptionsForInfeasibility()
-                    conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
+                    initial_conflict_rules = [rule_mapping[i] for i in conflict_indices if i in rule_mapping]
+            
+            # 执行精确定位
+            if len(conflict_indices) > 2:
+                logger.info("DEBUG: 执行最小冲突子集算法...")
+                conflict_rules = find_minimal_conflict_set(model, assumption_literals, conflict_indices, rule_mapping)
+                logger.info(f"DEBUG: 精简后冲突集大小: {len(conflict_rules)}")
+            else:
+                conflict_rules = initial_conflict_rules
             
             if conflict_rules:
-                error_msg = f"排课失败: 检测到 {len(conflict_rules)} 个约束发生冲突"
-                suggestions = [f"冲突核心: {', '.join(conflict_rules)}"]
-                suggestions.append("建议: 尝试放宽约束")
-                suggestions.append("建议: 减少一键生成中的硬约束数量")
-                suggestions.append("建议: 减少固定课程设置")
+                error_msg = f"排课失败: 检测到 {len(conflict_rules)} 个规则导致核心冲突"
+                suggestions = [f"🎯 冲突核心: {', '.join(conflict_rules)}"]
+                if len(initial_conflict_rules) > len(conflict_rules):
+                    suggestions.append(f"📊 连带影响: 另有 {len(initial_conflict_rules) - len(conflict_rules)} 条规则因上述冲突无法生效")
+                suggestions.append("💡 建议: 检查上述规则是否存在逻辑矛盾（如：同时要求排课和禁止排课）")
             else:
                  suggestions.append("【严重】可能是老师资源物理不足（同一时段需要上课的班级数 > 老师人数）。")
 

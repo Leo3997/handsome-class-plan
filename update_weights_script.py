@@ -1,7 +1,7 @@
 import json
 import os
 
-file_path = r'e:\实习\schedule_system\static\rules\shaoxing_rules.json'
+file_path = r'static\rules\shaoxing_rules.json'
 
 def update_weights():
     try:
